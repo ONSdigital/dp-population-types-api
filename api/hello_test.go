@@ -1,7 +1,9 @@
-package api
+//nolint:typecheck
+package api_test
 
 import (
 	"context"
+	"github.com/ONSdigital/dp-population-types-api/api"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -15,7 +17,7 @@ var ctx = context.Background()
 func TestHelloHandler(t *testing.T) {
 
 	Convey("Given a Hello handler ", t, func() {
-		helloHandler := HelloHandler(ctx)
+		helloHandler := api.HelloHandler(ctx)
 
 		Convey("when a good response is returned", func() {
 			req := httptest.NewRequest("GET", "http://localhost:8080/hello", nil)

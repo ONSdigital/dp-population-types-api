@@ -1,7 +1,9 @@
-package api
+//nolint:typecheck
+package api_test
 
 import (
 	"context"
+	"github.com/ONSdigital/dp-population-types-api/api"
 	"net/http/httptest"
 	"testing"
 
@@ -13,7 +15,7 @@ func TestSetup(t *testing.T) {
 	Convey("Given an API instance", t, func() {
 		r := mux.NewRouter()
 		ctx := context.Background()
-		api := Setup(ctx, r)
+		api := api.Setup(ctx, r)
 
 		// TODO: remove hello world example handler route test case
 		Convey("When created the following routes should have been added", func() {
