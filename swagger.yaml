@@ -9,30 +9,24 @@ info:
 basePath: "/v1"
 schemes:
   - http
-tags:
-  - name: "hello"
-  - name: "private"
 paths:
-  /hello:
+  /population-types:
     get:
       tags:
-        - hello
-      summary: Example hello world endpoint
-      description: Returns an example payload.
-      produces:
-        - application/json
+        - "Public"
+      summary: "Get all population types relevant to Census"
+      description: "Retrieves a list of cantabular population types for Census"
       responses:
         200:
-          description: OK
+          description: "Json object containing a list of population types for Census"
           schema:
-            $ref: "#/definitions/HelloResponse"
+            $ref: "#/definitions/PopulationTypes"
         500:
-          $ref: '#/responses/InternalError'
-
+          $ref: "#/responses/InternalError"
   /health:
     get:
       tags:
-        - private
+        - "Private"
       summary: "Returns API's health status"
       description: "Returns health status of the API and checks on dependent services"
       produces:
@@ -52,13 +46,6 @@ responses:
     description: "Failed to process the request due to an internal error"
 
 definitions:
-  HelloResponse:
-    type: object
-    properties:
-      message:
-        type: string
-        description: "Message returned by hello world endpoint"
-        example: "Hello, world!"
   Health:
     type: object
     properties:
@@ -100,7 +87,7 @@ definitions:
       checks:
         type: array
         items:
-          $ref: '#/definitions/HealthChecker'
+          $ref: "#/definitions/HealthChecker"
   HealthChecker:
     type: object
     properties:
@@ -128,3 +115,18 @@ definitions:
         type: string
         description: "The last failed health check date and time of the external service"
         example: "2019-09-22T11:48:51.0000001Z"
+  PopulationType:
+    description: "A population type which census data can be retrieved from"
+    type: object
+    properties:
+      name:
+        description: "The name of the population type"
+        type: string
+  PopulationTypes:
+    type: object
+    properties:
+      items:
+        description: "An array of population types"
+        type: array
+        items:
+          $ref: "#/definitions/PopulationType"
