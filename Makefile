@@ -15,7 +15,7 @@ audit:
 
 .PHONY: lint
 lint:
-	golangci-lint run ./... --timeout 2m --skip-dirs=features
+	golangci-lint run ./... --timeout 2m --skip-dirs=features --verbose
 
 .PHONY: build
 build:
