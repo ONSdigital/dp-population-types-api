@@ -11,4 +11,4 @@ Feature: Population types endpoint
   Scenario: If the root population-types endpoint fails, it should return correct errors
     Given cantabular is unresponsive
     When I access the root population types endpoint
-    Then the service responds with an internal server error saying "nope"
+    Then the service responds with an internal server error saying "failed to fetch population types"
