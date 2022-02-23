@@ -10,8 +10,8 @@ basePath: "/v1"
 schemes:
   - http
 tags:
-  - name: "Private"
   - name: "Public"
+  - name: "Private"
 securityDefinitions:
   InternalAPIKey:
     name: internal-token
@@ -23,8 +23,11 @@ paths:
     get:
       tags:
         - "Public"
+        - "Private"
       summary: "Get all population types relevant to Census"
       description: "Retrieves a list of cantabular population types for Census"
+      security:
+        - InternalAPIKey: []
       responses:
         200:
           description: "Json object containing a list of population types for Census"
