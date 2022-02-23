@@ -11,20 +11,22 @@ import (
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 )
 
-type Component struct {
+type PopulationTypesComponent struct {
 	componenttest.ErrorFeature
-	svcList        *service.ExternalServiceList
-	svc            *service.Service
-	errorChan      chan error
-	Config         *config.Config
-	HTTPServer     *http.Server
-	ServiceRunning bool
-	apiFeature     *componenttest.APIFeature
+	svcList                      *service.ExternalServiceList
+	svc                          *service.Service
+	errorChan                    chan error
+	Config                       *config.Config
+	HTTPServer                   *http.Server
+	ServiceRunning               bool
+	apiFeature                   *componenttest.APIFeature
+	fakeCantabularDatasets       []string
+	fakeCantabularIsUnresponsive bool
 }
 
-func NewComponent() (*Component, error) {
+func NewComponent() (*PopulationTypesComponent, error) {
 
-	c := &Component{
+	c := &PopulationTypesComponent{
 		HTTPServer:     &http.Server{},
 		errorChan:      make(chan error),
 		ServiceRunning: false,
@@ -49,12 +51,12 @@ func NewComponent() (*Component, error) {
 	return c, nil
 }
 
-func (c *Component) Reset() *Component {
+func (c *PopulationTypesComponent) Reset() *PopulationTypesComponent {
 	c.apiFeature.Reset()
 	return c
 }
 
-func (c *Component) Close() error {
+func (c *PopulationTypesComponent) Close() error {
 	if c.svc != nil && c.ServiceRunning {
 		c.svc.Close(context.Background())
 		c.ServiceRunning = false
@@ -62,7 +64,7 @@ func (c *Component) Close() error {
 	return nil
 }
 
-func (c *Component) InitialiseService() (http.Handler, error) {
+func (c *PopulationTypesComponent) InitialiseService() (http.Handler, error) {
 	var err error
 	c.svc, err = service.Run(context.Background(), c.Config, c.svcList, "1", "", "", c.errorChan)
 	if err != nil {
@@ -73,7 +75,7 @@ func (c *Component) InitialiseService() (http.Handler, error) {
 	return c.HTTPServer.Handler, nil
 }
 
-func (c *Component) DoGetHealthcheckOk(cfg *config.Config, buildTime string, gitCommit string, version string) (service.HealthChecker, error) {
+func (c *PopulationTypesComponent) DoGetHealthcheckOk(cfg *config.Config, buildTime string, gitCommit string, version string) (service.HealthChecker, error) {
 	return &mock.HealthCheckerMock{
 		AddCheckFunc: func(name string, checker healthcheck.Checker) error { return nil },
 		StartFunc:    func(ctx context.Context) {},
@@ -81,7 +83,7 @@ func (c *Component) DoGetHealthcheckOk(cfg *config.Config, buildTime string, git
 	}, nil
 }
 
-func (c *Component) DoGetHTTPServer(bindAddr string, router http.Handler) service.HTTPServer {
+func (c *PopulationTypesComponent) DoGetHTTPServer(bindAddr string, router http.Handler) service.HTTPServer {
 	c.HTTPServer.Addr = bindAddr
 	c.HTTPServer.Handler = router
 	return c.HTTPServer
