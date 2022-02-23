@@ -9,6 +9,9 @@ info:
 basePath: "/v1"
 schemes:
   - http
+tags:
+  - name: "Public"
+  - name: "Private"
 paths:
   /population-types:
     get:
