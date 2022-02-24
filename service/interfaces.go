@@ -16,6 +16,7 @@ import (
 type Initialiser interface {
 	DoGetHTTPServer(bindAddr string, router http.Handler) HTTPServer
 	DoGetHealthCheck(cfg *config.Config, buildTime, gitCommit, version string) (HealthChecker, error)
+	DoGetCantabularClient(ctx context.Context, cfg config.CantabularConfig) CantabularClient
 }
 
 // HTTPServer defines the required methods from the HTTP server
@@ -30,4 +31,10 @@ type HealthChecker interface {
 	Start(ctx context.Context)
 	Stop()
 	AddCheck(name string, checker healthcheck.Checker) (err error)
+}
+
+// CantabularClient fetches lists of datasets
+type CantabularClient interface {
+	ListDatasets(ctx context.Context) ([]string, error)
+	Checker(ctx context.Context, state *healthcheck.CheckState) error
 }

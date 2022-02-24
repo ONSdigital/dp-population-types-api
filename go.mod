@@ -21,6 +21,7 @@ require (
 
 require (
 	github.com/ONSdigital/dp-api-clients-go v1.41.1 // indirect
+	github.com/ONSdigital/dp-api-clients-go/v2 v2.92.4 // indirect
 	github.com/ONSdigital/dp-mongodb-in-memory v1.2.0 // indirect
 	github.com/aws/aws-sdk-go v1.38.15 // indirect
 	github.com/chromedp/cdproto v0.0.0-20211126220118-81fa0469ad77 // indirect
@@ -52,6 +53,7 @@ require (
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/maxcnunes/httpfake v1.2.4 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/shurcooL/graphql v0.0.0-20200928012149-18c5c3165e3a // indirect
 	github.com/smartystreets/assertions v1.2.0 // indirect
 	github.com/spf13/afero v1.8.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

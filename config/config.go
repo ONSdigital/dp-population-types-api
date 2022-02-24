@@ -14,6 +14,12 @@ type Config struct {
 	HealthCheckCriticalTimeout time.Duration `envconfig:"HEALTHCHECK_CRITICAL_TIMEOUT"`
 }
 
+type CantabularConfig struct {
+	CantabularURL         string
+	CantabularExtURL      string
+	DefaultRequestTimeout time.Duration
+}
+
 var cfg *Config
 
 // Get returns the default config with any modifications through environment

@@ -11,6 +11,7 @@ import (
 
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"github.com/ONSdigital/dp-population-types-api/service/mock"
@@ -79,12 +80,17 @@ func TestRun(t *testing.T) {
 			return failingServerMock
 		}
 
+		funcDoGetCantabularClientOk := func(ctx context.Context, cfg config.CantabularConfig) service.CantabularClient {
+			return cantabular.NewClient(cantabular.Config{}, nil, nil)
+		}
+
 		Convey("Given that initialising healthcheck returns an error", func() {
 
 			// setup (run before each `Convey` at this scope / indentation):
 			initMock := &serviceMock.InitialiserMock{
-				DoGetHTTPServerFunc:  funcDoGetHTTPServerNil,
-				DoGetHealthCheckFunc: funcDoGetHealthcheckErr,
+				DoGetHTTPServerFunc:       funcDoGetHTTPServerNil,
+				DoGetHealthCheckFunc:      funcDoGetHealthcheckErr,
+				DoGetCantabularClientFunc: funcDoGetCantabularClientOk,
 			}
 			svcErrors := make(chan error, 1)
 			svcList := service.NewServiceList(initMock)

@@ -1,6 +1,8 @@
 package service
 
 import (
+	"context"
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"net/http"
 
 	"github.com/ONSdigital/dp-population-types-api/config"
@@ -42,6 +44,13 @@ func (e *ExternalServiceList) GetHealthCheck(cfg *config.Config, buildTime, gitC
 	return hc, nil
 }
 
+// GetCantabularClient creates a cantabular client and sets the CantabularClient flag to true
+func (e *ExternalServiceList) GetCantabularClient(ctx context.Context, cfg config.CantabularConfig) (CantabularClient, error) {
+	cantabular := e.Init.DoGetCantabularClient(ctx, cfg)
+	//e.Cantabular = true
+	return cantabular, nil
+}
+
 // DoGetHTTPServer creates an HTTP Server with the provided bind address and router
 func (e *Init) DoGetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
 	s := dphttp.NewServer(bindAddr, router)
@@ -57,4 +66,15 @@ func (e *Init) DoGetHealthCheck(cfg *config.Config, buildTime, gitCommit, versio
 	}
 	hc := healthcheck.New(versionInfo, cfg.HealthCheckCriticalTimeout, cfg.HealthCheckInterval)
 	return &hc, nil
+}
+
+// DoGetCantabularClient configures a new cantabular client with injected http user agent
+func (e *Init) DoGetCantabularClient(_ context.Context, cfg config.CantabularConfig) CantabularClient {
+	cantabularConfig := cantabular.Config{
+		//Host:           cfg.CantabularURL,
+		//ExtApiHost:     cfg.CantabularExtURL,
+		//GraphQLTimeout: cfg.DefaultRequestTimeout,
+	}
+	userAgent := dphttp.NewClient()
+	return cantabular.NewClient(cantabularConfig, userAgent, nil)
 }

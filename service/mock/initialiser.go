@@ -4,11 +4,11 @@
 package mock
 
 import (
-	"net/http"
-	"sync"
-
+	"context"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
+	"net/http"
+	"sync"
 )
 
 // Ensure, that InitialiserMock does implement service.Initialiser.
@@ -17,29 +17,29 @@ var _ service.Initialiser = &InitialiserMock{}
 
 // InitialiserMock is a mock implementation of service.Initialiser.
 //
-//     func TestSomethingThatUsesInitialiser(t *testing.T) {
+// 	func TestSomethingThatUsesInitialiser(t *testing.T) {
 //
-//         // make and configure a mocked service.Initialiser
-//         mockedInitialiser := &InitialiserMock{
-//             DoGetHTTPServerFunc: func(bindAddr string, router http.Handler) service.HTTPServer {
-// 	               panic("mock out the DoGetHTTPServer method")
-//             },
-//             DoGetHealthCheckFunc: func(cfg *config.Config, buildTime string, gitCommit string, version string) (service.HealthChecker, error) {
-// 	               panic("mock out the DoGetHealthCheck method")
-//             },
-//             DoGetS3UploadedFunc: func(ctx context.Context, cfg *config.Config) (api.S3Clienter, error) {
-// 	               panic("mock out the DoGetS3Uploaded method")
-//             },
-//             DoGetVaultFunc: func(ctx context.Context, cfg *config.Config) (api.VaultClienter, error) {
-// 	               panic("mock out the DoGetVault method")
-//             },
-//         }
+// 		// make and configure a mocked service.Initialiser
+// 		mockedInitialiser := &InitialiserMock{
+// 			DoGetCantabularClientFunc: func(ctx context.Context, cfg config.CantabularConfig) service.CantabularClient {
+// 				panic("mock out the DoGetCantabularClient method")
+// 			},
+// 			DoGetHTTPServerFunc: func(bindAddr string, router http.Handler) service.HTTPServer {
+// 				panic("mock out the DoGetHTTPServer method")
+// 			},
+// 			DoGetHealthCheckFunc: func(cfg *config.Config, buildTime string, gitCommit string, version string) (service.HealthChecker, error) {
+// 				panic("mock out the DoGetHealthCheck method")
+// 			},
+// 		}
 //
-//         // use mockedInitialiser in code that requires service.Initialiser
-//         // and then make assertions.
+// 		// use mockedInitialiser in code that requires service.Initialiser
+// 		// and then make assertions.
 //
-//     }
+// 	}
 type InitialiserMock struct {
+	// DoGetCantabularClientFunc mocks the DoGetCantabularClient method.
+	DoGetCantabularClientFunc func(ctx context.Context, cfg config.CantabularConfig) service.CantabularClient
+
 	// DoGetHTTPServerFunc mocks the DoGetHTTPServer method.
 	DoGetHTTPServerFunc func(bindAddr string, router http.Handler) service.HTTPServer
 
@@ -48,6 +48,13 @@ type InitialiserMock struct {
 
 	// calls tracks calls to the methods.
 	calls struct {
+		// DoGetCantabularClient holds details about calls to the DoGetCantabularClient method.
+		DoGetCantabularClient []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// Cfg is the cfg argument value.
+			Cfg config.CantabularConfig
+		}
 		// DoGetHTTPServer holds details about calls to the DoGetHTTPServer method.
 		DoGetHTTPServer []struct {
 			// BindAddr is the bindAddr argument value.
@@ -67,8 +74,44 @@ type InitialiserMock struct {
 			Version string
 		}
 	}
-	lockDoGetHTTPServer  sync.RWMutex
-	lockDoGetHealthCheck sync.RWMutex
+	lockDoGetCantabularClient sync.RWMutex
+	lockDoGetHTTPServer       sync.RWMutex
+	lockDoGetHealthCheck      sync.RWMutex
+}
+
+// DoGetCantabularClient calls DoGetCantabularClientFunc.
+func (mock *InitialiserMock) DoGetCantabularClient(ctx context.Context, cfg config.CantabularConfig) service.CantabularClient {
+	if mock.DoGetCantabularClientFunc == nil {
+		panic("InitialiserMock.DoGetCantabularClientFunc: method is nil but Initialiser.DoGetCantabularClient was just called")
+	}
+	callInfo := struct {
+		Ctx context.Context
+		Cfg config.CantabularConfig
+	}{
+		Ctx: ctx,
+		Cfg: cfg,
+	}
+	mock.lockDoGetCantabularClient.Lock()
+	mock.calls.DoGetCantabularClient = append(mock.calls.DoGetCantabularClient, callInfo)
+	mock.lockDoGetCantabularClient.Unlock()
+	return mock.DoGetCantabularClientFunc(ctx, cfg)
+}
+
+// DoGetCantabularClientCalls gets all the calls that were made to DoGetCantabularClient.
+// Check the length with:
+//     len(mockedInitialiser.DoGetCantabularClientCalls())
+func (mock *InitialiserMock) DoGetCantabularClientCalls() []struct {
+	Ctx context.Context
+	Cfg config.CantabularConfig
+} {
+	var calls []struct {
+		Ctx context.Context
+		Cfg config.CantabularConfig
+	}
+	mock.lockDoGetCantabularClient.RLock()
+	calls = mock.calls.DoGetCantabularClient
+	mock.lockDoGetCantabularClient.RUnlock()
+	return calls
 }
 
 // DoGetHTTPServer calls DoGetHTTPServerFunc.
