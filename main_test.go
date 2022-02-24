@@ -15,6 +15,7 @@ import (
 )
 
 var componentFlag = flag.Bool("component", false, "perform component tests")
+var loggingFlag = flag.Bool("logging", false, "print logging")
 
 type ComponentTest struct {
 	MongoFeature *componenttest.MongoFeature
@@ -45,10 +46,13 @@ func (f *ComponentTest) InitializeTestSuite(ctx *godog.TestSuiteContext) {
 
 func TestComponent(t *testing.T) {
 	if *componentFlag {
-		// discarding production logging to obtain cleaner reporting of component specifications and results
-		log.SetDestination(io.Discard, io.Discard)
-		defer func() { log.SetDestination(os.Stdout, os.Stderr) }()
-		
+
+		if !*loggingFlag {
+			// discarding production logging only during the test run, in order to make the BDD output readable
+			log.SetDestination(io.Discard, io.Discard)
+			defer func() { log.SetDestination(os.Stdout, os.Stderr) }()
+		}
+
 		status := 0
 
 		var opts = godog.Options{
