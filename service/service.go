@@ -44,7 +44,9 @@ func Run(ctx context.Context, cfg *config.Config, serviceList *ExternalServiceLi
 		return nil, err
 	}
 
-	if err := registerCheckers(ctx, hc); err != nil {
+	cantabularClient, err := serviceList.GetCantabularClient(ctx, cfg.CantabularConfig)
+
+	if err := registerCheckers(ctx, hc, cantabularClient); err != nil {
 		return nil, errors.Wrap(err, "unable to register checkers")
 	}
 
@@ -115,9 +117,20 @@ func (svc *Service) Close(ctx context.Context) error {
 }
 
 func registerCheckers(ctx context.Context,
-	hc HealthChecker) (err error) {
+	hc HealthChecker,
+	cantabularClient CantabularClient) (err error) {
 
-	// TODO: add other health checks here, as per dp-upload-service
+	hasErrors := false
 
+	if cantabularClient != nil {
+		if err := hc.AddCheck("Cantabular client", cantabularClient.Checker); err != nil {
+			hasErrors = true
+			log.Error(ctx, "error adding check for vault", err)
+		}
+	}
+
+	if hasErrors {
+		return errors.New("Error(s) registering checkers for healthcheck")
+	}
 	return nil
 }

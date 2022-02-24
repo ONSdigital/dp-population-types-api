@@ -11,6 +11,7 @@ import (
 //go:generate moq -out mock/initialiser.go -pkg mock . Initialiser
 //go:generate moq -out mock/server.go -pkg mock . HTTPServer
 //go:generate moq -out mock/healthCheck.go -pkg mock . HealthChecker
+//go:generate moq -out mock/cantabularClient.go -pkg mock . CantabularClient
 
 // Initialiser defines the methods to initialise external services
 type Initialiser interface {
