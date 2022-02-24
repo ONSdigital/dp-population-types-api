@@ -36,4 +36,8 @@ convey:
 
 .PHONY: test-component
 test-component:
+	go test -cover -coverpkg=github.com/ONSdigital/dp-population-types-api/... -component -logging
+
+.PHONY: test-feature
+test-feature:
 	go test -cover -coverpkg=github.com/ONSdigital/dp-population-types-api/... -component
