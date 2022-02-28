@@ -70,9 +70,9 @@ func (e *Init) DoGetHealthCheck(cfg *config.Config, buildTime, gitCommit, versio
 // DoGetCantabularClient configures a new cantabular client with injected http user agent
 func (e *Init) DoGetCantabularClient(_ context.Context, cfg config.CantabularConfig) CantabularClient {
 	cantabularConfig := cantabular.Config{
-		//Host:           cfg.CantabularURL,
-		//ExtApiHost:     cfg.CantabularExtURL,
-		//GraphQLTimeout: cfg.DefaultRequestTimeout,
+		Host:           cfg.CantabularURL,
+		ExtApiHost:     cfg.CantabularExtURL,
+		GraphQLTimeout: cfg.DefaultRequestTimeout,
 	}
 	userAgent := dphttp.NewClient()
 	return cantabular.NewClient(cantabularConfig, userAgent, nil)
