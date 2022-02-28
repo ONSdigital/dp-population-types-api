@@ -107,6 +107,35 @@ func TestRun(t *testing.T) {
 			})
 		})
 
+		Convey("When the service is intiialised", func() {
+
+			var actualConfig config.CantabularConfig
+			initMock := &serviceMock.InitialiserMock{
+				DoGetHTTPServerFunc:  funcDoGetHTTPServer,
+				DoGetHealthCheckFunc: funcDoGetHealthcheckOk,
+				DoGetCantabularClientFunc: func(ctx context.Context, cfg config.CantabularConfig) service.CantabularClient {
+					actualConfig = cfg
+					return nil
+				},
+			}
+			svcErrors := make(chan error, 1)
+			svcList := service.NewServiceList(initMock)
+			serverWg.Add(1)
+			cfg.CantabularURL = "https://test.com/cantabularURL"
+			cfg.CantabularExtURL = "https://test.com/cantabularExtURL"
+			cfg.DefaultRequestTimeout = 42 * time.Hour
+
+			_, err := service.Run(ctx, cfg, svcList, testBuildTime, testGitCommit, testVersion, svcErrors)
+
+			So(err, ShouldBeNil)
+			expected := config.CantabularConfig{
+				CantabularURL:         "https://test.com/cantabularURL",
+				CantabularExtURL:      "https://test.com/cantabularExtURL",
+				DefaultRequestTimeout: 42 * time.Hour,
+			}
+			So(actualConfig, ShouldResemble, expected)
+
+		})
 		Convey("Given that all dependencies are successfully initialised", func() {
 
 			// setup (run before each `Convey` at this scope / indentation):

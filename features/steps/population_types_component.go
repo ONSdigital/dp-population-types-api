@@ -40,8 +40,9 @@ func NewComponent() (*PopulationTypesComponent, error) {
 	}
 
 	initMock := &mock.InitialiserMock{
-		DoGetHealthCheckFunc: c.DoGetHealthcheckOk,
-		DoGetHTTPServerFunc:  c.DoGetHTTPServer,
+		DoGetHealthCheckFunc:      c.DoGetHealthcheckOk,
+		DoGetHTTPServerFunc:       c.DoGetHTTPServer,
+		DoGetCantabularClientFunc: c.DoGetCantabularClient,
 	}
 
 	c.svcList = service.NewServiceList(initMock)
@@ -87,4 +88,8 @@ func (c *PopulationTypesComponent) DoGetHTTPServer(bindAddr string, router http.
 	c.HTTPServer.Addr = bindAddr
 	c.HTTPServer.Handler = router
 	return c.HTTPServer
+}
+
+func (c *PopulationTypesComponent) DoGetCantabularClient(ctx context.Context, cfg config.CantabularConfig) service.CantabularClient {
+	return nil
 }

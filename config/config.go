@@ -16,9 +16,9 @@ type Config struct {
 }
 
 type CantabularConfig struct {
-	CantabularURL         string
-	CantabularExtURL      string
-	DefaultRequestTimeout time.Duration
+	CantabularURL         string        `envconfig:"CANTABULAR_URL"`
+	CantabularExtURL      string        `envconfig:"CANTABULAR_EXT_API_URL"`
+	DefaultRequestTimeout time.Duration `envconfig:"DEFAULT_REQUEST_TIMEOUT"`
 }
 
 var cfg *Config
@@ -35,6 +35,11 @@ func Get() (*Config, error) {
 		GracefulShutdownTimeout:    5 * time.Second,
 		HealthCheckInterval:        30 * time.Second,
 		HealthCheckCriticalTimeout: 90 * time.Second,
+		CantabularConfig: CantabularConfig{
+			CantabularURL:         "http://localhost:8491",
+			CantabularExtURL:      "http://localhost:8492",
+			DefaultRequestTimeout: 10 * time.Second,
+		},
 	}
 
 	return cfg, envconfig.Process("", cfg)
