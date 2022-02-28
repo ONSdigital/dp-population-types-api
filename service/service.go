@@ -12,12 +12,13 @@ import (
 
 // Service contains all the configs, server and clients to run the API
 type Service struct {
-	Config      *config.Config
-	Server      HTTPServer
-	Router      *mux.Router
-	Api         *api.API
-	ServiceList *ExternalServiceList
-	HealthCheck HealthChecker
+	Config           *config.Config
+	Server           HTTPServer
+	Router           *mux.Router
+	Api              *api.API
+	ServiceList      *ExternalServiceList
+	HealthCheck      HealthChecker
+	CantabularClient CantabularClient
 }
 
 // Run the service
@@ -44,7 +45,7 @@ func Run(ctx context.Context, cfg *config.Config, serviceList *ExternalServiceLi
 		return nil, err
 	}
 
-	cantabularClient, err := serviceList.GetCantabularClient(ctx, cfg.CantabularConfig)
+	cantabularClient := serviceList.GetCantabularClient(ctx, cfg.CantabularConfig)
 
 	if err := registerCheckers(ctx, hc, cantabularClient); err != nil {
 		return nil, errors.Wrap(err, "unable to register checkers")
@@ -61,12 +62,13 @@ func Run(ctx context.Context, cfg *config.Config, serviceList *ExternalServiceLi
 	}()
 
 	return &Service{
-		Config:      cfg,
-		Router:      r,
-		Api:         a,
-		HealthCheck: hc,
-		ServiceList: serviceList,
-		Server:      s,
+		Config:           cfg,
+		Router:           r,
+		Api:              a,
+		HealthCheck:      hc,
+		ServiceList:      serviceList,
+		Server:           s,
+		CantabularClient: cantabularClient,
 	}, nil
 }
 

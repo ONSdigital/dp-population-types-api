@@ -36,10 +36,6 @@ var funcDoGetHealthcheckErr = func(cfg *config.Config, buildTime string, gitComm
 	return nil, errHealthcheck
 }
 
-var funcDoGetHTTPServerNil = func(bindAddr string, router http.Handler) service.HTTPServer {
-	return nil
-}
-
 func TestRun(t *testing.T) {
 
 	Convey("Having a set of mocked dependencies", t, func() {
@@ -77,7 +73,7 @@ func TestRun(t *testing.T) {
 			return serverMock
 		}
 
-		funcDoGetFailingHTTPSerer := func(bindAddr string, router http.Handler) service.HTTPServer {
+		funcDoGetFailingHTTPServer := func(bindAddr string, router http.Handler) service.HTTPServer {
 			return failingServerMock
 		}
 
@@ -107,7 +103,7 @@ func TestRun(t *testing.T) {
 			})
 		})
 
-		Convey("When the service is intiialised", func() {
+		Convey("When the service is initialised", func() {
 
 			var actualConfig config.CantabularConfig
 			initMock := &serviceMock.InitialiserMock{
@@ -115,7 +111,7 @@ func TestRun(t *testing.T) {
 				DoGetHealthCheckFunc: funcDoGetHealthcheckOk,
 				DoGetCantabularClientFunc: func(ctx context.Context, cfg config.CantabularConfig) service.CantabularClient {
 					actualConfig = cfg
-					return nil
+					return cantabularClientMock
 				},
 			}
 			svcErrors := make(chan error, 1)
@@ -125,17 +121,20 @@ func TestRun(t *testing.T) {
 			cfg.CantabularExtURL = "https://test.com/cantabularExtURL"
 			cfg.DefaultRequestTimeout = 42 * time.Hour
 
-			_, err := service.Run(ctx, cfg, svcList, testBuildTime, testGitCommit, testVersion, svcErrors)
-
+			svc, err := service.Run(ctx, cfg, svcList, testBuildTime, testGitCommit, testVersion, svcErrors)
 			So(err, ShouldBeNil)
-			expected := config.CantabularConfig{
-				CantabularURL:         "https://test.com/cantabularURL",
-				CantabularExtURL:      "https://test.com/cantabularExtURL",
-				DefaultRequestTimeout: 42 * time.Hour,
-			}
-			So(actualConfig, ShouldResemble, expected)
 
+			SoMsg("Then the cantabular client should be initialised using the expected configuration",
+				actualConfig, ShouldResemble, config.CantabularConfig{
+					CantabularURL:         "https://test.com/cantabularURL",
+					CantabularExtURL:      "https://test.com/cantabularExtURL",
+					DefaultRequestTimeout: 42 * time.Hour,
+				})
+
+			SoMsg("Then the service should have the created cantabular client",
+				svc.CantabularClient, ShouldEqual, cantabularClientMock)
 		})
+
 		Convey("Given that all dependencies are successfully initialised", func() {
 
 			// setup (run before each `Convey` at this scope / indentation):
@@ -212,7 +211,7 @@ func TestRun(t *testing.T) {
 			// setup (run before each `Convey` at this scope / indentation):
 			initMock := &serviceMock.InitialiserMock{
 				DoGetHealthCheckFunc:      funcDoGetHealthcheckOk,
-				DoGetHTTPServerFunc:       funcDoGetFailingHTTPSerer,
+				DoGetHTTPServerFunc:       funcDoGetFailingHTTPServer,
 				DoGetCantabularClientFunc: funcDoGetCantabularClientOk,
 			}
 			svcErrors := make(chan error, 1)

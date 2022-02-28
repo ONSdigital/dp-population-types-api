@@ -45,10 +45,9 @@ func (e *ExternalServiceList) GetHealthCheck(cfg *config.Config, buildTime, gitC
 }
 
 // GetCantabularClient creates a cantabular client and sets the CantabularClient flag to true
-func (e *ExternalServiceList) GetCantabularClient(ctx context.Context, cfg config.CantabularConfig) (CantabularClient, error) {
+func (e *ExternalServiceList) GetCantabularClient(ctx context.Context, cfg config.CantabularConfig) CantabularClient {
 	cantabular := e.Init.DoGetCantabularClient(ctx, cfg)
-	//e.Cantabular = true
-	return cantabular, nil
+	return cantabular
 }
 
 // DoGetHTTPServer creates an HTTP Server with the provided bind address and router
