@@ -171,7 +171,7 @@ func TestRun(t *testing.T) {
 		Convey("Given that Checkers cannot be registered", func() {
 
 			// setup (run before each `Convey` at this scope / indentation):
-			errAddCheckFail := errors.New("Error(s) registering checkers for healthcheck")
+			errAddCheckFail := errors.New("error(s) registering checkers for healthcheck")
 			hcMockAddFail := &serviceMock.HealthCheckerMock{
 				AddCheckFunc: func(name string, checker healthcheck.Checker) error { return errAddCheckFail },
 				StartFunc:    func(ctx context.Context) {},
