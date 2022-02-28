@@ -46,7 +46,7 @@ func run(ctx context.Context) error {
 
 	// Run the service, providing an error channel for fatal errors
 	svcErrors := make(chan error, 1)
-	svcList := service.NewServiceList(&service.Init{})
+	svcList := service.NewServiceList(service.NewInit())
 
 	log.Info(ctx, "dp-population-types-api version", log.Data{"version": Version})
 

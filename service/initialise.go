@@ -26,7 +26,15 @@ func NewServiceList(initialiser Initialiser) *ExternalServiceList {
 }
 
 // Init implements the Initialiser interface to initialise dependencies
-type Init struct{}
+type Init struct {
+	CantabularClientFactory func(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.Client
+}
+
+func NewInit() *Init {
+	return &Init{
+		CantabularClientFactory: cantabularNewClient,
+	}
+}
 
 // GetHTTPServer creates an http server
 func (e *ExternalServiceList) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
@@ -69,11 +77,16 @@ func (e *Init) DoGetHealthCheck(cfg *config.Config, buildTime, gitCommit, versio
 
 // DoGetCantabularClient configures a new cantabular client with injected http user agent
 func (e *Init) DoGetCantabularClient(_ context.Context, cfg config.CantabularConfig) CantabularClient {
-	cantabularConfig := cantabular.Config{
-		Host:           cfg.CantabularURL,
-		ExtApiHost:     cfg.CantabularExtURL,
-		GraphQLTimeout: cfg.DefaultRequestTimeout,
-	}
-	userAgent := dphttp.NewClient()
-	return cantabular.NewClient(cantabularConfig, userAgent, nil)
+	return e.CantabularClientFactory(
+		cantabular.Config{
+			Host:           cfg.CantabularURL,
+			ExtApiHost:     cfg.CantabularExtURL,
+			GraphQLTimeout: cfg.DefaultRequestTimeout,
+		},
+		dphttp.NewClient(),
+	)
+}
+
+func cantabularNewClient(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.Client {
+	return cantabular.NewClient(cfg, ua, nil)
 }
