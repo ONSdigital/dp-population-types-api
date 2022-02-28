@@ -13,39 +13,31 @@ import (
 
 type PopulationTypesComponent struct {
 	componenttest.ErrorFeature
-	svcList                      *service.ExternalServiceList
 	svc                          *service.Service
 	errorChan                    chan error
 	Config                       *config.Config
-	HTTPServer                   *http.Server
 	ServiceRunning               bool
 	apiFeature                   *componenttest.APIFeature
 	fakeCantabularDatasets       []string
 	fakeCantabularIsUnresponsive bool
+	service                      *service.Service
+	InitialiserMock              service.Initialiser
+	HttpServer                   *http.Server
 }
 
 func NewComponent() (*PopulationTypesComponent, error) {
 
-	c := &PopulationTypesComponent{
-		HTTPServer:     &http.Server{},
-		errorChan:      make(chan error),
-		ServiceRunning: false,
-	}
-
-	var err error
-
-	c.Config, err = config.Get()
+	config, err := config.Get()
 	if err != nil {
 		return nil, err
 	}
 
-	initMock := &mock.InitialiserMock{
-		DoGetHealthCheckFunc:      c.DoGetHealthcheckOk,
-		DoGetHTTPServerFunc:       c.DoGetHTTPServer,
-		DoGetCantabularClientFunc: c.DoGetCantabularClient,
+	c := &PopulationTypesComponent{
+		errorChan:      make(chan error),
+		ServiceRunning: false,
+		Config:         config,
+		HttpServer:     &http.Server{},
 	}
-
-	c.svcList = service.NewServiceList(initMock)
 
 	c.apiFeature = componenttest.NewAPIFeature(c.InitialiseService)
 
@@ -66,17 +58,40 @@ func (c *PopulationTypesComponent) Close() error {
 }
 
 func (c *PopulationTypesComponent) InitialiseService() (http.Handler, error) {
+
+	c.InitialiserMock = &mock.InitialiserMock{
+		GetHealthCheckFunc:      GetHealthcheck,
+		GetHTTPServerFunc:       c.GetHttpServer,
+		GetCantabularClientFunc: GetCantabularClient,
+		GetResponderFunc:        GetResponder,
+	}
+
 	var err error
-	c.svc, err = service.Run(context.Background(), c.Config, c.svcList, "1", "", "", c.errorChan)
+
+	c.service = service.New()
+
+	err = c.service.Init(context.Background(), c.InitialiserMock, c.Config, "", "1", "")
 	if err != nil {
 		return nil, err
 	}
 
+	c.service.Start(context.Background(), c.errorChan)
+
 	c.ServiceRunning = true
-	return c.HTTPServer.Handler, nil
+	return c.HttpServer.Handler, nil
 }
 
-func (c *PopulationTypesComponent) DoGetHealthcheckOk(cfg *config.Config, buildTime string, gitCommit string, version string) (service.HealthChecker, error) {
+func GetResponder() service.Responder {
+	return nil
+}
+
+func (c *PopulationTypesComponent) GetHttpServer(addr string, router http.Handler) service.HTTPServer {
+	c.HttpServer.Addr = addr
+	c.HttpServer.Handler = router
+	return c.HttpServer
+}
+
+func GetHealthcheck(cfg *config.Config, buildTime string, gitCommit string, version string) (service.HealthChecker, error) {
 	return &mock.HealthCheckerMock{
 		AddCheckFunc: func(name string, checker healthcheck.Checker) error { return nil },
 		StartFunc:    func(ctx context.Context) {},
@@ -84,12 +99,6 @@ func (c *PopulationTypesComponent) DoGetHealthcheckOk(cfg *config.Config, buildT
 	}, nil
 }
 
-func (c *PopulationTypesComponent) DoGetHTTPServer(bindAddr string, router http.Handler) service.HTTPServer {
-	c.HTTPServer.Addr = bindAddr
-	c.HTTPServer.Handler = router
-	return c.HTTPServer
-}
-
-func (c *PopulationTypesComponent) DoGetCantabularClient(ctx context.Context, cfg config.CantabularConfig) service.CantabularClient {
+func GetCantabularClient(cfg config.CantabularConfig) service.CantabularClient {
 	return nil
 }

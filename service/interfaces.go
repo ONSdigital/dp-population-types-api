@@ -15,9 +15,10 @@ import (
 
 // Initialiser defines the methods to initialise external services
 type Initialiser interface {
-	DoGetHTTPServer(bindAddr string, router http.Handler) HTTPServer
-	DoGetHealthCheck(cfg *config.Config, buildTime, gitCommit, version string) (HealthChecker, error)
-	DoGetCantabularClient(ctx context.Context, cfg config.CantabularConfig) CantabularClient
+	GetHTTPServer(bindAddr string, router http.Handler) HTTPServer
+	GetCantabularClient(cfg config.CantabularConfig) CantabularClient
+	GetHealthCheck(cfg *config.Config, time, commit, version string) (HealthChecker, error)
+	GetResponder() Responder
 }
 
 // HTTPServer defines the required methods from the HTTP server
@@ -38,4 +39,12 @@ type HealthChecker interface {
 type CantabularClient interface {
 	ListDatasets(ctx context.Context) ([]string, error)
 	Checker(ctx context.Context, state *healthcheck.CheckState) error
+}
+
+// Responder handles responding to http requests
+type Responder interface {
+	JSON(context.Context, http.ResponseWriter, int, interface{})
+	Error(context.Context, http.ResponseWriter, int, error)
+	StatusCode(http.ResponseWriter, int)
+	Bytes(context.Context, http.ResponseWriter, int, []byte)
 }

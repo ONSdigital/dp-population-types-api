@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -9,7 +10,6 @@ import (
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"github.com/ONSdigital/log.go/v2/log"
-	"github.com/pkg/errors"
 )
 
 const serviceName = "dp-population-types-api"
@@ -43,33 +43,40 @@ func main() {
 func run(ctx context.Context) error {
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)
-
-	// Run the service, providing an error channel for fatal errors
 	svcErrors := make(chan error, 1)
-	svcList := service.NewServiceList(service.NewInit())
-
-	log.Info(ctx, "dp-population-types-api version", log.Data{"version": Version})
 
 	// Read config
 	cfg, err := config.Get()
 	if err != nil {
-		return errors.Wrap(err, "error getting configuration")
+		return fmt.Errorf("unable to retrieve configuration, error: %w", err)
 	}
 
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	// Start service
-	svc, err := service.Run(ctx, cfg, svcList, BuildTime, GitCommit, Version, svcErrors)
-	if err != nil {
-		return errors.Wrap(err, "running service failed")
+	svc := service.New()
+	init := service.NewInit()
+	if err := svc.Init(ctx, init, cfg, BuildTime, GitCommit, Version); err != nil {
+		return fmt.Errorf("failed to initialise service: %w", err)
 	}
+	svc.Start(ctx, svcErrors)
 
 	// blocks until an os interrupt or a fatal error occurs
 	select {
 	case err := <-svcErrors:
-		// TODO: call svc.Close(ctx) (or something specific)
-		//  if there are any service connections like Kafka that you need to shut down
-		return errors.Wrap(err, "service error received")
+		err = fmt.Errorf("service error received: %w", err)
+		if errClose := svc.Close(ctx); errClose != nil {
+			log.Error(ctx, "service close error during error handling", errClose)
+		}
+		return err
 	case sig := <-signals:
 		log.Info(ctx, "os signal received", log.Data{"signal": sig})
 	}
-	return svc.Close(ctx)
+
+	if err := svc.Close(ctx); err != nil {
+		return fmt.Errorf("failed to close service: %w", err)
+	}
+
+	return nil
 }

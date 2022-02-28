@@ -1,7 +1,6 @@
 package service_test
 
 import (
-	"context"
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	dphttp "github.com/ONSdigital/dp-net/http"
 	"github.com/ONSdigital/dp-population-types-api/config"
@@ -32,7 +31,7 @@ func TestInitialiser(t *testing.T) {
 				CantabularExtURL:      "CantabularExtURL",
 				DefaultRequestTimeout: 42 * time.Hour,
 			}
-			_ = initialiser.DoGetCantabularClient(context.Background(), cantabularConfig)
+			_ = initialiser.GetCantabularClient(cantabularConfig)
 			Convey("Then the cantabular client factory should be called with the expectd configuration and user agent", func() {
 				So(actualConfig, ShouldResemble, cantabular.Config{
 					Host:           "CantabularURL",

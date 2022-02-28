@@ -4,7 +4,6 @@
 package mock
 
 import (
-	"context"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"net/http"
@@ -21,14 +20,17 @@ var _ service.Initialiser = &InitialiserMock{}
 //
 // 		// make and configure a mocked service.Initialiser
 // 		mockedInitialiser := &InitialiserMock{
-// 			DoGetCantabularClientFunc: func(ctx context.Context, cfg config.CantabularConfig) service.CantabularClient {
-// 				panic("mock out the DoGetCantabularClient method")
+// 			GetCantabularClientFunc: func(cfg config.CantabularConfig) service.CantabularClient {
+// 				panic("mock out the GetCantabularClient method")
 // 			},
-// 			DoGetHTTPServerFunc: func(bindAddr string, router http.Handler) service.HTTPServer {
-// 				panic("mock out the DoGetHTTPServer method")
+// 			GetHTTPServerFunc: func(bindAddr string, router http.Handler) service.HTTPServer {
+// 				panic("mock out the GetHTTPServer method")
 // 			},
-// 			DoGetHealthCheckFunc: func(cfg *config.Config, buildTime string, gitCommit string, version string) (service.HealthChecker, error) {
-// 				panic("mock out the DoGetHealthCheck method")
+// 			GetHealthCheckFunc: func(cfg *config.Config, time string, commit string, version string) (service.HealthChecker, error) {
+// 				panic("mock out the GetHealthCheck method")
+// 			},
+// 			GetResponderFunc: func() service.Responder {
+// 				panic("mock out the GetResponder method")
 // 			},
 // 		}
 //
@@ -37,87 +39,88 @@ var _ service.Initialiser = &InitialiserMock{}
 //
 // 	}
 type InitialiserMock struct {
-	// DoGetCantabularClientFunc mocks the DoGetCantabularClient method.
-	DoGetCantabularClientFunc func(ctx context.Context, cfg config.CantabularConfig) service.CantabularClient
+	// GetCantabularClientFunc mocks the GetCantabularClient method.
+	GetCantabularClientFunc func(cfg config.CantabularConfig) service.CantabularClient
 
-	// DoGetHTTPServerFunc mocks the DoGetHTTPServer method.
-	DoGetHTTPServerFunc func(bindAddr string, router http.Handler) service.HTTPServer
+	// GetHTTPServerFunc mocks the GetHTTPServer method.
+	GetHTTPServerFunc func(bindAddr string, router http.Handler) service.HTTPServer
 
-	// DoGetHealthCheckFunc mocks the DoGetHealthCheck method.
-	DoGetHealthCheckFunc func(cfg *config.Config, buildTime string, gitCommit string, version string) (service.HealthChecker, error)
+	// GetHealthCheckFunc mocks the GetHealthCheck method.
+	GetHealthCheckFunc func(cfg *config.Config, time string, commit string, version string) (service.HealthChecker, error)
+
+	// GetResponderFunc mocks the GetResponder method.
+	GetResponderFunc func() service.Responder
 
 	// calls tracks calls to the methods.
 	calls struct {
-		// DoGetCantabularClient holds details about calls to the DoGetCantabularClient method.
-		DoGetCantabularClient []struct {
-			// Ctx is the ctx argument value.
-			Ctx context.Context
+		// GetCantabularClient holds details about calls to the GetCantabularClient method.
+		GetCantabularClient []struct {
 			// Cfg is the cfg argument value.
 			Cfg config.CantabularConfig
 		}
-		// DoGetHTTPServer holds details about calls to the DoGetHTTPServer method.
-		DoGetHTTPServer []struct {
+		// GetHTTPServer holds details about calls to the GetHTTPServer method.
+		GetHTTPServer []struct {
 			// BindAddr is the bindAddr argument value.
 			BindAddr string
 			// Router is the router argument value.
 			Router http.Handler
 		}
-		// DoGetHealthCheck holds details about calls to the DoGetHealthCheck method.
-		DoGetHealthCheck []struct {
+		// GetHealthCheck holds details about calls to the GetHealthCheck method.
+		GetHealthCheck []struct {
 			// Cfg is the cfg argument value.
 			Cfg *config.Config
-			// BuildTime is the buildTime argument value.
-			BuildTime string
-			// GitCommit is the gitCommit argument value.
-			GitCommit string
+			// Time is the time argument value.
+			Time string
+			// Commit is the commit argument value.
+			Commit string
 			// Version is the version argument value.
 			Version string
 		}
+		// GetResponder holds details about calls to the GetResponder method.
+		GetResponder []struct {
+		}
 	}
-	lockDoGetCantabularClient sync.RWMutex
-	lockDoGetHTTPServer       sync.RWMutex
-	lockDoGetHealthCheck      sync.RWMutex
+	lockGetCantabularClient sync.RWMutex
+	lockGetHTTPServer       sync.RWMutex
+	lockGetHealthCheck      sync.RWMutex
+	lockGetResponder        sync.RWMutex
 }
 
-// DoGetCantabularClient calls DoGetCantabularClientFunc.
-func (mock *InitialiserMock) DoGetCantabularClient(ctx context.Context, cfg config.CantabularConfig) service.CantabularClient {
-	if mock.DoGetCantabularClientFunc == nil {
-		panic("InitialiserMock.DoGetCantabularClientFunc: method is nil but Initialiser.DoGetCantabularClient was just called")
+// GetCantabularClient calls GetCantabularClientFunc.
+func (mock *InitialiserMock) GetCantabularClient(cfg config.CantabularConfig) service.CantabularClient {
+	if mock.GetCantabularClientFunc == nil {
+		panic("InitialiserMock.GetCantabularClientFunc: method is nil but Initialiser.GetCantabularClient was just called")
 	}
 	callInfo := struct {
-		Ctx context.Context
 		Cfg config.CantabularConfig
 	}{
-		Ctx: ctx,
 		Cfg: cfg,
 	}
-	mock.lockDoGetCantabularClient.Lock()
-	mock.calls.DoGetCantabularClient = append(mock.calls.DoGetCantabularClient, callInfo)
-	mock.lockDoGetCantabularClient.Unlock()
-	return mock.DoGetCantabularClientFunc(ctx, cfg)
+	mock.lockGetCantabularClient.Lock()
+	mock.calls.GetCantabularClient = append(mock.calls.GetCantabularClient, callInfo)
+	mock.lockGetCantabularClient.Unlock()
+	return mock.GetCantabularClientFunc(cfg)
 }
 
-// DoGetCantabularClientCalls gets all the calls that were made to DoGetCantabularClient.
+// GetCantabularClientCalls gets all the calls that were made to GetCantabularClient.
 // Check the length with:
-//     len(mockedInitialiser.DoGetCantabularClientCalls())
-func (mock *InitialiserMock) DoGetCantabularClientCalls() []struct {
-	Ctx context.Context
+//     len(mockedInitialiser.GetCantabularClientCalls())
+func (mock *InitialiserMock) GetCantabularClientCalls() []struct {
 	Cfg config.CantabularConfig
 } {
 	var calls []struct {
-		Ctx context.Context
 		Cfg config.CantabularConfig
 	}
-	mock.lockDoGetCantabularClient.RLock()
-	calls = mock.calls.DoGetCantabularClient
-	mock.lockDoGetCantabularClient.RUnlock()
+	mock.lockGetCantabularClient.RLock()
+	calls = mock.calls.GetCantabularClient
+	mock.lockGetCantabularClient.RUnlock()
 	return calls
 }
 
-// DoGetHTTPServer calls DoGetHTTPServerFunc.
-func (mock *InitialiserMock) DoGetHTTPServer(bindAddr string, router http.Handler) service.HTTPServer {
-	if mock.DoGetHTTPServerFunc == nil {
-		panic("InitialiserMock.DoGetHTTPServerFunc: method is nil but Initialiser.DoGetHTTPServer was just called")
+// GetHTTPServer calls GetHTTPServerFunc.
+func (mock *InitialiserMock) GetHTTPServer(bindAddr string, router http.Handler) service.HTTPServer {
+	if mock.GetHTTPServerFunc == nil {
+		panic("InitialiserMock.GetHTTPServerFunc: method is nil but Initialiser.GetHTTPServer was just called")
 	}
 	callInfo := struct {
 		BindAddr string
@@ -126,16 +129,16 @@ func (mock *InitialiserMock) DoGetHTTPServer(bindAddr string, router http.Handle
 		BindAddr: bindAddr,
 		Router:   router,
 	}
-	mock.lockDoGetHTTPServer.Lock()
-	mock.calls.DoGetHTTPServer = append(mock.calls.DoGetHTTPServer, callInfo)
-	mock.lockDoGetHTTPServer.Unlock()
-	return mock.DoGetHTTPServerFunc(bindAddr, router)
+	mock.lockGetHTTPServer.Lock()
+	mock.calls.GetHTTPServer = append(mock.calls.GetHTTPServer, callInfo)
+	mock.lockGetHTTPServer.Unlock()
+	return mock.GetHTTPServerFunc(bindAddr, router)
 }
 
-// DoGetHTTPServerCalls gets all the calls that were made to DoGetHTTPServer.
+// GetHTTPServerCalls gets all the calls that were made to GetHTTPServer.
 // Check the length with:
-//     len(mockedInitialiser.DoGetHTTPServerCalls())
-func (mock *InitialiserMock) DoGetHTTPServerCalls() []struct {
+//     len(mockedInitialiser.GetHTTPServerCalls())
+func (mock *InitialiserMock) GetHTTPServerCalls() []struct {
 	BindAddr string
 	Router   http.Handler
 } {
@@ -143,51 +146,77 @@ func (mock *InitialiserMock) DoGetHTTPServerCalls() []struct {
 		BindAddr string
 		Router   http.Handler
 	}
-	mock.lockDoGetHTTPServer.RLock()
-	calls = mock.calls.DoGetHTTPServer
-	mock.lockDoGetHTTPServer.RUnlock()
+	mock.lockGetHTTPServer.RLock()
+	calls = mock.calls.GetHTTPServer
+	mock.lockGetHTTPServer.RUnlock()
 	return calls
 }
 
-// DoGetHealthCheck calls DoGetHealthCheckFunc.
-func (mock *InitialiserMock) DoGetHealthCheck(cfg *config.Config, buildTime string, gitCommit string, version string) (service.HealthChecker, error) {
-	if mock.DoGetHealthCheckFunc == nil {
-		panic("InitialiserMock.DoGetHealthCheckFunc: method is nil but Initialiser.DoGetHealthCheck was just called")
+// GetHealthCheck calls GetHealthCheckFunc.
+func (mock *InitialiserMock) GetHealthCheck(cfg *config.Config, time string, commit string, version string) (service.HealthChecker, error) {
+	if mock.GetHealthCheckFunc == nil {
+		panic("InitialiserMock.GetHealthCheckFunc: method is nil but Initialiser.GetHealthCheck was just called")
 	}
 	callInfo := struct {
-		Cfg       *config.Config
-		BuildTime string
-		GitCommit string
-		Version   string
+		Cfg     *config.Config
+		Time    string
+		Commit  string
+		Version string
 	}{
-		Cfg:       cfg,
-		BuildTime: buildTime,
-		GitCommit: gitCommit,
-		Version:   version,
+		Cfg:     cfg,
+		Time:    time,
+		Commit:  commit,
+		Version: version,
 	}
-	mock.lockDoGetHealthCheck.Lock()
-	mock.calls.DoGetHealthCheck = append(mock.calls.DoGetHealthCheck, callInfo)
-	mock.lockDoGetHealthCheck.Unlock()
-	return mock.DoGetHealthCheckFunc(cfg, buildTime, gitCommit, version)
+	mock.lockGetHealthCheck.Lock()
+	mock.calls.GetHealthCheck = append(mock.calls.GetHealthCheck, callInfo)
+	mock.lockGetHealthCheck.Unlock()
+	return mock.GetHealthCheckFunc(cfg, time, commit, version)
 }
 
-// DoGetHealthCheckCalls gets all the calls that were made to DoGetHealthCheck.
+// GetHealthCheckCalls gets all the calls that were made to GetHealthCheck.
 // Check the length with:
-//     len(mockedInitialiser.DoGetHealthCheckCalls())
-func (mock *InitialiserMock) DoGetHealthCheckCalls() []struct {
-	Cfg       *config.Config
-	BuildTime string
-	GitCommit string
-	Version   string
+//     len(mockedInitialiser.GetHealthCheckCalls())
+func (mock *InitialiserMock) GetHealthCheckCalls() []struct {
+	Cfg     *config.Config
+	Time    string
+	Commit  string
+	Version string
 } {
 	var calls []struct {
-		Cfg       *config.Config
-		BuildTime string
-		GitCommit string
-		Version   string
+		Cfg     *config.Config
+		Time    string
+		Commit  string
+		Version string
 	}
-	mock.lockDoGetHealthCheck.RLock()
-	calls = mock.calls.DoGetHealthCheck
-	mock.lockDoGetHealthCheck.RUnlock()
+	mock.lockGetHealthCheck.RLock()
+	calls = mock.calls.GetHealthCheck
+	mock.lockGetHealthCheck.RUnlock()
+	return calls
+}
+
+// GetResponder calls GetResponderFunc.
+func (mock *InitialiserMock) GetResponder() service.Responder {
+	if mock.GetResponderFunc == nil {
+		panic("InitialiserMock.GetResponderFunc: method is nil but Initialiser.GetResponder was just called")
+	}
+	callInfo := struct {
+	}{}
+	mock.lockGetResponder.Lock()
+	mock.calls.GetResponder = append(mock.calls.GetResponder, callInfo)
+	mock.lockGetResponder.Unlock()
+	return mock.GetResponderFunc()
+}
+
+// GetResponderCalls gets all the calls that were made to GetResponder.
+// Check the length with:
+//     len(mockedInitialiser.GetResponderCalls())
+func (mock *InitialiserMock) GetResponderCalls() []struct {
+} {
+	var calls []struct {
+	}
+	mock.lockGetResponder.RLock()
+	calls = mock.calls.GetResponder
+	mock.lockGetResponder.RUnlock()
 	return calls
 }

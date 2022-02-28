@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"net/http"
 
@@ -10,20 +9,6 @@ import (
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	dphttp "github.com/ONSdigital/dp-net/http"
 )
-
-// ExternalServiceList holds the initialiser and initialisation state of external services.
-type ExternalServiceList struct {
-	HealthCheck bool
-	Init        Initialiser
-}
-
-// NewServiceList creates a new service list with the provided initialiser
-func NewServiceList(initialiser Initialiser) *ExternalServiceList {
-	return &ExternalServiceList{
-		HealthCheck: false,
-		Init:        initialiser,
-	}
-}
 
 // Init implements the Initialiser interface to initialise dependencies
 type Init struct {
@@ -37,36 +22,14 @@ func NewInit() *Init {
 }
 
 // GetHTTPServer creates an http server
-func (e *ExternalServiceList) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
-	s := e.Init.DoGetHTTPServer(bindAddr, router)
-	return s
-}
-
-// GetHealthCheck creates a healthcheck with versionInfo and sets teh HealthCheck flag to true
-func (e *ExternalServiceList) GetHealthCheck(cfg *config.Config, buildTime, gitCommit, version string) (HealthChecker, error) {
-	hc, err := e.Init.DoGetHealthCheck(cfg, buildTime, gitCommit, version)
-	if err != nil {
-		return nil, err
-	}
-	e.HealthCheck = true
-	return hc, nil
-}
-
-// GetCantabularClient creates a cantabular client and sets the CantabularClient flag to true
-func (e *ExternalServiceList) GetCantabularClient(ctx context.Context, cfg config.CantabularConfig) CantabularClient {
-	cantabular := e.Init.DoGetCantabularClient(ctx, cfg)
-	return cantabular
-}
-
-// DoGetHTTPServer creates an HTTP Server with the provided bind address and router
-func (e *Init) DoGetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
+func (i *Init) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
 	s := dphttp.NewServer(bindAddr, router)
 	s.HandleOSSignals = false
 	return s
 }
 
-// DoGetHealthCheck creates a healthcheck with versionInfo
-func (e *Init) DoGetHealthCheck(cfg *config.Config, buildTime, gitCommit, version string) (HealthChecker, error) {
+// GetHealthCheck creates a healthcheck with versionInfo and sets teh HealthCheck flag to true
+func (i *Init) GetHealthCheck(cfg *config.Config, buildTime, gitCommit, version string) (HealthChecker, error) {
 	versionInfo, err := healthcheck.NewVersionInfo(buildTime, gitCommit, version)
 	if err != nil {
 		return nil, err
@@ -75,9 +38,9 @@ func (e *Init) DoGetHealthCheck(cfg *config.Config, buildTime, gitCommit, versio
 	return &hc, nil
 }
 
-// DoGetCantabularClient configures a new cantabular client with injected http user agent
-func (e *Init) DoGetCantabularClient(_ context.Context, cfg config.CantabularConfig) CantabularClient {
-	return e.CantabularClientFactory(
+// GetCantabularClient creates a cantabular client and sets the CantabularClient flag to true
+func (i *Init) GetCantabularClient(cfg config.CantabularConfig) CantabularClient {
+	return i.CantabularClientFactory(
 		cantabular.Config{
 			Host:           cfg.CantabularURL,
 			ExtApiHost:     cfg.CantabularExtURL,
@@ -89,4 +52,8 @@ func (e *Init) DoGetCantabularClient(_ context.Context, cfg config.CantabularCon
 
 func cantabularNewClient(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.Client {
 	return cantabular.NewClient(cfg, ua, nil)
+}
+
+func (i *Init) GetResponder() Responder {
+	return nil
 }
