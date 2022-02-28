@@ -17,12 +17,12 @@ type PopulationTypesComponent struct {
 	errorChan                    chan error
 	Config                       *config.Config
 	ServiceRunning               bool
+	HttpServer                   *http.Server
 	apiFeature                   *componenttest.APIFeature
 	fakeCantabularDatasets       []string
 	fakeCantabularIsUnresponsive bool
 	service                      *service.Service
 	InitialiserMock              service.Initialiser
-	HttpServer                   *http.Server
 }
 
 func NewComponent() (*PopulationTypesComponent, error) {
