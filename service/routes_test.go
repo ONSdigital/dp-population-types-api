@@ -28,8 +28,12 @@ func TestRoutes(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, "/population-types", nil)
 			svc.Router.ServeHTTP(rec, req)
 			result := rec.Result()
+
 			So(result.StatusCode, ShouldEqual, 200)
+
 			actualResponse, _ := ioutil.ReadAll(rec.Body)
+			result.Body.Close()
+
 			So(string(actualResponse), ShouldEqualJSON, `{"items":[]}`)
 		})
 	})
