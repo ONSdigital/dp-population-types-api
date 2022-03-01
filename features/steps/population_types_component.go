@@ -73,7 +73,7 @@ func (c *PopulationTypesComponent) InitialiseService() (http.Handler, error) {
 
 	err = c.service.Init(context.Background(), c.InitialiserMock, c.Config, "", "1", "")
 	if err != nil {
-		return nil, errors.Wrap(err, "Error initialising service")
+		return nil, errors.Wrap(err, "error initialising service")
 	}
 
 	c.service.Start(context.Background(), c.errorChan)
