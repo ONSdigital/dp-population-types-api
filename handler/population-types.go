@@ -14,13 +14,11 @@ func NewPopulationTypes(responder responder) *PopulationTypes {
 	}
 }
 
-type blah struct {
-	Items []string `json:"items"`
-}
-
 func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
-	body := blah{
-		Items: make([]string, 0),
+	body := struct {
+		Items []interface{} `json:"items"`
+	}{
+		Items: make([]interface{}, 0),
 	}
 	responder := h.responder
 	ctx := req.Context()
