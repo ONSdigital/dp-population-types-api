@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/pkg/errors"
 	"os"
 	"os/signal"
@@ -49,7 +48,7 @@ func run(ctx context.Context) error {
 	// Read config
 	cfg, err := config.Get()
 	if err != nil {
-		return fmt.Errorf("unable to retrieve configuration, error: %w", err)
+		return errors.Wrap(err, "unable to retrieve configuration, error: %w")
 	}
 
 	ctx, cancel := context.WithCancel(ctx)
@@ -59,7 +58,7 @@ func run(ctx context.Context) error {
 	svc := service.New()
 	init := service.NewInit()
 	if err := svc.Init(ctx, init, cfg, BuildTime, GitCommit, Version); err != nil {
-		return fmt.Errorf("failed to initialise service: %w", err)
+		return errors.Wrap(err, "failed to initialise service")
 	}
 	svc.Start(ctx, svcErrors)
 
@@ -72,7 +71,7 @@ func run(ctx context.Context) error {
 	}
 
 	if err := svc.Close(ctx); err != nil {
-		return fmt.Errorf("failed to close service: %w", err)
+		return errors.Wrap(err, "failed to close service")
 	}
 
 	return nil

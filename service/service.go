@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"github.com/pkg/errors"
 
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/log.go/v2/log"
@@ -37,7 +37,7 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 
 	svc.HealthCheck, err = init.GetHealthCheck(cfg, buildTime, gitCommit, version)
 	if err != nil {
-		return fmt.Errorf("failed to get healthcheck: %w", err)
+		return errors.Wrap(err, "failed to get healthcheck")
 	}
 
 	svc.responder = init.GetResponder()
@@ -59,7 +59,7 @@ func (svc *Service) Start(ctx context.Context, svcErrors chan error) {
 
 	go func() {
 		if err := svc.Server.ListenAndServe(); err != nil {
-			svcErrors <- fmt.Errorf("failed to start main http server: %w", err)
+			svcErrors <- errors.Wrap(err, "failed to start main http server")
 		}
 	}()
 }
@@ -94,7 +94,7 @@ func (svc *Service) Close(ctx context.Context) error {
 
 	// timeout expired
 	if ctx.Err() == context.DeadlineExceeded {
-		return fmt.Errorf("shutdown timed out: %w", ctx.Err())
+		return errors.Wrap(ctx.Err(), "shutdown timed out")
 	}
 
 	// other error
@@ -110,7 +110,7 @@ func (svc *Service) registerCheckers() (err error) {
 
 	if svc.cantabularClient != nil {
 		if err := svc.HealthCheck.AddCheck("Cantabular client", svc.cantabularClient.Checker); err != nil {
-			return fmt.Errorf("error adding check for cantabular client")
+			return errors.Wrap(err, "error adding check for cantabular client")
 		}
 	}
 
