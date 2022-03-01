@@ -5,6 +5,7 @@ import (
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"github.com/ONSdigital/dp-population-types-api/service/mock"
+	"github.com/pkg/errors"
 	"net/http"
 
 	componenttest "github.com/ONSdigital/dp-component-test"
@@ -72,7 +73,7 @@ func (c *PopulationTypesComponent) InitialiseService() (http.Handler, error) {
 
 	err = c.service.Init(context.Background(), c.InitialiserMock, c.Config, "", "1", "")
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "Error initialising service")
 	}
 
 	c.service.Start(context.Background(), c.errorChan)

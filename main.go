@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/pkg/errors"
 	"os"
 	"os/signal"
 	"syscall"
@@ -65,11 +66,7 @@ func run(ctx context.Context) error {
 	// blocks until an os interrupt or a fatal error occurs
 	select {
 	case err := <-svcErrors:
-		err = fmt.Errorf("service error received: %w", err)
-		if errClose := svc.Close(ctx); errClose != nil {
-			log.Error(ctx, "service close error during error handling", errClose)
-		}
-		return err
+		return errors.Wrap(err, "service error received")
 	case sig := <-signals:
 		log.Info(ctx, "os signal received", log.Data{"signal": sig})
 	}
