@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
@@ -15,7 +14,7 @@ import (
 type Service struct {
 	Config           *config.Config
 	Server           HTTPServer
-	router           *chi.Mux
+	Router           *chi.Mux
 	responder        Responder
 	cantabularClient CantabularClient
 	HealthCheck      HealthChecker
@@ -35,7 +34,6 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 	log.Info(ctx, "initialising service with config", log.Data{"config": cfg})
 
 	svc.Config = cfg
-
 	svc.HealthCheck, err = init.GetHealthCheck(cfg, buildTime, gitCommit, version)
 	if err != nil {
 		return errors.Wrap(err, "failed to get healthcheck")
@@ -45,10 +43,10 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 	svc.cantabularClient = init.GetCantabularClient(cfg.CantabularConfig)
 
 	svc.buildRoutes(ctx)
-	svc.Server = init.GetHTTPServer(cfg.BindAddr, svc.router)
+	svc.Server = init.GetHTTPServer(cfg.BindAddr, svc.Router)
 
-	if err := svc.registerCheckers(); err != nil {
-		return fmt.Errorf("unable to register checkers: %w", err)
+	if err = svc.registerCheckers(); err != nil {
+		return errors.Wrap(err, "unable to register checkers")
 	}
 
 	return nil

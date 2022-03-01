@@ -8,6 +8,7 @@ import (
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	dphttp "github.com/ONSdigital/dp-net/http"
+	"github.com/ONSdigital/dp-net/v2/responder"
 	"github.com/ONSdigital/dp-population-types-api/config"
 )
 
@@ -56,5 +57,5 @@ func cantabularNewClient(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.
 }
 
 func (i *Init) GetResponder() Responder {
-	return nil
+	return responder.New()
 }
