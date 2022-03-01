@@ -3,15 +3,17 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/ONSdigital/log.go/v2/log"
 	"io"
 	"os"
 	"testing"
 
-	componenttest "github.com/ONSdigital/dp-component-test"
-	"github.com/ONSdigital/dp-population-types-api/features/steps"
+	"github.com/ONSdigital/log.go/v2/log"
+
 	"github.com/cucumber/godog"
 	"github.com/cucumber/godog/colors"
+
+	componenttest "github.com/ONSdigital/dp-component-test"
+	"github.com/ONSdigital/dp-population-types-api/features/steps"
 )
 
 var componentFlag = flag.Bool("component", false, "perform component tests")

@@ -3,16 +3,16 @@ package service_test
 import (
 	"context"
 	"errors"
-	"github.com/ONSdigital/dp-population-types-api/config"
-	"github.com/ONSdigital/dp-population-types-api/service"
-	"github.com/ONSdigital/dp-population-types-api/service/mock"
 	"net/http"
 	"testing"
 	"time"
 
-	"github.com/ONSdigital/dp-healthcheck/healthcheck"
-
 	. "github.com/smartystreets/goconvey/convey"
+
+	"github.com/ONSdigital/dp-healthcheck/healthcheck"
+	"github.com/ONSdigital/dp-population-types-api/config"
+	"github.com/ONSdigital/dp-population-types-api/service"
+	"github.com/ONSdigital/dp-population-types-api/service/mock"
 )
 
 var (

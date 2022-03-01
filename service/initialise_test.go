@@ -1,14 +1,16 @@
 package service_test
 
 import (
-	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
-	dphttp "github.com/ONSdigital/dp-net/http"
-	"github.com/ONSdigital/dp-population-types-api/config"
 	"testing"
 	"time"
 
-	"github.com/ONSdigital/dp-population-types-api/service"
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	dphttp "github.com/ONSdigital/dp-net/http"
+	"github.com/ONSdigital/dp-population-types-api/config"
+
 	. "github.com/smartystreets/goconvey/convey"
+
+	"github.com/ONSdigital/dp-population-types-api/service"
 )
 
 func TestInitialiser(t *testing.T) {

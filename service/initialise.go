@@ -1,13 +1,14 @@
 package service
 
 import (
-	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"net/http"
 
-	"github.com/ONSdigital/dp-population-types-api/config"
+	"github.com/pkg/errors"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	dphttp "github.com/ONSdigital/dp-net/http"
+	"github.com/ONSdigital/dp-population-types-api/config"
 )
 
 // Init implements the Initialiser interface to initialise dependencies
@@ -32,7 +33,7 @@ func (i *Init) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
 func (i *Init) GetHealthCheck(cfg *config.Config, buildTime, gitCommit, version string) (HealthChecker, error) {
 	versionInfo, err := healthcheck.NewVersionInfo(buildTime, gitCommit, version)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "Healthcheck version info failed")
 	}
 	hc := healthcheck.New(versionInfo, cfg.HealthCheckCriticalTimeout, cfg.HealthCheckInterval)
 	return &hc, nil

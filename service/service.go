@@ -3,11 +3,12 @@ package service
 import (
 	"context"
 	"fmt"
+
+	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
 
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/log.go/v2/log"
-	"github.com/go-chi/chi/v5"
 )
 
 // Service contains all the configs, server and clients to run the API

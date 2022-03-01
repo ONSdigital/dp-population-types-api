@@ -2,14 +2,15 @@ package steps
 
 import (
 	"context"
-	"github.com/ONSdigital/dp-population-types-api/config"
-	"github.com/ONSdigital/dp-population-types-api/service"
-	"github.com/ONSdigital/dp-population-types-api/service/mock"
-	"github.com/pkg/errors"
 	"net/http"
+
+	"github.com/pkg/errors"
 
 	componenttest "github.com/ONSdigital/dp-component-test"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
+	"github.com/ONSdigital/dp-population-types-api/config"
+	"github.com/ONSdigital/dp-population-types-api/service"
+	"github.com/ONSdigital/dp-population-types-api/service/mock"
 )
 
 type PopulationTypesComponent struct {

@@ -2,13 +2,14 @@
 package config_test
 
 import (
-	"github.com/ONSdigital/dp-population-types-api/config"
 	"os"
 	"reflect"
 	"testing"
 	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
+
+	"github.com/ONSdigital/dp-population-types-api/config"
 )
 
 func TestConfig(t *testing.T) {

@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/pkg/errors"
 
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"

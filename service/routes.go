@@ -4,8 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/ONSdigital/log.go/v2/log"
 	"github.com/go-chi/chi/v5"
+
+	"github.com/ONSdigital/log.go/v2/log"
 )
 
 func (svc *Service) buildRoutes(ctx context.Context) {
