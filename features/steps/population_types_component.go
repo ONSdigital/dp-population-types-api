@@ -8,6 +8,7 @@ import (
 
 	componenttest "github.com/ONSdigital/dp-component-test"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
+	"github.com/ONSdigital/dp-net/v2/responder"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"github.com/ONSdigital/dp-population-types-api/service/mock"
@@ -84,7 +85,7 @@ func (c *PopulationTypesComponent) InitialiseService() (http.Handler, error) {
 }
 
 func (c *PopulationTypesComponent) GetResponder() service.Responder {
-	return nil
+	return responder.New()
 }
 
 func (c *PopulationTypesComponent) GetHttpServer(addr string, router http.Handler) service.HTTPServer {
