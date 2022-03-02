@@ -29,7 +29,7 @@ func TestRoutes(t *testing.T) {
 			svc.Router.ServeHTTP(rec, req)
 			result := rec.Result()
 
-			So(result.StatusCode, ShouldEqual, 200)
+			So(result.StatusCode, ShouldEqual, http.StatusOK)
 
 			actualResponse, _ := ioutil.ReadAll(rec.Body)
 			result.Body.Close()
