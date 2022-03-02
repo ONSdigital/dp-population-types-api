@@ -2,5 +2,6 @@
 
 pushd dp-population-types-api
   go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
+  ls -la
   make lint
 popd
