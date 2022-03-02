@@ -23,5 +23,5 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	responder := h.responder
 	ctx := req.Context()
 
-	responder.JSON(ctx, w, 200, body)
+	responder.JSON(ctx, w, http.StatusOK, body)
 }
