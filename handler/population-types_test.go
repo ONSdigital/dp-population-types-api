@@ -2,7 +2,6 @@ package handler_test
 
 import (
 	"context"
-	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -12,6 +11,7 @@ import (
 	"github.com/pkg/errors"
 	. "github.com/smartystreets/goconvey/convey"
 
+	"github.com/ONSdigital/dp-net/v2/responder"
 	"github.com/ONSdigital/dp-population-types-api/handler"
 )
 
@@ -19,11 +19,11 @@ func TestEndpointRoot(t *testing.T) {
 
 	Convey("Given a population-types handler", t, func() {
 
-		responder := fakeResponder{}
+		responder := responder.New()
 		cantabularClient := fakeCantabularClient{
 			listDatasetsReturnData: []string{"Thing one", "Thing two"},
 		}
-		handler := handler.NewPopulationTypes(&responder, &cantabularClient)
+		handler := handler.NewPopulationTypes(responder, &cantabularClient)
 
 		Convey("When I get population types", func() {
 
@@ -65,29 +65,6 @@ func TestEndpointRoot(t *testing.T) {
 		})
 	})
 
-}
-
-type fakeResponder struct {
-}
-
-func (r *fakeResponder) Error(_ context.Context, w http.ResponseWriter, status int, err error) {
-	write(w, status, []byte(err.Error()))
-}
-
-func (r *fakeResponder) JSON(_ context.Context, w http.ResponseWriter, status int, resp interface{}) {
-	bytes, err := json.Marshal(resp)
-	if err != nil {
-		panic(err)
-	}
-	write(w, status, bytes)
-}
-
-func write(w http.ResponseWriter, status int, bytes []byte) {
-	w.WriteHeader(status)
-	_, writeErr := w.Write(bytes)
-	if writeErr != nil {
-		panic(writeErr)
-	}
 }
 
 type fakeCantabularClient struct {
