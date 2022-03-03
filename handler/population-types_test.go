@@ -37,6 +37,7 @@ func TestEndpointRoot(t *testing.T) {
 			SoMsg("Then the response should be OK", result.StatusCode, ShouldEqual, http.StatusOK)
 
 			actual, err := ioutil.ReadAll(result.Body)
+			result.Body.Close()
 			So(err, ShouldBeNil)
 			SoMsg("And the response should match expected", string(actual), ShouldEqualJSON, expectedJSON)
 		})
@@ -54,6 +55,7 @@ func TestEndpointRoot(t *testing.T) {
 				SoMsg("Then the response should be InternalServerError", result.StatusCode, ShouldEqual, http.StatusInternalServerError)
 
 				actual, err := ioutil.ReadAll(result.Body)
+				result.Body.Close()
 				So(err, ShouldBeNil)
 				SoMsg("And the response should reflect the top-level error message",
 					strings.Contains(string(actual), "failed to fetch population types"), ShouldBeTrue)
@@ -68,18 +70,24 @@ func TestEndpointRoot(t *testing.T) {
 type fakeResponder struct {
 }
 
-func (r *fakeResponder) Error(_ context.Context, w http.ResponseWriter, i int, err error) {
-	w.WriteHeader(i)
-	w.Write([]byte(err.Error()))
+func (r *fakeResponder) Error(_ context.Context, w http.ResponseWriter, status int, err error) {
+	write(w, status, []byte(err.Error()))
 }
 
 func (r *fakeResponder) JSON(_ context.Context, w http.ResponseWriter, status int, resp interface{}) {
-	w.WriteHeader(status)
 	bytes, err := json.Marshal(resp)
 	if err != nil {
 		panic(err)
 	}
-	w.Write(bytes)
+	write(w, status, bytes)
+}
+
+func write(w http.ResponseWriter, status int, bytes []byte) {
+	w.WriteHeader(status)
+	_, writeErr := w.Write(bytes)
+	if writeErr != nil {
+		panic(writeErr)
+	}
 }
 
 type fakeCantabularClient struct {
