@@ -111,7 +111,6 @@ func (svc *Service) registerCheckers(ctx context.Context) (err error) {
 		if svc.Config.CantabularHealthcheckEnabled {
 			if err := svc.HealthCheck.AddCheck("Cantabular client", svc.cantabularClient.Checker); err != nil {
 				return errors.Wrap(err, "error adding check for cantabular client")
-				//return nil
 			}
 		} else {
 			log.Info(ctx, "cantabular health checking is disabled")

@@ -90,7 +90,8 @@ func TestInit(t *testing.T) {
 					So(cantabularCall.Checker, ShouldNotBeNil)
 
 					checkState := healthcheck.CheckState{}
-					cantabularCall.Checker(ctx, &checkState)
+					err := cantabularCall.Checker(ctx, &checkState)
+					So(err, ShouldBeNil)
 
 					checkerCalls := cantabularClientMock.CheckerCalls()
 					So(checkerCalls[0].State, ShouldPointTo, &checkState)
