@@ -103,5 +103,7 @@ func (c *PopulationTypesComponent) GetHealthcheck(cfg *config.Config, buildTime 
 }
 
 func (c *PopulationTypesComponent) GetCantabularClient(cfg config.CantabularConfig) service.CantabularClient {
-	return nil
+	return &mock.CantabularClientMock{
+		ListDatasetsFunc: func(ctx context.Context) ([]string, error) { return []string{}, nil },
+	}
 }
