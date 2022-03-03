@@ -45,7 +45,7 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 	svc.buildRoutes(ctx)
 	svc.Server = init.GetHTTPServer(cfg.BindAddr, svc.Router)
 
-	if err = svc.registerCheckers(); err != nil {
+	if err = svc.registerCheckers(ctx); err != nil {
 		return errors.Wrap(err, "unable to register checkers")
 	}
 
@@ -105,11 +105,16 @@ func (svc *Service) Close(ctx context.Context) error {
 	return nil
 }
 
-func (svc *Service) registerCheckers() (err error) {
+func (svc *Service) registerCheckers(ctx context.Context) (err error) {
 
 	if svc.cantabularClient != nil {
-		if err := svc.HealthCheck.AddCheck("Cantabular client", svc.cantabularClient.Checker); err != nil {
-			return errors.Wrap(err, "error adding check for cantabular client")
+		if svc.Config.CantabularHealthcheckEnabled {
+			if err := svc.HealthCheck.AddCheck("Cantabular client", svc.cantabularClient.Checker); err != nil {
+				return errors.Wrap(err, "error adding check for cantabular client")
+				//return nil
+			}
+		} else {
+			log.Info(ctx, "cantabular health checking is disabled")
 		}
 	}
 

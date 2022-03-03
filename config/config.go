@@ -16,9 +16,10 @@ type Config struct {
 }
 
 type CantabularConfig struct {
-	CantabularURL         string        `envconfig:"CANTABULAR_URL"`
-	CantabularExtURL      string        `envconfig:"CANTABULAR_EXT_API_URL"`
-	DefaultRequestTimeout time.Duration `envconfig:"DEFAULT_REQUEST_TIMEOUT"`
+	CantabularURL                string        `envconfig:"CANTABULAR_URL"`
+	CantabularExtURL             string        `envconfig:"CANTABULAR_EXT_API_URL"`
+	DefaultRequestTimeout        time.Duration `envconfig:"DEFAULT_REQUEST_TIMEOUT"`
+	CantabularHealthcheckEnabled bool          `envconfig:"CANTABULAR_HEALTHCHECK_ENABLED"`
 }
 
 var cfg *Config
