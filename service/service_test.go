@@ -80,10 +80,7 @@ func TestInit(t *testing.T) {
 					return hcMock, nil
 				}
 				err := svc.Init(ctx, &initialiserMock, &cfgWithCantabularHealthcheckEnabled, testBuildTime, testGitCommit, testVersion)
-
-				Convey("Then service Init succeeds", func() {
-					So(err, ShouldBeNil)
-				})
+				So(err, ShouldBeNil)
 
 				Convey("Then the cantabular healthcheck should be added", func() {
 					cantabularCall := findCantabularClientCheck(hcMock)
