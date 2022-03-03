@@ -12,6 +12,7 @@ import (
 	"github.com/ONSdigital/dp-net/v2/responder"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
+	"github.com/ONSdigital/dp-population-types-api/service/mock"
 )
 
 func TestRoutes(t *testing.T) {
@@ -19,6 +20,7 @@ func TestRoutes(t *testing.T) {
 		svc := &service.Service{}
 		initialiser := buildInitialiserMockWithNilDependencies()
 		initialiser.GetResponderFunc = func() service.Responder { return responder.New() }
+		initialiser.GetCantabularClientFunc = testCantabularClient
 		config := config.Config{}
 		err := svc.Init(context.Background(), &initialiser, &config, "", "", "")
 		So(err, ShouldBeNil)
@@ -37,4 +39,12 @@ func TestRoutes(t *testing.T) {
 			So(string(actualResponse), ShouldEqualJSON, `{"items":[]}`)
 		})
 	})
+}
+
+func testCantabularClient(config.CantabularConfig) service.CantabularClient {
+	return &mock.CantabularClientMock{
+		ListDatasetsFunc: func(ctx context.Context) ([]string, error) {
+			return []string{}, nil
+		},
+	}
 }

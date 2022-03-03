@@ -2,26 +2,26 @@ package handler
 
 import (
 	"net/http"
+
+	"github.com/ONSdigital/dp-population-types-api/contract"
 )
 
 type PopulationTypes struct {
-	responder responder
+	responder        responder
+	cantabularClient cantabularClient
 }
 
-func NewPopulationTypes(responder responder) *PopulationTypes {
+func NewPopulationTypes(responder responder, cantabularClient cantabularClient) *PopulationTypes {
 	return &PopulationTypes{
-		responder: responder,
+		responder:        responder,
+		cantabularClient: cantabularClient,
 	}
 }
 
 func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
-	body := struct {
-		Items []interface{} `json:"items"`
-	}{
-		Items: make([]interface{}, 0),
-	}
-	responder := h.responder
 	ctx := req.Context()
 
-	responder.JSON(ctx, w, http.StatusOK, body)
+	data, _ := h.cantabularClient.ListDatasets(ctx)
+	body := *contract.NewPopulationTypes(data)
+	h.responder.JSON(ctx, w, http.StatusOK, body)
 }
