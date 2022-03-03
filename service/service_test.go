@@ -55,16 +55,12 @@ func TestInit(t *testing.T) {
 			initialiserMock.GetHealthCheckFunc = func(cfg *config.Config, buildTime, gitCommit, version string) (service.HealthChecker, error) {
 				return nil, errHealthcheck
 			}
-			// setup (run before each `Convey` at this scope / indentation):
+
 			svc := service.New()
 			err := svc.Init(ctx, &initialiserMock, cfg, testBuildTime, testGitCommit, testVersion)
 
 			Convey("Then service Init fails with an error", func() {
 				So(errors.Is(err, errHealthcheck), ShouldBeTrue)
-			})
-
-			Reset(func() {
-				// This reset is run after each `Convey` at the same scope (indentation)
 			})
 		})
 
@@ -106,14 +102,16 @@ func TestInit(t *testing.T) {
 					return nil
 				},
 			}
+
 			initialiserMock.GetHealthCheckFunc = func(cfg *config.Config, buildTime, gitCommit, version string) (service.HealthChecker, error) {
 				return hcMock, nil
 			}
 
 			Convey("When the service is initialised", func() {
-				// setup (run before each `Convey` at this scope / indentation):
+
 				err := svc.Init(ctx, &initialiserMock, &cfgWithCantabularHealthcheckEnabled, testBuildTime, testGitCommit, testVersion)
 				Convey("Then the cantabular healthcheck error should be included in the returned errors", func() {
+
 					So(strings.Contains(err.Error(), "cantabular client"), ShouldBeTrue)
 				})
 			})
@@ -129,23 +127,19 @@ func TestInit(t *testing.T) {
 				return hcMock, nil
 			}
 
-			// setup (run before each `Convey` at this scope / indentation):
 			err := svc.Init(ctx, &initialiserMock, cfg, testBuildTime, testGitCommit, testVersion)
 
 			Convey("Then service Init succeeds", func() {
+
 				So(err, ShouldBeNil)
 			})
 
 			Convey("Then the cantabular healthcheck should not be added (as the flag is not set)", func() {
+
 				cantabularCall := findCantabularClientCheck(hcMock)
 				So(cantabularCall, ShouldBeNil)
 			})
-
-			Reset(func() {
-				// This reset is run after each `Convey` at the same scope (indentation)
-			})
 		})
-
 	})
 }
 
