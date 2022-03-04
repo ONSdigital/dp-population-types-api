@@ -1,6 +1,11 @@
 package steps
 
 import (
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/cucumber/godog"
 )
 
@@ -15,7 +20,9 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 }
 
 func (c *PopulationTypesComponent) aListOfNamedCantabularPopulationTypesIsReturned() error {
-	return godog.ErrPending
+	return c.apiFeature.IShouldReceiveTheFollowingJSONResponse(&godog.DocString{
+		Content: `{"items":[{"name": "dataset 1"}, {"name": "dataset 2"}, {"name": "dataset 3"}]}`,
+	})
 }
 
 func (c *PopulationTypesComponent) iAccessTheRootPopulationTypesEndpoint() error {
@@ -33,5 +40,16 @@ func (c *PopulationTypesComponent) cantabularIsUnresponsive() error {
 }
 
 func (c *PopulationTypesComponent) theServiceRespondsWithAnInternalServerErrorSaying(expected string) error {
-	return godog.ErrPending
+	resp := c.apiFeature.HttpResponse
+	if resp.StatusCode != http.StatusInternalServerError {
+		return fmt.Errorf("expected: %d. actual: %d", http.StatusInternalServerError, resp.StatusCode)
+	}
+	body, err := ioutil.ReadAll(c.apiFeature.HttpResponse.Body)
+	if err != nil {
+		return err
+	}
+	if !strings.Contains(string(body), fakeCantabularFailedToRespondErrorMessage) {
+		return fmt.Errorf("expected to contain: %s. actual: %s", fakeCantabularFailedToRespondErrorMessage, string(body))
+	}
+	return nil
 }

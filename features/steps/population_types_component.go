@@ -14,6 +14,8 @@ import (
 	"github.com/ONSdigital/dp-population-types-api/service/mock"
 )
 
+const fakeCantabularFailedToRespondErrorMessage = "cantabular failed to respond"
+
 type PopulationTypesComponent struct {
 	componenttest.ErrorFeature
 	svc                          *service.Service
@@ -104,6 +106,11 @@ func (c *PopulationTypesComponent) GetHealthcheck(cfg *config.Config, buildTime 
 
 func (c *PopulationTypesComponent) GetCantabularClient(cfg config.CantabularConfig) service.CantabularClient {
 	return &mock.CantabularClientMock{
-		ListDatasetsFunc: func(ctx context.Context) ([]string, error) { return []string{}, nil },
+		ListDatasetsFunc: func(ctx context.Context) ([]string, error) {
+			if c.fakeCantabularIsUnresponsive {
+				return nil, errors.New(fakeCantabularFailedToRespondErrorMessage)
+			}
+			return c.fakeCantabularDatasets, nil
+		},
 	}
 }
