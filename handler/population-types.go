@@ -28,7 +28,7 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 		wrappedErr := errors.Wrap(err, "failed to fetch population types")
 		h.responder.Error(ctx, w, http.StatusInternalServerError, wrappedErr)
 	} else {
-		body := *contract.NewPopulationTypes(data)
+		body := contract.NewPopulationTypes(data)
 		h.responder.JSON(ctx, w, http.StatusOK, body)
 	}
 }
