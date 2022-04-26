@@ -37,6 +37,33 @@ paths:
           description: "Unauthorised to fetch"
         500:
           $ref: "#/responses/InternalError"
+  /population-types/{population-type}/area-types:
+    get:
+      parameters:
+      - name: population-type
+        type: string
+        in: path
+        required: true
+      tags:
+        - "Public"
+        - "Private"
+      summary: "Get all area-types for a population-type"
+      description: "Retrieves a list of area types for a population type for Census"
+      security:
+        - InternalAPIKey: []
+      responses:
+        200:
+          description: "Json object containing a list of population types for Census"
+          schema:
+            $ref: "#/definitions/AreaTypes"
+        401:
+          description: "Unauthorised to fetch"
+        404:
+          description: "Population-type not found"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          $ref: "#/responses/InternalError"
   /health:
     get:
       tags:
@@ -60,6 +87,43 @@ responses:
     description: "Failed to process the request due to an internal error"
 
 definitions:
+  AreaType:
+    properties:
+      id:
+        type: string
+      label:
+        type: string
+      total_count:
+        type: integer
+  AreaTypes:
+    description: "A list of area-types for a population-type"
+    type: object
+    properties:
+      count:
+        description: "The number of area-types returned"
+        readOnly: true
+        type: integer
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/AreaType'
+      limit:
+        description: "The number of area-types requested"
+        type: integer
+      offset:
+        description: "The first row of area-types to retrieve, starting at 0. Use this parameter as a pagination mechanism along with the limit parameter"
+        type: integer
+      total_count:
+        description: "The total number of area-types"
+        readOnly: true
+        type: integer
+  ErrorResponse:
+    description: "The response body containing an error message"
+    properties:
+      errors:
+        type: array
+        items:
+          type: string
   Health:
     type: object
     properties:
