@@ -3,58 +3,59 @@ package service
 import (
 	"net/http"
 
-	"github.com/ONSdigital/dp-population-types-api/config"
+	"github.com/pkg/errors"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	dphttp "github.com/ONSdigital/dp-net/http"
+	"github.com/ONSdigital/dp-net/v2/responder"
+	"github.com/ONSdigital/dp-population-types-api/config"
 )
 
-// ExternalServiceList holds the initialiser and initialisation state of external services.
-type ExternalServiceList struct {
-	HealthCheck bool
-	Init        Initialiser
+// Init implements the Initialiser interface to initialise dependencies
+type Init struct {
+	CantabularClientFactory func(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.Client
 }
 
-// NewServiceList creates a new service list with the provided initialiser
-func NewServiceList(initialiser Initialiser) *ExternalServiceList {
-	return &ExternalServiceList{
-		HealthCheck: false,
-		Init:        initialiser,
+func NewInit() *Init {
+	return &Init{
+		CantabularClientFactory: cantabularNewClient,
 	}
 }
-
-// Init implements the Initialiser interface to initialise dependencies
-type Init struct{}
 
 // GetHTTPServer creates an http server
-func (e *ExternalServiceList) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
-	s := e.Init.DoGetHTTPServer(bindAddr, router)
-	return s
-}
-
-// GetHealthCheck creates a healthcheck with versionInfo and sets teh HealthCheck flag to true
-func (e *ExternalServiceList) GetHealthCheck(cfg *config.Config, buildTime, gitCommit, version string) (HealthChecker, error) {
-	hc, err := e.Init.DoGetHealthCheck(cfg, buildTime, gitCommit, version)
-	if err != nil {
-		return nil, err
-	}
-	e.HealthCheck = true
-	return hc, nil
-}
-
-// DoGetHTTPServer creates an HTTP Server with the provided bind address and router
-func (e *Init) DoGetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
+func (i *Init) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
 	s := dphttp.NewServer(bindAddr, router)
 	s.HandleOSSignals = false
 	return s
 }
 
-// DoGetHealthCheck creates a healthcheck with versionInfo
-func (e *Init) DoGetHealthCheck(cfg *config.Config, buildTime, gitCommit, version string) (HealthChecker, error) {
+// GetHealthCheck creates a healthcheck with versionInfo and sets teh HealthCheck flag to true
+func (i *Init) GetHealthCheck(cfg *config.Config, buildTime, gitCommit, version string) (HealthChecker, error) {
 	versionInfo, err := healthcheck.NewVersionInfo(buildTime, gitCommit, version)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "Healthcheck version info failed")
 	}
 	hc := healthcheck.New(versionInfo, cfg.HealthCheckCriticalTimeout, cfg.HealthCheckInterval)
 	return &hc, nil
+}
+
+// GetCantabularClient creates a cantabular client and sets the CantabularClient flag to true
+func (i *Init) GetCantabularClient(cfg config.CantabularConfig) CantabularClient {
+	return i.CantabularClientFactory(
+		cantabular.Config{
+			Host:           cfg.CantabularURL,
+			ExtApiHost:     cfg.CantabularExtURL,
+			GraphQLTimeout: cfg.DefaultRequestTimeout,
+		},
+		dphttp.NewClient(),
+	)
+}
+
+func cantabularNewClient(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.Client {
+	return cantabular.NewClient(cfg, ua, nil)
+}
+
+func (i *Init) GetResponder() Responder {
+	return responder.New()
 }
