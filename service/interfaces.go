@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/config"
 )
@@ -38,6 +39,7 @@ type HealthChecker interface {
 // CantabularClient fetches lists of datasets
 type CantabularClient interface {
 	ListDatasets(ctx context.Context) ([]string, error)
+	GetGeographyDimensions(ctx context.Context, dataset string) (*cantabular.GetGeographyDimensionsResponse, error)
 	Checker(ctx context.Context, state *healthcheck.CheckState) error
 }
 

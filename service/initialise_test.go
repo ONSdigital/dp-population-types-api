@@ -34,7 +34,7 @@ func TestInitialiser(t *testing.T) {
 				DefaultRequestTimeout: 42 * time.Hour,
 			}
 			_ = initialiser.GetCantabularClient(cantabularConfig)
-			Convey("Then the cantabular client factory should be called with the expectd configuration and user agent", func() {
+			Convey("Then the cantabular client factory should be called with the expected configuration and user agent", func() {
 				So(actualConfig, ShouldResemble, cantabular.Config{
 					Host:           "CantabularURL",
 					ExtApiHost:     "CantabularExtURL",

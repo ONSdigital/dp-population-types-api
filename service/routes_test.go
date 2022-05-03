@@ -7,6 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular/gql"
 	. "github.com/smartystreets/goconvey/convey"
 
 	"github.com/ONSdigital/dp-net/v2/responder"
@@ -38,6 +40,20 @@ func TestRoutes(t *testing.T) {
 
 			So(string(actualResponse), ShouldEqualJSON, `{"items":[]}`)
 		})
+
+		Convey("Then the http server should respond to the area-types route", func() {
+			rec := httptest.NewRecorder()
+			req := httptest.NewRequest(http.MethodGet, "/population-types/dataset-id/area-types", nil)
+			svc.Router.ServeHTTP(rec, req)
+			result := rec.Result()
+
+			So(result.StatusCode, ShouldEqual, http.StatusOK)
+
+			actualResponse, _ := ioutil.ReadAll(rec.Body)
+			result.Body.Close()
+
+			So(string(actualResponse), ShouldEqualJSON, `{"area-types":null}`)
+		})
 	})
 }
 
@@ -45,6 +61,9 @@ func testCantabularClient(config.CantabularConfig) service.CantabularClient {
 	return &mock.CantabularClientMock{
 		ListDatasetsFunc: func(ctx context.Context) ([]string, error) {
 			return []string{}, nil
+		},
+		GetGeographyDimensionsFunc: func(ctx context.Context, dataset string) (*cantabular.GetGeographyDimensionsResponse, error) {
+			return &cantabular.GetGeographyDimensionsResponse{Dataset: gql.DatasetRuleBase{}}, nil
 		},
 	}
 }

@@ -5,6 +5,7 @@ package mock
 
 import (
 	"context"
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"sync"
@@ -23,6 +24,9 @@ var _ service.CantabularClient = &CantabularClientMock{}
 // 			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error {
 // 				panic("mock out the Checker method")
 // 			},
+// 			GetGeographyDimensionsFunc: func(ctx context.Context, dataset string) (*cantabular.GetGeographyDimensionsResponse, error) {
+// 				panic("mock out the GetGeographyDimensions method")
+// 			},
 // 			ListDatasetsFunc: func(ctx context.Context) ([]string, error) {
 // 				panic("mock out the ListDatasets method")
 // 			},
@@ -36,6 +40,9 @@ type CantabularClientMock struct {
 	// CheckerFunc mocks the Checker method.
 	CheckerFunc func(ctx context.Context, state *healthcheck.CheckState) error
 
+	// GetGeographyDimensionsFunc mocks the GetGeographyDimensions method.
+	GetGeographyDimensionsFunc func(ctx context.Context, dataset string) (*cantabular.GetGeographyDimensionsResponse, error)
+
 	// ListDatasetsFunc mocks the ListDatasets method.
 	ListDatasetsFunc func(ctx context.Context) ([]string, error)
 
@@ -48,14 +55,22 @@ type CantabularClientMock struct {
 			// State is the state argument value.
 			State *healthcheck.CheckState
 		}
+		// GetGeographyDimensions holds details about calls to the GetGeographyDimensions method.
+		GetGeographyDimensions []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// Dataset is the dataset argument value.
+			Dataset string
+		}
 		// ListDatasets holds details about calls to the ListDatasets method.
 		ListDatasets []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 		}
 	}
-	lockChecker      sync.RWMutex
-	lockListDatasets sync.RWMutex
+	lockChecker                sync.RWMutex
+	lockGetGeographyDimensions sync.RWMutex
+	lockListDatasets           sync.RWMutex
 }
 
 // Checker calls CheckerFunc.
@@ -90,6 +105,41 @@ func (mock *CantabularClientMock) CheckerCalls() []struct {
 	mock.lockChecker.RLock()
 	calls = mock.calls.Checker
 	mock.lockChecker.RUnlock()
+	return calls
+}
+
+// GetGeographyDimensions calls GetGeographyDimensionsFunc.
+func (mock *CantabularClientMock) GetGeographyDimensions(ctx context.Context, dataset string) (*cantabular.GetGeographyDimensionsResponse, error) {
+	if mock.GetGeographyDimensionsFunc == nil {
+		panic("CantabularClientMock.GetGeographyDimensionsFunc: method is nil but CantabularClient.GetGeographyDimensions was just called")
+	}
+	callInfo := struct {
+		Ctx     context.Context
+		Dataset string
+	}{
+		Ctx:     ctx,
+		Dataset: dataset,
+	}
+	mock.lockGetGeographyDimensions.Lock()
+	mock.calls.GetGeographyDimensions = append(mock.calls.GetGeographyDimensions, callInfo)
+	mock.lockGetGeographyDimensions.Unlock()
+	return mock.GetGeographyDimensionsFunc(ctx, dataset)
+}
+
+// GetGeographyDimensionsCalls gets all the calls that were made to GetGeographyDimensions.
+// Check the length with:
+//     len(mockedCantabularClient.GetGeographyDimensionsCalls())
+func (mock *CantabularClientMock) GetGeographyDimensionsCalls() []struct {
+	Ctx     context.Context
+	Dataset string
+} {
+	var calls []struct {
+		Ctx     context.Context
+		Dataset string
+	}
+	mock.lockGetGeographyDimensions.RLock()
+	calls = mock.calls.GetGeographyDimensions
+	mock.lockGetGeographyDimensions.RUnlock()
 	return calls
 }
 

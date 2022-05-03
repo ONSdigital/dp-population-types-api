@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/pkg/errors"
 	. "github.com/smartystreets/goconvey/convey"
 
@@ -74,4 +75,8 @@ type fakeCantabularClient struct {
 
 func (t *fakeCantabularClient) ListDatasets(ctx context.Context) ([]string, error) {
 	return t.listDatasetsReturnData, t.listDatasetsReturnError
+}
+
+func (t *fakeCantabularClient) GetGeographyDimensions(ctx context.Context, dataset string) (*cantabular.GetGeographyDimensionsResponse, error) {
+	return nil, t.listDatasetsReturnError
 }
