@@ -7,7 +7,7 @@ replace github.com/coreos/etcd => github.com/coreos/etcd v3.3.24+incompatible
 replace github.com/dgrijalva/jwt-go v3.2.0+incompatible => github.com/golang-jwt/jwt v3.2.2+incompatible
 
 require (
-	github.com/ONSdigital/dp-api-clients-go/v2 v2.117.0
+	github.com/ONSdigital/dp-api-clients-go/v2 v2.138.0
 	github.com/ONSdigital/dp-component-test v0.7.0
 	github.com/ONSdigital/dp-healthcheck v1.3.0
 	github.com/ONSdigital/dp-net v1.4.1
@@ -23,7 +23,7 @@ require (
 require (
 	github.com/ONSdigital/dp-api-clients-go v1.43.0 // indirect
 	github.com/ONSdigital/dp-mongodb-in-memory v1.3.0 // indirect
-	github.com/aws/aws-sdk-go v1.44.22 // indirect
+	github.com/aws/aws-sdk-go v1.44.23 // indirect
 	github.com/chromedp/cdproto v0.0.0-20220525225945-2a6180d575f6 // indirect
 	github.com/chromedp/chromedp v0.8.2 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect

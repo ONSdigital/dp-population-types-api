@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	dperrors "github.com/ONSdigital/dp-net/v2/errors"
 	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
@@ -39,9 +40,11 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	pt := chi.URLParam(r, "population-type")
+	req := cantabular.GetGeographyDimensionsRequest{
+		Dataset: chi.URLParam(r, "population-type"),
+	}
 
-	res, err := h.cantabularClient.GetGeographyDimensions(ctx, pt)
+	res, err := h.cantabularClient.GetGeographyDimensions(ctx, req)
 	if err != nil {
 		h.responder.Error(
 			ctx,

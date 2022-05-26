@@ -117,7 +117,7 @@ func (c *PopulationTypesComponent) GetCantabularClient(cfg config.CantabularConf
 			}
 			return c.fakeCantabularDatasets, nil
 		},
-		GetGeographyDimensionsFunc: func(ctx context.Context, dataset string) (*cantabular.GetGeographyDimensionsResponse, error) {
+		GetGeographyDimensionsFunc: func(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
 			if c.fakeCantabularIsUnresponsive {
 				return nil, dperrors.New(
 					errors.New("error(s) returned by graphQL query"),

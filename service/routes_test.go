@@ -62,7 +62,7 @@ func testCantabularClient(config.CantabularConfig) service.CantabularClient {
 		ListDatasetsFunc: func(ctx context.Context) ([]string, error) {
 			return []string{}, nil
 		},
-		GetGeographyDimensionsFunc: func(ctx context.Context, dataset string) (*cantabular.GetGeographyDimensionsResponse, error) {
+		GetGeographyDimensionsFunc: func(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
 			return &cantabular.GetGeographyDimensionsResponse{Dataset: gql.DatasetRuleBase{}}, nil
 		},
 	}
