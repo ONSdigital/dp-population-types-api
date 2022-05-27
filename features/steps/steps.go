@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/cucumber/godog"
+
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular/gql"
-	"github.com/cucumber/godog"
 )
 
 func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {

@@ -3,11 +3,11 @@ package handler
 import (
 	"net/http"
 
-	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
-	dperrors "github.com/ONSdigital/dp-net/v2/errors"
 	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	dperrors "github.com/ONSdigital/dp-net/v2/errors"
 	"github.com/ONSdigital/dp-population-types-api/contract"
 )
 

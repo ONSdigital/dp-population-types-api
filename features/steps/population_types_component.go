@@ -4,17 +4,17 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
-	dperrors "github.com/ONSdigital/dp-api-clients-go/v2/errors"
-	"github.com/ONSdigital/log.go/v2/log"
 	"github.com/pkg/errors"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	dperrors "github.com/ONSdigital/dp-api-clients-go/v2/errors"
 	componenttest "github.com/ONSdigital/dp-component-test"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-net/v2/responder"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"github.com/ONSdigital/dp-population-types-api/service/mock"
+	"github.com/ONSdigital/log.go/v2/log"
 )
 
 const fakeCantabularFailedToRespondErrorMessage = "cantabular failed to respond"

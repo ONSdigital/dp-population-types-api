@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/pkg/errors"
 	. "github.com/smartystreets/goconvey/convey"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-net/v2/responder"
 	"github.com/ONSdigital/dp-population-types-api/handler"
 )
