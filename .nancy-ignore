@@ -3,3 +3,5 @@ sonatype-2021-1401      # pkg:golang/github.com/miekg/dns@v1.0.14               
 CVE-2022-29153          # pkg:golang/github.com/hashicorp/consul/api@v1.1.0     - CWE-918: Server-Side Request Forgery (SSRF)   - 7.5/10 (High)
                         # pkg:golang/github.com/hashicorp/consul/sdk@v0.1.1     - CWE-918: Server-Side Request Forgery (SSRF)   - 7.5/10 (High)
 CVE-2022-21698          # pkg:golang/github.com/prometheus/client_golang@v0.9.3 - CWE-400: Uncontrolled Resource Consumption    - 7.5/10 (High)
+CVE-2022-24687          # pkg:golang/github.com/hashicorp/consul/api@v1.12.0    - CWE-400: Uncontrolled Resource Consumption    - 6.5/10 (High) - brought in by github.com/golangci/golangci-lint/cmd/golangci-lint
+                        # pkg:golang/github.com/hashicorp/consul/sdk@v0.8.0     - CWE-400: Uncontrolled Resource Consumption    - 6.5/10 (High) - brought in by github.com/golangci/golangci-lint/cmd/golangci-lint
