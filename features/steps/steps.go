@@ -47,6 +47,9 @@ func (c *PopulationTypesComponent) cantabularIsUnresponsive() error {
 
 func (c *PopulationTypesComponent) theServiceRespondsWithAnInternalServerErrorSaying(expectedHttpCode int, expected string) error {
 	resp := c.apiFeature.HttpResponse
+	fmt.Printf("StatusCode: %d\n", resp.StatusCode)
+	fmt.Printf("Expected StatusCode: %d\n", expectedHttpCode)
+	fmt.Printf("StatusCode Type: %T\n", resp.StatusCode)
 	if resp.StatusCode != expectedHttpCode {
 		return fmt.Errorf("expected: %d. actual: %d", http.StatusInternalServerError, resp.StatusCode)
 	}

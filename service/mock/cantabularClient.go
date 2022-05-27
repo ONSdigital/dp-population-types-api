@@ -30,6 +30,9 @@ var _ service.CantabularClient = &CantabularClientMock{}
 // 			ListDatasetsFunc: func(ctx context.Context) ([]string, error) {
 // 				panic("mock out the ListDatasets method")
 // 			},
+// 			StatusCodeFunc: func(err error) int {
+// 				panic("mock out the StatusCode method")
+// 			},
 // 		}
 //
 // 		// use mockedCantabularClient in code that requires service.CantabularClient
@@ -45,6 +48,9 @@ type CantabularClientMock struct {
 
 	// ListDatasetsFunc mocks the ListDatasets method.
 	ListDatasetsFunc func(ctx context.Context) ([]string, error)
+
+	// StatusCodeFunc mocks the StatusCode method.
+	StatusCodeFunc func(err error) int
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -67,10 +73,16 @@ type CantabularClientMock struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 		}
+		// StatusCode holds details about calls to the StatusCode method.
+		StatusCode []struct {
+			// Err is the err argument value.
+			Err error
+		}
 	}
 	lockChecker                sync.RWMutex
 	lockGetGeographyDimensions sync.RWMutex
 	lockListDatasets           sync.RWMutex
+	lockStatusCode             sync.RWMutex
 }
 
 // Checker calls CheckerFunc.
@@ -171,5 +183,36 @@ func (mock *CantabularClientMock) ListDatasetsCalls() []struct {
 	mock.lockListDatasets.RLock()
 	calls = mock.calls.ListDatasets
 	mock.lockListDatasets.RUnlock()
+	return calls
+}
+
+// StatusCode calls StatusCodeFunc.
+func (mock *CantabularClientMock) StatusCode(err error) int {
+	if mock.StatusCodeFunc == nil {
+		panic("CantabularClientMock.StatusCodeFunc: method is nil but CantabularClient.StatusCode was just called")
+	}
+	callInfo := struct {
+		Err error
+	}{
+		Err: err,
+	}
+	mock.lockStatusCode.Lock()
+	mock.calls.StatusCode = append(mock.calls.StatusCode, callInfo)
+	mock.lockStatusCode.Unlock()
+	return mock.StatusCodeFunc(err)
+}
+
+// StatusCodeCalls gets all the calls that were made to StatusCode.
+// Check the length with:
+//     len(mockedCantabularClient.StatusCodeCalls())
+func (mock *CantabularClientMock) StatusCodeCalls() []struct {
+	Err error
+} {
+	var calls []struct {
+		Err error
+	}
+	mock.lockStatusCode.RLock()
+	calls = mock.calls.StatusCode
+	mock.lockStatusCode.RUnlock()
 	return calls
 }

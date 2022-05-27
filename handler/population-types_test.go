@@ -80,3 +80,7 @@ func (t *fakeCantabularClient) ListDatasets(ctx context.Context) ([]string, erro
 func (t *fakeCantabularClient) GetGeographyDimensions(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
 	return nil, t.listDatasetsReturnError
 }
+
+func (t *fakeCantabularClient) StatusCode(err error) int {
+	return 0
+}

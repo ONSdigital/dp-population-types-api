@@ -41,6 +41,7 @@ type CantabularClient interface {
 	ListDatasets(ctx context.Context) ([]string, error)
 	GetGeographyDimensions(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error)
 	Checker(ctx context.Context, state *healthcheck.CheckState) error
+	StatusCode(error) int
 }
 
 // Responder handles responding to http requests

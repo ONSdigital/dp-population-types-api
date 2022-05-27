@@ -7,7 +7,6 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
-	dperrors "github.com/ONSdigital/dp-net/v2/errors"
 	"github.com/ONSdigital/dp-population-types-api/contract"
 )
 
@@ -49,7 +48,7 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 		h.responder.Error(
 			ctx,
 			w,
-			dperrors.StatusCode(err), // Can be changed to ctblr.StatusCode(err) once added to Client
+			h.cantabularClient.StatusCode(err), // Can be changed to ctblr.StatusCode(err) once added to Client
 			errors.Wrap(err, "failed to get area-types"),
 		)
 		return

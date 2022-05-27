@@ -127,5 +127,8 @@ func (c *PopulationTypesComponent) GetCantabularClient(cfg config.CantabularConf
 			}
 			return c.fakeCantabularGeoDimensions, nil
 		},
+		StatusCodeFunc: func(err error) int {
+			return 404
+		},
 	}
 }
