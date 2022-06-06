@@ -3,7 +3,6 @@ package steps
 import (
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"strings"
 
 	"github.com/cucumber/godog"
@@ -19,7 +18,7 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^cantabular is unresponsive$`, c.cantabularIsUnresponsive)
 	ctx.Step(`^I access the root population types endpoint$`, c.iAccessTheRootPopulationTypesEndpoint)
 	ctx.Step(`^I have some population types in cantabular$`, c.iHaveSomePopulationTypesInCantabular)
-	ctx.Step(`^the service responds with "([^"]*)" http code and an internal server error saying "([^"]*)"$`, c.theServiceRespondsWithAnInternalServerErrorSaying)
+	ctx.Step(`^an internal server error saying "([^"]*)" is returned$`, c.theServiceRespondsWithAnErrorSaying)
 	ctx.Step(`^a geography query response is available from Cantabular api extension$`, c.theFollowingCantabularResponseIsAvailable)
 	ctx.Step(`^an error json response is returned from Cantabular api extension$`, c.anErrorJsonResponseIsReturnedFromCantabularApiExtension)
 	ctx.Step(`^a list of area types is returned$`, c.aListOfAreaTypesIsReturned)
@@ -45,14 +44,7 @@ func (c *PopulationTypesComponent) cantabularIsUnresponsive() error {
 	return nil
 }
 
-func (c *PopulationTypesComponent) theServiceRespondsWithAnInternalServerErrorSaying(expectedHttpCode int, expected string) error {
-	resp := c.apiFeature.HttpResponse
-	fmt.Printf("StatusCode: %d\n", resp.StatusCode)
-	fmt.Printf("Expected StatusCode: %d\n", expectedHttpCode)
-	fmt.Printf("StatusCode Type: %T\n", resp.StatusCode)
-	if resp.StatusCode != expectedHttpCode {
-		return fmt.Errorf("expected: %d. actual: %d", http.StatusInternalServerError, resp.StatusCode)
-	}
+func (c *PopulationTypesComponent) theServiceRespondsWithAnErrorSaying(expected string) error {
 	body, err := ioutil.ReadAll(c.apiFeature.HttpResponse.Body)
 	if err != nil {
 		return err
