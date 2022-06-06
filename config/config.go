@@ -12,6 +12,12 @@ type Config struct {
 	GracefulShutdownTimeout    time.Duration `envconfig:"GRACEFUL_SHUTDOWN_TIMEOUT"`
 	HealthCheckInterval        time.Duration `envconfig:"HEALTHCHECK_INTERVAL"`
 	HealthCheckCriticalTimeout time.Duration `envconfig:"HEALTHCHECK_CRITICAL_TIMEOUT"`
+	EnablePrivateEndpoints     bool          `envconfig:"ENABLE_PRIVATE_ENDPOINTS"`
+
+	EnablePermissionsAuth bool   `envconfig:"ENABLE_PERMISSIONS_AUTH"`
+	ZebedeeURL            string `envconfig:"ZEBEDEE_URL"`
+	ServiceAuthToken      string `envconfig:"SERVICE_AUTH_TOKEN"`
+
 	CantabularConfig
 }
 
@@ -36,6 +42,10 @@ func Get() (*Config, error) {
 		GracefulShutdownTimeout:    5 * time.Second,
 		HealthCheckInterval:        30 * time.Second,
 		HealthCheckCriticalTimeout: 90 * time.Second,
+		EnablePrivateEndpoints:     true,
+		ZebedeeURL:                 "http://localhost:8082",
+		ServiceAuthToken:           "",
+		EnablePermissionsAuth:      true,
 		CantabularConfig: CantabularConfig{
 			CantabularURL:         "http://localhost:8491",
 			CantabularExtURL:      "http://localhost:8492",
