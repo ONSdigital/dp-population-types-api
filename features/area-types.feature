@@ -51,5 +51,5 @@ Feature: Area Types
     When an error json response is returned from Cantabular api extension
 
     And I GET "/population-types/Inexistent/area-types"
-
-    Then the service responds with "404" http code and an internal server error saying "failed to get area-types: error(s) returned by graphQL query"
+    Then an internal server error saying "failed to get area-types: error(s) returned by graphQL query" is returned
+    And the HTTP status code should be "404"

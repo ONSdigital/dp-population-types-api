@@ -11,7 +11,8 @@ Feature: Population types endpoint
     When I access the root population types endpoint
     Then a list of named cantabular population types is returned
 
-  # Scenario: If the root population-types endpoint fails, it should return correct errors
-  #   Given cantabular is unresponsive
-  #   When I access the root population types endpoint
-  #   Then the service responds with "500" http code and an internal server error saying "failed to fetch population types"
+  Scenario: If the root population-types endpoint fails, it should return correct errors
+    Given cantabular is unresponsive
+    When I access the root population types endpoint
+    Then an internal server error saying "failed to fetch population types" is returned
+    And the HTTP status code should be "500"
