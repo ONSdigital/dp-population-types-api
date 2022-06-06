@@ -24,4 +24,5 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 	// Routes
 	populationTypes := handler.NewPopulationTypes(svc.responder, svc.cantabularClient)
 	svc.Router.Get("/population-types", populationTypes.Get)
+	svc.Router.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypes)
 }

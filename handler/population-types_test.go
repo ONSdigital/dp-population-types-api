@@ -11,6 +11,7 @@ import (
 	"github.com/pkg/errors"
 	. "github.com/smartystreets/goconvey/convey"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-net/v2/responder"
 	"github.com/ONSdigital/dp-population-types-api/handler"
 )
@@ -74,4 +75,12 @@ type fakeCantabularClient struct {
 
 func (t *fakeCantabularClient) ListDatasets(ctx context.Context) ([]string, error) {
 	return t.listDatasetsReturnData, t.listDatasetsReturnError
+}
+
+func (t *fakeCantabularClient) GetGeographyDimensions(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
+	return nil, t.listDatasetsReturnError
+}
+
+func (t *fakeCantabularClient) StatusCode(err error) int {
+	return 0
 }

@@ -6,15 +6,19 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	dperrors "github.com/ONSdigital/dp-api-clients-go/v2/errors"
 	componenttest "github.com/ONSdigital/dp-component-test"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-net/v2/responder"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"github.com/ONSdigital/dp-population-types-api/service/mock"
+	"github.com/ONSdigital/log.go/v2/log"
 )
 
 const fakeCantabularFailedToRespondErrorMessage = "cantabular failed to respond"
+const fakeCantabularGeoDimensionsErrorMessage = "failed to get area-types: error(s) returned by graphQL query"
 
 type PopulationTypesComponent struct {
 	componenttest.ErrorFeature
@@ -26,6 +30,7 @@ type PopulationTypesComponent struct {
 	apiFeature                   *componenttest.APIFeature
 	fakeCantabularDatasets       []string
 	fakeCantabularIsUnresponsive bool
+	fakeCantabularGeoDimensions  *cantabular.GetGeographyDimensionsResponse
 	service                      *service.Service
 	InitialiserMock              service.Initialiser
 }
@@ -111,6 +116,19 @@ func (c *PopulationTypesComponent) GetCantabularClient(cfg config.CantabularConf
 				return nil, errors.New(fakeCantabularFailedToRespondErrorMessage)
 			}
 			return c.fakeCantabularDatasets, nil
+		},
+		GetGeographyDimensionsFunc: func(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
+			if c.fakeCantabularIsUnresponsive {
+				return nil, dperrors.New(
+					errors.New("error(s) returned by graphQL query"),
+					http.StatusNotFound,
+					log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+				)
+			}
+			return c.fakeCantabularGeoDimensions, nil
+		},
+		StatusCodeFunc: func(err error) int {
+			return 404
 		},
 	}
 }
