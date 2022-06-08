@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/config"
 )
@@ -13,12 +14,14 @@ import (
 //go:generate moq -out mock/server.go -pkg mock . HTTPServer
 //go:generate moq -out mock/healthCheck.go -pkg mock . HealthChecker
 //go:generate moq -out mock/cantabularClient.go -pkg mock . CantabularClient
+//go:generate moq -out mock/datasetApi.go -pkg mock . DatasetAPIClient
 
 // Initialiser defines the methods to initialise external services
 type Initialiser interface {
 	GetHTTPServer(bindAddr string, router http.Handler) HTTPServer
 	GetCantabularClient(cfg config.CantabularConfig) CantabularClient
 	GetHealthCheck(cfg *config.Config, time, commit, version string) (HealthChecker, error)
+	GetDatasetAPIClient(cfg config.Config) DatasetAPIClient
 	GetResponder() Responder
 }
 
@@ -50,4 +53,9 @@ type Responder interface {
 	Error(context.Context, http.ResponseWriter, int, error)
 	StatusCode(http.ResponseWriter, int)
 	Bytes(context.Context, http.ResponseWriter, int, []byte)
+}
+
+type DatasetAPIClient interface {
+	GetDatasets(ctx context.Context, userAuthToken, serviceAuthToken, collectionID string, q *dataset.QueryParams) (m dataset.List, err error)
+	Checker(context.Context, *healthcheck.CheckState) error
 }

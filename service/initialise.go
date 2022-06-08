@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	dphttp "github.com/ONSdigital/dp-net/http"
 	"github.com/ONSdigital/dp-net/v2/responder"
@@ -52,6 +53,10 @@ func (i *Init) GetCantabularClient(cfg config.CantabularConfig) CantabularClient
 	)
 }
 
+func (i *Init) GetDatasetAPIClient(cfg config.Config) DatasetAPIClient {
+	// There is a healthcheck client, should I be using that?
+	return dataset.NewAPIClient(cfg.DatasetAPIURL)
+}
 func cantabularNewClient(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.Client {
 	return cantabular.NewClient(cfg, ua, nil)
 }

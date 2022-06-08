@@ -20,6 +20,7 @@ type Service struct {
 	cantabularClient CantabularClient
 	HealthCheck      HealthChecker
 	identityClient   *identity.Client
+	DatasetAPIClient DatasetAPIClient
 }
 
 func New() *Service {
@@ -44,6 +45,7 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 
 	svc.responder = init.GetResponder()
 	svc.cantabularClient = init.GetCantabularClient(cfg.CantabularConfig)
+	svc.DatasetAPIClient = init.GetDatasetAPIClient(*cfg)
 
 	svc.buildRoutes(ctx)
 	svc.Server = init.GetHTTPServer(cfg.BindAddr, svc.Router)
