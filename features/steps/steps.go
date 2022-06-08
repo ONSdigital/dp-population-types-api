@@ -13,7 +13,16 @@ import (
 )
 
 func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
-	c.apiFeature.RegisterSteps(ctx)
+	c.APIFeature.RegisterSteps(ctx)
+
+	ctx.Step(
+		`^private endpoints are enabled`,
+		c.privateEndpointsAreEnabled,
+	)
+	ctx.Step(
+		`^private endpoints are not enabled`,
+		c.privateEndpointsAreNotEnabled,
+	)
 
 	ctx.Step(`^a list of named cantabular population types is returned$`, c.aListOfNamedCantabularPopulationTypesIsReturned)
 	ctx.Step(`^cantabular is unresponsive$`, c.cantabularIsUnresponsive)
@@ -23,16 +32,43 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^a geography query response is available from Cantabular api extension$`, c.theFollowingCantabularResponseIsAvailable)
 	ctx.Step(`^an error json response is returned from Cantabular api extension$`, c.anErrorJsonResponseIsReturnedFromCantabularApiExtension)
 	ctx.Step(`^a list of area types is returned$`, c.aListOfAreaTypesIsReturned)
+	ctx.Step(`^the following response is returned from dp-dataset-api:$`, c.theFollowingVersionDocumentIsAvailable)
+}
+
+func (c *PopulationTypesComponent) privateEndpointsAreNotEnabled() error {
+	c.Config.EnablePrivateEndpoints = false
+	return nil
+}
+
+func (c *PopulationTypesComponent) privateEndpointsAreEnabled() error {
+	c.Config.EnablePrivateEndpoints = true
+	return nil
+}
+
+// theFollowingVersionDocumentIsAvailable generates a mocked response for dataset API
+// GET /daktasets/{dataset_id}/editions/{edition}/versions/{version}
+func (c *PopulationTypesComponent) theFollowingVersionDocumentIsAvailable(v *godog.DocString) error {
+	url := fmt.Sprintf(
+		`/datasets?offset=0&limit=10&is_based_on=%s`,
+		"Example",
+	)
+
+	c.DatasetAPI.NewHandler().
+		Get(url).
+		Reply(http.StatusOK).
+		BodyString(v.Content)
+
+	return nil
 }
 
 func (c *PopulationTypesComponent) aListOfNamedCantabularPopulationTypesIsReturned() error {
-	return c.apiFeature.IShouldReceiveTheFollowingJSONResponse(&godog.DocString{
+	return c.APIFeature.IShouldReceiveTheFollowingJSONResponse(&godog.DocString{
 		Content: `{"items":[{"name": "dataset 1"}, {"name": "dataset 2"}, {"name": "dataset 3"}]}`,
 	})
 }
 
 func (c *PopulationTypesComponent) iAccessTheRootPopulationTypesEndpoint() error {
-	return c.apiFeature.IGet("/population-types")
+	return c.APIFeature.IGet("/population-types")
 }
 
 func (c *PopulationTypesComponent) iHaveSomePopulationTypesInCantabular() error {
@@ -46,14 +82,14 @@ func (c *PopulationTypesComponent) cantabularIsUnresponsive() error {
 }
 
 func (c *PopulationTypesComponent) theServiceRespondsWithAnInternalServerErrorSaying(expectedHttpCode int, expected string) error {
-	resp := c.apiFeature.HttpResponse
+	resp := c.APIFeature.HttpResponse
 	fmt.Printf("StatusCode: %d\n", resp.StatusCode)
 	fmt.Printf("Expected StatusCode: %d\n", expectedHttpCode)
 	fmt.Printf("StatusCode Type: %T\n", resp.StatusCode)
 	if resp.StatusCode != expectedHttpCode {
 		return fmt.Errorf("expected: %d. actual: %d", http.StatusInternalServerError, resp.StatusCode)
 	}
-	body, err := ioutil.ReadAll(c.apiFeature.HttpResponse.Body)
+	body, err := ioutil.ReadAll(c.APIFeature.HttpResponse.Body)
 	if err != nil {
 		return err
 	}
@@ -102,7 +138,7 @@ func (c *PopulationTypesComponent) anErrorJsonResponseIsReturnedFromCantabularAp
 }
 
 func (c *PopulationTypesComponent) aListOfAreaTypesIsReturned() error {
-	return c.apiFeature.IShouldReceiveTheFollowingJSONResponse(&godog.DocString{
+	return c.APIFeature.IShouldReceiveTheFollowingJSONResponse(&godog.DocString{
 		Content: `
 			  {
 				"area-types":[

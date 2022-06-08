@@ -21,11 +21,12 @@ type PopulationTypes struct {
 	identityClient   *identity.Client
 }
 
-func NewPopulationTypes(responder responder, cantabularClient cantabularClient, identityClient *identity.Client) *PopulationTypes {
+func NewPopulationTypes(responder responder, cantabularClient cantabularClient, identityClient *identity.Client, datasetClient DatasetAPIClient) *PopulationTypes {
 	return &PopulationTypes{
 		responder:        responder,
 		cantabularClient: cantabularClient,
 		identityClient:   identityClient,
+		datasetClient:    datasetClient,
 	}
 }
 

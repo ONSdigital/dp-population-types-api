@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-api-clients-go/v2/identity"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/log.go/v2/log"
@@ -45,8 +46,9 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 
 	svc.responder = init.GetResponder()
 	svc.cantabularClient = init.GetCantabularClient(cfg.CantabularConfig)
-	svc.DatasetAPIClient = init.GetDatasetAPIClient(*cfg)
+	svc.DatasetAPIClient = dataset.NewAPIClient(cfg.DatasetAPIURL)
 
+	println("-_____---__ ", cfg.EnablePrivateEndpoints)
 	svc.buildRoutes(ctx)
 	svc.Server = init.GetHTTPServer(cfg.BindAddr, svc.Router)
 

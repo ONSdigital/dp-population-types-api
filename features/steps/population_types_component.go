@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/maxcnunes/httpfake"
 	"github.com/pkg/errors"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
@@ -27,36 +28,42 @@ type PopulationTypesComponent struct {
 	Config                       *config.Config
 	ServiceRunning               bool
 	HttpServer                   *http.Server
-	apiFeature                   *componenttest.APIFeature
+	APIFeature                   *componenttest.APIFeature
 	fakeCantabularDatasets       []string
 	fakeCantabularIsUnresponsive bool
 	fakeCantabularGeoDimensions  *cantabular.GetGeographyDimensionsResponse
 	service                      *service.Service
 	InitialiserMock              service.Initialiser
+
+	// Here add identity client?
+	DatasetAPI *httpfake.HTTPFake
 }
 
-func NewComponent() (*PopulationTypesComponent, error) {
+func NewComponent(zebedeeURL string) (*PopulationTypesComponent, error) {
 
 	config, err := config.Get()
 	if err != nil {
 		return nil, err
 	}
 
+	config.ZebedeeURL = zebedeeURL
 	c := &PopulationTypesComponent{
 		errorChan:      make(chan error),
 		ServiceRunning: false,
 		Config:         config,
 		HttpServer:     &http.Server{},
+		DatasetAPI:     httpfake.New(),
 	}
-
-	c.apiFeature = componenttest.NewAPIFeature(c.InitialiseService)
 
 	return c, nil
 }
 
-func (c *PopulationTypesComponent) Reset() *PopulationTypesComponent {
-	c.apiFeature.Reset()
-	return c
+func (c *PopulationTypesComponent) Reset() error {
+	c.APIFeature.Reset()
+	if _, err := c.InitialiseService(); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c *PopulationTypesComponent) Close() error {
@@ -79,6 +86,7 @@ func (c *PopulationTypesComponent) InitialiseService() (http.Handler, error) {
 	var err error
 
 	c.service = service.New()
+	c.Config.DatasetAPIURL = c.DatasetAPI.ResolveURL("")
 
 	err = c.service.Init(context.Background(), c.InitialiserMock, c.Config, "", "1", "")
 	if err != nil {

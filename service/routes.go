@@ -19,6 +19,7 @@ func (svc *Service) buildRoutes(ctx context.Context) {
 		svc.Router.Handle("/health", http.HandlerFunc(svc.HealthCheck.Handler))
 	}
 
+	println("************** BUILD ROUTES", svc.Config.EnablePrivateEndpoints)
 	if svc.Config.EnablePrivateEndpoints {
 		svc.privateEndpoints(ctx)
 	} else {
@@ -32,15 +33,15 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 	log.Info(ctx, "enabling public endpoints")
 
 	// Routes
-	populationTypes := handler.NewPopulationTypes(svc.responder, svc.cantabularClient, svc.identityClient)
+	populationTypes := handler.NewPopulationTypes(svc.responder, svc.cantabularClient, svc.identityClient, svc.DatasetAPIClient)
 	svc.Router.Get("/population-types", populationTypes.Get)
 	svc.Router.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypes)
 }
 
 func (svc *Service) privateEndpoints(ctx context.Context) {
-	log.Info(ctx, "enabling public endpoints")
+	log.Info(ctx, "enabling private endpoints")
 
-	populationTypes := handler.NewPopulationTypes(svc.responder, svc.cantabularClient, svc.identityClient)
+	populationTypes := handler.NewPopulationTypes(svc.responder, svc.cantabularClient, svc.identityClient, svc.DatasetAPIClient)
 
 	r := chi.NewRouter()
 
@@ -54,4 +55,6 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	svc.Router.Get("/population-types", populationTypes.Get)
 	svc.Router.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypes)
 
+	// added from cant filt flex
+	svc.Router.Mount("/", r)
 }
