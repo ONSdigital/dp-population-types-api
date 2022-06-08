@@ -17,7 +17,7 @@ type Config struct {
 	EnablePermissionsAuth bool   `envconfig:"ENABLE_PERMISSIONS_AUTH"`
 	ZebedeeURL            string `envconfig:"ZEBEDEE_URL"`
 	ServiceAuthToken      string `envconfig:"SERVICE_AUTH_TOKEN"`
-
+	DatasetAPIURL         string `envconfig:"DATASET_API_URL"`
 	CantabularConfig
 }
 
@@ -46,6 +46,7 @@ func Get() (*Config, error) {
 		ZebedeeURL:                 "http://localhost:8082",
 		ServiceAuthToken:           "",
 		EnablePermissionsAuth:      true,
+		DatasetAPIURL:              "http://localhost:22000",
 		CantabularConfig: CantabularConfig{
 			CantabularURL:         "http://localhost:8491",
 			CantabularExtURL:      "http://localhost:8492",

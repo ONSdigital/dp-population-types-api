@@ -32,7 +32,7 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 	log.Info(ctx, "enabling public endpoints")
 
 	// Routes
-	populationTypes := handler.NewPopulationTypes(svc.responder, svc.cantabularClient)
+	populationTypes := handler.NewPopulationTypes(svc.responder, svc.cantabularClient, svc.identityClient)
 	svc.Router.Get("/population-types", populationTypes.Get)
 	svc.Router.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypes)
 }
@@ -40,7 +40,7 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 func (svc *Service) privateEndpoints(ctx context.Context) {
 	log.Info(ctx, "enabling public endpoints")
 
-	populationTypes := handler.NewPopulationTypes(svc.responder, svc.cantabularClient)
+	populationTypes := handler.NewPopulationTypes(svc.responder, svc.cantabularClient, svc.identityClient)
 
 	r := chi.NewRouter()
 
