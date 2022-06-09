@@ -3,6 +3,7 @@ package steps
 import (
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"strings"
 
 	"github.com/cucumber/godog"
@@ -81,7 +82,7 @@ func (c *PopulationTypesComponent) cantabularIsUnresponsive() error {
 }
 
 func (c *PopulationTypesComponent) theServiceRespondsWithAnErrorSaying(expected string) error {
-	body, err := ioutil.ReadAll(c.apiFeature.HttpResponse.Body)
+	body, err := ioutil.ReadAll(c.APIFeature.HttpResponse.Body)
 	if err != nil {
 		return err
 	}

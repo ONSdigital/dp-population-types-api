@@ -2,11 +2,13 @@ package service_test
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/maxcnunes/httpfake"
 	. "github.com/smartystreets/goconvey/convey"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
@@ -24,6 +26,19 @@ func TestRoutes(t *testing.T) {
 		initialiser.GetResponderFunc = func() service.Responder { return responder.New() }
 		initialiser.GetCantabularClientFunc = testCantabularClient
 		config := config.Config{}
+
+		fakeServer := httpfake.New()
+		config.DatasetAPIURL = fakeServer.ResolveURL("")
+
+		url := fmt.Sprintf(
+			`/datasets?offset=0&limit=100&is_based_on=%s`,
+			"dataset-id",
+		)
+		fakeServer.NewHandler().
+			Get(url).
+			Reply(http.StatusOK).
+			BodyString(`{"total_count": 1}`)
+
 		err := svc.Init(context.Background(), &initialiser, &config, "", "", "")
 		So(err, ShouldBeNil)
 

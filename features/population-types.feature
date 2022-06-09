@@ -5,7 +5,6 @@ Feature: Population types endpoint
 
   Background:
     Given private endpoints are not enabled
-
   Scenario: The root population-types endpoint should return a list of population types
     Given I have some population types in cantabular
     When I access the root population types endpoint

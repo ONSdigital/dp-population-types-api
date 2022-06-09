@@ -24,7 +24,7 @@ func TestEndpointRoot(t *testing.T) {
 		cantabularClient := fakeCantabularClient{
 			listDatasetsReturnData: []string{"Thing one", "Thing two"},
 		}
-		handler := handler.NewPopulationTypes(responder, &cantabularClient)
+		handler := handler.NewPopulationTypes(responder, &cantabularClient, nil, nil)
 
 		Convey("When I get population types", func() {
 
