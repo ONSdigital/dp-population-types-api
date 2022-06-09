@@ -23,7 +23,7 @@ func TestConfig(t *testing.T) {
 				configuration, err := config.Get() // This Get() is only called once, when inside this function
 				So(err, ShouldBeNil)
 				So(configuration, ShouldResemble, &config.Config{
-					BindAddr:                   "localhost:12900",
+					BindAddr:                   "localhost:27300",
 					GracefulShutdownTimeout:    5 * time.Second,
 					HealthCheckInterval:        30 * time.Second,
 					HealthCheckCriticalTimeout: 90 * time.Second,

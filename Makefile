@@ -41,3 +41,7 @@ test-component:
 .PHONY: test-feature
 test-feature:
 	go test -cover -coverpkg=github.com/ONSdigital/dp-population-types-api/... -component
+
+.PHONY: run
+run:
+	HUMAN_LOG=1 go run -tags 'production' -ldflags "-X $(SERVICE_PATH).BuildTime=$(BUILD_TIME) -X $(SERVICE_PATH).GitCommit=$(GIT_COMMIT) -X $(SERVICE_PATH).Version=$(VERSION)" -race $(LDFLAGS) main.go
