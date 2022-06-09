@@ -22,7 +22,7 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 	log.Info(ctx, "enabling public endpoints")
 
 	// Routes
-	populationTypes := handler.NewPopulationTypes(svc.responder, svc.cantabularClient)
+	populationTypes := handler.NewPopulationTypes(svc.Config, svc.responder, svc.cantabularClient, svc.datasetAPIClient)
 	svc.Router.Get("/population-types", populationTypes.Get)
 	svc.Router.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypes)
 }

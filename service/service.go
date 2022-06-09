@@ -17,6 +17,7 @@ type Service struct {
 	Router           *chi.Mux
 	responder        Responder
 	cantabularClient CantabularClient
+	datasetAPIClient DatasetAPIClient
 	HealthCheck      HealthChecker
 }
 
@@ -41,6 +42,7 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 
 	svc.responder = init.GetResponder()
 	svc.cantabularClient = init.GetCantabularClient(cfg.CantabularConfig)
+	svc.datasetAPIClient = init.GetDatasetAPIClient(cfg)
 
 	svc.buildRoutes(ctx)
 	svc.Server = init.GetHTTPServer(cfg.BindAddr, svc.Router)
@@ -105,8 +107,7 @@ func (svc *Service) Close(ctx context.Context) error {
 	return nil
 }
 
-func (svc *Service) registerCheckers(ctx context.Context) (err error) {
-
+func (svc *Service) registerCheckers(ctx context.Context) error {
 	if svc.cantabularClient != nil {
 		if svc.Config.CantabularHealthcheckEnabled {
 			if err := svc.HealthCheck.AddCheck("Cantabular client", svc.cantabularClient.Checker); err != nil {

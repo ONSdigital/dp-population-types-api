@@ -12,12 +12,14 @@ type Config struct {
 	GracefulShutdownTimeout    time.Duration `envconfig:"GRACEFUL_SHUTDOWN_TIMEOUT"`
 	HealthCheckInterval        time.Duration `envconfig:"HEALTHCHECK_INTERVAL"`
 	HealthCheckCriticalTimeout time.Duration `envconfig:"HEALTHCHECK_CRITICAL_TIMEOUT"`
+	DatasetAPIURL              string        `envconfig:"DATASET_API_URL"`
+	ServiceAuthToken           string        `envconfig:"SERVICE_AUTH_TOKEN"`
 	CantabularConfig
 }
 
 type CantabularConfig struct {
 	CantabularURL                string        `envconfig:"CANTABULAR_URL"`
-	CantabularExtURL             string        `envconfig:"CANTABULAR_EXT_API_URL"`
+	CantabularExtURL             string        `envconfig:"CANTABULAR_API_EXT_URL"`
 	DefaultRequestTimeout        time.Duration `envconfig:"DEFAULT_REQUEST_TIMEOUT"`
 	CantabularHealthcheckEnabled bool          `envconfig:"CANTABULAR_HEALTHCHECK_ENABLED"`
 }

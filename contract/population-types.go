@@ -1,5 +1,8 @@
 package contract
 
+type GetPopulationTypesResponse struct {
+	PopulationTypes
+}
 type PopulationTypes struct {
 	Items []PopulationType `json:"items"`
 }

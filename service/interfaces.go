@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/config"
 )
@@ -20,6 +21,7 @@ type Initialiser interface {
 	GetCantabularClient(cfg config.CantabularConfig) CantabularClient
 	GetHealthCheck(cfg *config.Config, time, commit, version string) (HealthChecker, error)
 	GetResponder() Responder
+	GetDatasetAPIClient(cfg *config.Config) DatasetAPIClient
 }
 
 // HTTPServer defines the required methods from the HTTP server
@@ -50,4 +52,8 @@ type Responder interface {
 	Error(context.Context, http.ResponseWriter, int, error)
 	StatusCode(http.ResponseWriter, int)
 	Bytes(context.Context, http.ResponseWriter, int, []byte)
+}
+
+type DatasetAPIClient interface {
+	GetDatasets(ctx context.Context, uToken, svcToken, collectionID string, params *dataset.QueryParams) (dataset.List, error)
 }
