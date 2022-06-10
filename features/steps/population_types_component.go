@@ -4,9 +4,11 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/maxcnunes/httpfake"
 	"github.com/pkg/errors"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	dperrors "github.com/ONSdigital/dp-api-clients-go/v2/errors"
 	componenttest "github.com/ONSdigital/dp-component-test"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
@@ -33,10 +35,10 @@ type PopulationTypesComponent struct {
 	fakeCantabularGeoDimensions  *cantabular.GetGeographyDimensionsResponse
 	service                      *service.Service
 	InitialiserMock              service.Initialiser
+	datasetAPI                   *httpfake.HTTPFake
 }
 
 func NewComponent() (*PopulationTypesComponent, error) {
-
 	config, err := config.Get()
 	if err != nil {
 		return nil, err
@@ -51,11 +53,15 @@ func NewComponent() (*PopulationTypesComponent, error) {
 
 	c.apiFeature = componenttest.NewAPIFeature(c.InitialiseService)
 
+	c.datasetAPI = httpfake.New()
+	c.Config.DatasetAPIURL = c.datasetAPI.ResolveURL("")
+
 	return c, nil
 }
 
 func (c *PopulationTypesComponent) Reset() *PopulationTypesComponent {
 	c.apiFeature.Reset()
+	c.datasetAPI.Reset()
 	return c
 }
 
@@ -68,12 +74,12 @@ func (c *PopulationTypesComponent) Close() error {
 }
 
 func (c *PopulationTypesComponent) InitialiseService() (http.Handler, error) {
-
 	c.InitialiserMock = &mock.InitialiserMock{
 		GetHealthCheckFunc:      c.GetHealthcheck,
 		GetHTTPServerFunc:       c.GetHttpServer,
 		GetCantabularClientFunc: c.GetCantabularClient,
 		GetResponderFunc:        c.GetResponder,
+		GetDatasetAPIClientFunc: c.GetDatasetAPIClient,
 	}
 
 	var err error
@@ -131,4 +137,8 @@ func (c *PopulationTypesComponent) GetCantabularClient(cfg config.CantabularConf
 			return 404
 		},
 	}
+}
+
+func (c *PopulationTypesComponent) GetDatasetAPIClient(_ *config.Config) service.DatasetAPIClient {
+	return dataset.NewAPIClient(c.Config.DatasetAPIURL)
 }

@@ -23,6 +23,9 @@ var _ service.Initialiser = &InitialiserMock{}
 // 			GetCantabularClientFunc: func(cfg config.CantabularConfig) service.CantabularClient {
 // 				panic("mock out the GetCantabularClient method")
 // 			},
+// 			GetDatasetAPIClientFunc: func(cfg *config.Config) service.DatasetAPIClient {
+// 				panic("mock out the GetDatasetAPIClient method")
+// 			},
 // 			GetHTTPServerFunc: func(bindAddr string, router http.Handler) service.HTTPServer {
 // 				panic("mock out the GetHTTPServer method")
 // 			},
@@ -42,6 +45,9 @@ type InitialiserMock struct {
 	// GetCantabularClientFunc mocks the GetCantabularClient method.
 	GetCantabularClientFunc func(cfg config.CantabularConfig) service.CantabularClient
 
+	// GetDatasetAPIClientFunc mocks the GetDatasetAPIClient method.
+	GetDatasetAPIClientFunc func(cfg *config.Config) service.DatasetAPIClient
+
 	// GetHTTPServerFunc mocks the GetHTTPServer method.
 	GetHTTPServerFunc func(bindAddr string, router http.Handler) service.HTTPServer
 
@@ -57,6 +63,11 @@ type InitialiserMock struct {
 		GetCantabularClient []struct {
 			// Cfg is the cfg argument value.
 			Cfg config.CantabularConfig
+		}
+		// GetDatasetAPIClient holds details about calls to the GetDatasetAPIClient method.
+		GetDatasetAPIClient []struct {
+			// Cfg is the cfg argument value.
+			Cfg *config.Config
 		}
 		// GetHTTPServer holds details about calls to the GetHTTPServer method.
 		GetHTTPServer []struct {
@@ -81,6 +92,7 @@ type InitialiserMock struct {
 		}
 	}
 	lockGetCantabularClient sync.RWMutex
+	lockGetDatasetAPIClient sync.RWMutex
 	lockGetHTTPServer       sync.RWMutex
 	lockGetHealthCheck      sync.RWMutex
 	lockGetResponder        sync.RWMutex
@@ -114,6 +126,37 @@ func (mock *InitialiserMock) GetCantabularClientCalls() []struct {
 	mock.lockGetCantabularClient.RLock()
 	calls = mock.calls.GetCantabularClient
 	mock.lockGetCantabularClient.RUnlock()
+	return calls
+}
+
+// GetDatasetAPIClient calls GetDatasetAPIClientFunc.
+func (mock *InitialiserMock) GetDatasetAPIClient(cfg *config.Config) service.DatasetAPIClient {
+	if mock.GetDatasetAPIClientFunc == nil {
+		panic("InitialiserMock.GetDatasetAPIClientFunc: method is nil but Initialiser.GetDatasetAPIClient was just called")
+	}
+	callInfo := struct {
+		Cfg *config.Config
+	}{
+		Cfg: cfg,
+	}
+	mock.lockGetDatasetAPIClient.Lock()
+	mock.calls.GetDatasetAPIClient = append(mock.calls.GetDatasetAPIClient, callInfo)
+	mock.lockGetDatasetAPIClient.Unlock()
+	return mock.GetDatasetAPIClientFunc(cfg)
+}
+
+// GetDatasetAPIClientCalls gets all the calls that were made to GetDatasetAPIClient.
+// Check the length with:
+//     len(mockedInitialiser.GetDatasetAPIClientCalls())
+func (mock *InitialiserMock) GetDatasetAPIClientCalls() []struct {
+	Cfg *config.Config
+} {
+	var calls []struct {
+		Cfg *config.Config
+	}
+	mock.lockGetDatasetAPIClient.RLock()
+	calls = mock.calls.GetDatasetAPIClient
+	mock.lockGetDatasetAPIClient.RUnlock()
 	return calls
 }
 

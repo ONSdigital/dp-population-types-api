@@ -49,7 +49,7 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	for _, p := range ptypes {
 		q := dataset.QueryParams{
 			IsBasedOn: p,
-			Limit:     1,
+			Limit:     1000,
 		}
 
 		datasets, err := h.datasets.GetDatasets(ctx, "", h.cfg.ServiceAuthToken, "", &q)
