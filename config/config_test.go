@@ -51,7 +51,7 @@ func TestConfig(t *testing.T) {
 		Convey("Cantabular config", func() {
 			cantabularConfigMetadata := reflect.TypeOf(config.CantabularConfig{})
 			assertTagEnvConfig(cantabularConfigMetadata, "CantabularURL", "CANTABULAR_URL")
-			assertTagEnvConfig(cantabularConfigMetadata, "CantabularExtURL", "CANTABULAR_EXT_API_URL")
+			assertTagEnvConfig(cantabularConfigMetadata, "CantabularExtURL", "CANTABULAR_API_EXT_URL")
 			assertTagEnvConfig(cantabularConfigMetadata, "DefaultRequestTimeout", "DEFAULT_REQUEST_TIMEOUT")
 		})
 	})

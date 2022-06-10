@@ -57,4 +57,5 @@ type Responder interface {
 
 type DatasetAPIClient interface {
 	GetDatasets(ctx context.Context, uToken, svcToken, collectionID string, params *dataset.QueryParams) (dataset.List, error)
+	Checker(ctx context.Context, state *healthcheck.CheckState) error
 }

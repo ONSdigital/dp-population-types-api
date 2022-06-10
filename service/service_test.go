@@ -40,7 +40,13 @@ func TestInit(t *testing.T) {
 			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error { return nil },
 		}
 
+		datasetAPIClientMock := &mock.DatasetAPIClientMock{
+			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error { return nil },
+		}
+
 		initialiserMock.GetCantabularClientFunc = func(cfg config.CantabularConfig) service.CantabularClient { return cantabularClientMock }
+
+		initialiserMock.GetDatasetAPIClientFunc = func(cfg *config.Config) service.DatasetAPIClient { return datasetAPIClientMock }
 
 		serverMock := &mock.HTTPServerMock{
 			ListenAndServeFunc: func() error { return nil },
@@ -172,9 +178,15 @@ func TestClose(t *testing.T) {
 			StopFunc:     func() { hcStopped = true },
 		}
 
+		datasetAPIClientMock := &mock.DatasetAPIClientMock{
+			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error { return nil },
+		}
+
 		initialiserMock.GetHealthCheckFunc = func(cfg *config.Config, buildTime, gitCommit, version string) (service.HealthChecker, error) {
 			return hcMock, nil
 		}
+
+		initialiserMock.GetDatasetAPIClientFunc = func(cfg *config.Config) service.DatasetAPIClient { return datasetAPIClientMock }
 
 		// server Shutdown will fail if healthcheck is not stopped
 		serverMock := &mock.HTTPServerMock{
