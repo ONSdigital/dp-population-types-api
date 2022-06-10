@@ -98,12 +98,12 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 		Dataset: chi.URLParam(r, "population-type"),
 	}
 
-	res, err := h.cantabularClient.GetGeographyDimensions(ctx, req)
+	res, err := h.cantabular.GetGeographyDimensions(ctx, req)
 	if err != nil {
-		h.responder.Error(
+		h.respond.Error(
 			ctx,
 			w,
-			h.cantabularClient.StatusCode(err), // Can be changed to ctblr.StatusCode(err) once added to Client
+			h.cantabular.StatusCode(err), // Can be changed to ctblr.StatusCode(err) once added to Client
 			errors.Wrap(err, "failed to get area-types"),
 		)
 		return
@@ -121,5 +121,5 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	h.responder.JSON(ctx, w, http.StatusOK, resp)
+	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }

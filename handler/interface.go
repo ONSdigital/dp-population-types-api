@@ -4,11 +4,8 @@ import (
 	"context"
 	"net/http"
 
-<<<<<<< HEAD
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
-=======
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
->>>>>>> 63d8084 (Add published check ro GET /population-types)
 )
 
 type responder interface {
