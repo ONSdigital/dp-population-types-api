@@ -19,11 +19,9 @@ func (svc *Service) buildRoutes(ctx context.Context) {
 		svc.Router.Handle("/health", http.HandlerFunc(svc.HealthCheck.Handler))
 	}
 
-	println("************** BUILD ROUTES", svc.Config.EnablePrivateEndpoints)
 	if svc.Config.EnablePrivateEndpoints {
 		svc.privateEndpoints(ctx)
 	} else {
-
 		svc.publicEndpoints(ctx)
 	}
 
@@ -52,8 +50,8 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	r.Use(middleware.LogIdentity())
 	r.Use(permissions.Require(auth.Permissions{Read: true}))
 
-	svc.Router.Get("/population-types", populationTypes.Get)
-	svc.Router.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypes)
+	r.Get("/population-types", populationTypes.Get)
+	r.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypes)
 
 	// added from cant filt flex
 	svc.Router.Mount("/", r)

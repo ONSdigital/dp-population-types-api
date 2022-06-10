@@ -75,7 +75,7 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 			"",
 			// What do I put here for collection ID ?!
 			"",
-			&dataset.QueryParams{IsBasedOn: isBasedOn},
+			&dataset.QueryParams{IsBasedOn: isBasedOn, Limit: 100},
 		)
 		if err != nil {
 			h.responder.Error(
@@ -116,12 +116,9 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 func (h *PopulationTypes) authenticate(r *http.Request, logData log.Data) bool {
 	var authorised bool
 
-	// not sure that this is necessary
-	// if api.EnablePrePublishView {
-
 	var hasCallerIdentity, hasUserIdentity bool
-
 	callerIdentity := dprequest.Caller(r.Context())
+
 	if callerIdentity != "" {
 		logData["caller_identity"] = callerIdentity
 		hasCallerIdentity = true
@@ -137,9 +134,6 @@ func (h *PopulationTypes) authenticate(r *http.Request, logData log.Data) bool {
 		authorised = true
 	}
 	logData["authenticated"] = authorised
-
-	//return authorised
-	//	}
 
 	return authorised
 }

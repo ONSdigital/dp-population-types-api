@@ -48,7 +48,6 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 	svc.cantabularClient = init.GetCantabularClient(cfg.CantabularConfig)
 	svc.DatasetAPIClient = dataset.NewAPIClient(cfg.DatasetAPIURL)
 
-	println("-_____---__ ", cfg.EnablePrivateEndpoints)
 	svc.buildRoutes(ctx)
 	svc.Server = init.GetHTTPServer(cfg.BindAddr, svc.Router)
 

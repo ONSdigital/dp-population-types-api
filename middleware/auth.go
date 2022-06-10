@@ -15,7 +15,6 @@ func LogIdentity() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			ctx := r.Context()
-
 			if id := request.Caller(ctx); id != "" {
 				log.Info(ctx, "caller identity verified", log.Data{
 					"caller_identity": id,

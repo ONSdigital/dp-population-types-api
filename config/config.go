@@ -23,7 +23,7 @@ type Config struct {
 
 type CantabularConfig struct {
 	CantabularURL                string        `envconfig:"CANTABULAR_URL"`
-	CantabularExtURL             string        `envconfig:"CANTABULAR_EXT_API_URL"`
+	CantabularExtURL             string        `envconfig:"CANTABULAR_API_EXT_URL"`
 	DefaultRequestTimeout        time.Duration `envconfig:"DEFAULT_REQUEST_TIMEOUT"`
 	CantabularHealthcheckEnabled bool          `envconfig:"CANTABULAR_HEALTHCHECK_ENABLED"`
 }
@@ -45,8 +45,9 @@ func Get() (*Config, error) {
 		EnablePrivateEndpoints:     true,
 		ZebedeeURL:                 "http://localhost:8082",
 		ServiceAuthToken:           "",
-		EnablePermissionsAuth:      true,
-		DatasetAPIURL:              "http://localhost:22000",
+		EnablePermissionsAuth:      false,
+		// NOTE: ensure that this is routed to the *unauthenticated* dataset endpoint.
+		DatasetAPIURL: "http://localhost:22000",
 		CantabularConfig: CantabularConfig{
 			CantabularURL:         "http://localhost:8491",
 			CantabularExtURL:      "http://localhost:8492",
