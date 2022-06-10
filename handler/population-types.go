@@ -43,7 +43,14 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// Get is the handler for GET /area-types
+/*
+   GET population-type/<id>/area-types
+   Gets area types from cantabular.
+   If not authenticated, then only return
+   area-types if datasets using it published.
+   Whether published determined by making
+   unauthenticated request to dataset api.
+*/
 func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -61,7 +68,7 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 		h.responder.Error(
 			ctx,
 			w,
-			h.cantabularClient.StatusCode(err), // Can be changed to ctblr.StatusCode(err) once added to Client
+			h.cantabularClient.StatusCode(err),
 			errors.Wrap(err, "failed to get area-types"),
 		)
 		return
@@ -81,7 +88,6 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 			h.responder.Error(
 				ctx,
 				w,
-				// Is there a more ONS way?
 				http.StatusInternalServerError,
 				errors.Wrap(err, "failed to get area-types"),
 			)
@@ -89,14 +95,14 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 
 		}
 		if datasets.TotalCount == 0 {
-			// unauthenticated and no published datasets
+			// No published datasets
+			// Should return nothing
 			h.responder.JSON(ctx,
 				w,
 				http.StatusNotFound,
 				nil,
 			)
 		}
-
 	}
 
 	if res != nil {
