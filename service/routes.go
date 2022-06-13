@@ -53,6 +53,5 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	r.Get("/population-types", populationTypes.Get)
 	r.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypes)
 
-	// added from cant filt flex
 	svc.Router.Mount("/", r)
 }

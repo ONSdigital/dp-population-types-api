@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"io"
-	glog "log"
 	"os"
 	"testing"
 
@@ -25,6 +24,7 @@ type ComponentTest struct {
 }
 
 func (f *ComponentTest) InitializeScenario(ctx *godog.ScenarioContext) {
+	os.Clearenv()
 	authFeature := componenttest.NewAuthorizationFeature()
 	zebedeeURL := authFeature.FakeAuthService.ResolveURL("")
 
@@ -38,7 +38,7 @@ func (f *ComponentTest) InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
 		apiFeature.Reset()
 		if err := component.Reset(); err != nil {
-			glog.Panicf("unable to initialise scenario: %s", err)
+			return nil, err
 		}
 		authFeature.Reset()
 

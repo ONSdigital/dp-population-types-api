@@ -34,9 +34,7 @@ type PopulationTypesComponent struct {
 	fakeCantabularGeoDimensions  *cantabular.GetGeographyDimensionsResponse
 	service                      *service.Service
 	InitialiserMock              service.Initialiser
-
-	// Here add identity client?
-	DatasetAPI *httpfake.HTTPFake
+	DatasetAPI                   *httpfake.HTTPFake
 }
 
 func NewComponent(zebedeeURL string) (*PopulationTypesComponent, error) {
@@ -45,6 +43,8 @@ func NewComponent(zebedeeURL string) (*PopulationTypesComponent, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	config.EnablePermissionsAuth = false
 
 	config.ZebedeeURL = zebedeeURL
 	c := &PopulationTypesComponent{
@@ -61,7 +61,7 @@ func NewComponent(zebedeeURL string) (*PopulationTypesComponent, error) {
 func (c *PopulationTypesComponent) Reset() error {
 	c.APIFeature.Reset()
 	if _, err := c.InitialiseService(); err != nil {
-		return err
+		return errors.Wrap(err, "failed to reset component.")
 	}
 	return nil
 }

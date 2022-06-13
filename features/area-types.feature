@@ -7,7 +7,7 @@ Feature: Area Types
     Given the following response is returned from dp-dataset-api:
     """
     {
-    "total_count": 1
+        "total_count": 1
     }
     """
 
@@ -38,7 +38,7 @@ Feature: Area Types
     Given the following response is returned from dp-dataset-api:
     """
     {
-    "total_count": 0
+        "total_count": 0
     }
     """
 
@@ -51,7 +51,10 @@ Feature: Area Types
     When an error json response is returned from Cantabular api extension
 
     And I GET "/population-types/Inexistent/area-types"
-    Then an internal server error saying "failed to get area-types: error(s) returned by graphQL query" is returned
+    Then I should receive the following JSON response:
+    """
+    {"errors":["failed to get area-types: error(s) returned by graphQL query"]}
+    """
     And the HTTP status code should be "404"
 
   Scenario: Dataset Client returns errors
@@ -60,4 +63,7 @@ Feature: Area Types
 
     When I GET "/population-types/Example/area-types"
     Then the HTTP status code should be "500"
-    And an internal server error saying "failed to get area-types" is returned
+    And I should receive the following JSON response:
+    """
+    {"errors":["failed to get area-types: internal server error"]}
+    """

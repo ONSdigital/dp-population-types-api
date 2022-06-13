@@ -54,7 +54,6 @@ func (i *Init) GetCantabularClient(cfg config.CantabularConfig) CantabularClient
 }
 
 func (i *Init) GetDatasetAPIClient(cfg config.Config) DatasetAPIClient {
-	// There is a healthcheck client, should I be using that?
 	return dataset.NewAPIClient(cfg.DatasetAPIURL)
 }
 

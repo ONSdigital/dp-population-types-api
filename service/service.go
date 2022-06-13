@@ -118,8 +118,11 @@ func (svc *Service) registerCheckers(ctx context.Context) (err error) {
 			if err := svc.HealthCheck.AddCheck("Cantabular client", svc.cantabularClient.Checker); err != nil {
 				return errors.Wrap(err, "error adding check for cantabular client")
 			}
+			if err := svc.HealthCheck.AddCheck("dataset api", svc.DatasetAPIClient.Checker); err != nil {
+				return errors.Wrap(err, "error adding check for dataset api client")
+			}
 		} else {
-			log.Info(ctx, "cantabular health checking is disabled")
+			log.Info(ctx, "Health checking is disabled")
 		}
 	}
 

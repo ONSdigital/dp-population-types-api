@@ -38,7 +38,7 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 
 func (c *PopulationTypesComponent) datasetClientReturnsErrors() {
 	url := fmt.Sprintf(
-		`/datasets?offset=0&limit=10&is_based_on=%s`,
+		`/datasets?offset=0&limit=100&is_based_on=%s`,
 		"Example",
 	)
 

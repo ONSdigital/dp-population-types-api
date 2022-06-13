@@ -13,11 +13,10 @@ type Config struct {
 	HealthCheckInterval        time.Duration `envconfig:"HEALTHCHECK_INTERVAL"`
 	HealthCheckCriticalTimeout time.Duration `envconfig:"HEALTHCHECK_CRITICAL_TIMEOUT"`
 	EnablePrivateEndpoints     bool          `envconfig:"ENABLE_PRIVATE_ENDPOINTS"`
-
-	EnablePermissionsAuth bool   `envconfig:"ENABLE_PERMISSIONS_AUTH"`
-	ZebedeeURL            string `envconfig:"ZEBEDEE_URL"`
-	ServiceAuthToken      string `envconfig:"SERVICE_AUTH_TOKEN"`
-	DatasetAPIURL         string `envconfig:"DATASET_API_URL"`
+	EnablePermissionsAuth      bool          `envconfig:"ENABLE_PERMISSIONS_AUTH"`
+	ZebedeeURL                 string        `envconfig:"ZEBEDEE_URL"`
+	ServiceAuthToken           string        `envconfig:"SERVICE_AUTH_TOKEN"`
+	DatasetAPIURL              string        `envconfig:"DATASET_API_URL"`
 	CantabularConfig
 }
 
@@ -45,9 +44,8 @@ func Get() (*Config, error) {
 		EnablePrivateEndpoints:     true,
 		ZebedeeURL:                 "http://localhost:8082",
 		ServiceAuthToken:           "",
-		EnablePermissionsAuth:      false,
-		// NOTE: ensure that this is routed to the *unauthenticated* dataset endpoint.
-		DatasetAPIURL: "http://localhost:22000",
+		EnablePermissionsAuth:      true,
+		DatasetAPIURL:              "http://localhost:22000",
 		CantabularConfig: CantabularConfig{
 			CantabularURL:         "http://localhost:8491",
 			CantabularExtURL:      "http://localhost:8492",

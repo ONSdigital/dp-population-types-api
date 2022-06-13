@@ -41,8 +41,6 @@ Feature: Area Types
     """
     {"total_count": 0}
     """
-
-
     When I GET "/population-types/Example/area-types"
 
     Then the HTTP status code should be "200"

@@ -11,7 +11,6 @@ import (
 	"github.com/ONSdigital/dp-api-clients-go/v2/identity"
 	dprequest "github.com/ONSdigital/dp-net/v2/request"
 	"github.com/ONSdigital/dp-population-types-api/contract"
-	"github.com/ONSdigital/log.go/v2/log"
 )
 
 type PopulationTypes struct {
@@ -54,8 +53,7 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	logData := log.Data{}
-	authenticated := h.authenticate(r, logData)
+	authenticated := h.authenticate(r)
 
 	isBasedOn := chi.URLParam(r, "population-type")
 
@@ -77,7 +75,8 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 	var resp contract.GetAreaTypesResponse
 
 	if !authenticated {
-		datasets, err := h.datasetClient.GetDatasets(ctx,
+		datasets, err := h.datasetClient.GetDatasets(
+			ctx,
 			"",
 			"",
 			"",
@@ -88,19 +87,19 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 				ctx,
 				w,
 				http.StatusInternalServerError,
-				errors.Wrap(err, "failed to get area-types"),
+				errors.New("failed to get area-types: internal server error"),
 			)
 			return
 
 		}
 		if datasets.TotalCount == 0 {
-			// No published datasets
-			// Should return nothing
-			h.responder.JSON(ctx,
+			h.responder.JSON(
+				ctx,
 				w,
 				http.StatusNotFound,
-				nil,
+				errors.New("dataset not found"),
 			)
+			return
 		}
 	}
 
@@ -118,27 +117,24 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 }
 
 // Required for GET area types
-func (h *PopulationTypes) authenticate(r *http.Request, logData log.Data) bool {
+func (h *PopulationTypes) authenticate(r *http.Request) bool {
 	var authorised bool
 
 	var hasCallerIdentity, hasUserIdentity bool
 	callerIdentity := dprequest.Caller(r.Context())
 
 	if callerIdentity != "" {
-		logData["caller_identity"] = callerIdentity
 		hasCallerIdentity = true
 	}
 
 	userIdentity := dprequest.User(r.Context())
 	if userIdentity != "" {
-		logData["user_identity"] = userIdentity
 		hasUserIdentity = true
 	}
 
 	if hasCallerIdentity || hasUserIdentity {
 		authorised = true
 	}
-	logData["authenticated"] = authorised
 
 	return authorised
 }
