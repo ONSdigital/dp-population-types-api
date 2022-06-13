@@ -1,6 +1,9 @@
 Feature: Area Types
   Background:
     Given private endpoints are enabled
+    And I am identified as "user@ons.gov.uk"
+    And I am authorised
+
   Scenario: Getting Published area-types
     Given the following response is returned from dp-dataset-api:
     """
@@ -8,8 +11,6 @@ Feature: Area Types
     """
     And I have some population types in cantabular
     And a geography query response is available from Cantabular api extension
-    And I am identified as "user@ons.gov.uk"
-    And I am authorised
 
     When I GET "/population-types/Example/area-types"
     Then the HTTP status code should be "200"
@@ -33,16 +34,14 @@ Feature: Area Types
 
   Scenario: Getting Unpublished area-types
 
+    Given I have some population types in cantabular
+    And a geography query response is available from Cantabular api extension
 
-    Given I am identified as "user@ons.gov.uk"
-    And I am authorised
-
-    And I have some population types in cantabular
     And the following response is returned from dp-dataset-api:
     """
     {"total_count": 0}
     """
-    And a geography query response is available from Cantabular api extension
+
 
     When I GET "/population-types/Example/area-types"
 
