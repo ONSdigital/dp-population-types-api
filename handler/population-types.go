@@ -80,7 +80,6 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 		datasets, err := h.datasetClient.GetDatasets(ctx,
 			"",
 			"",
-			// What do I put here for collection ID ?!
 			"",
 			&dataset.QueryParams{IsBasedOn: isBasedOn, Limit: 100},
 		)

@@ -33,6 +33,19 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^an error json response is returned from Cantabular api extension$`, c.anErrorJsonResponseIsReturnedFromCantabularApiExtension)
 	ctx.Step(`^a list of area types is returned$`, c.aListOfAreaTypesIsReturned)
 	ctx.Step(`^the following response is returned from dp-dataset-api:$`, c.theFollowingVersionDocumentIsAvailable)
+	ctx.Step("^the dp-dataset-api is returning errors", c.datasetClientReturnsErrors)
+}
+
+func (c *PopulationTypesComponent) datasetClientReturnsErrors() {
+	url := fmt.Sprintf(
+		`/datasets?offset=0&limit=10&is_based_on=%s`,
+		"Example",
+	)
+
+	c.DatasetAPI.NewHandler().
+		Get(url).
+		Reply(http.StatusInternalServerError).
+		BodyString("some test error")
 }
 
 func (c *PopulationTypesComponent) privateEndpointsAreNotEnabled() error {

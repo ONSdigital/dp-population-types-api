@@ -53,3 +53,11 @@ Feature: Area Types
     And I GET "/population-types/Inexistent/area-types"
     Then an internal server error saying "failed to get area-types: error(s) returned by graphQL query" is returned
     And the HTTP status code should be "404"
+
+  Scenario: Dataset Client returns errors
+    Given the dp-dataset-api is returning errors
+    And a geography query response is available from Cantabular api extension
+
+    When I GET "/population-types/Example/area-types"
+    Then the HTTP status code should be "500"
+    And an internal server error saying "failed to get area-types" is returned
