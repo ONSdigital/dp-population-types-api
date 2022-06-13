@@ -72,9 +72,10 @@ Feature: Population types endpoint
       }
     }]
   }
-    """
-    And the following datasets based on "dataset_2" are available
-    """
+  """
+
+  And the following datasets based on "dataset_2" are available
+  """
   {
     "items": [
     {
