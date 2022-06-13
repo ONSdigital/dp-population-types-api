@@ -15,6 +15,7 @@ audit:
 
 .PHONY: lint
 lint:
+	golangci-lint run ./... --timeout 10m --skip-dirs=features --verbose --enable=gosec --enable=gocritic --enable=gofmt --enable=gocyclo --enable=bodyclose --enable=gocognit --enable=goimports
 
 .PHONY: build
 build:
