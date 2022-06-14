@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/identity"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/log.go/v2/log"
 )
@@ -19,6 +20,7 @@ type Service struct {
 	cantabularClient CantabularClient
 	datasetAPIClient DatasetAPIClient
 	HealthCheck      HealthChecker
+	identityClient   *identity.Client
 }
 
 func New() *Service {
@@ -35,6 +37,7 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 	log.Info(ctx, "initialising service with config", log.Data{"config": cfg})
 
 	svc.Config = cfg
+	svc.identityClient = identity.New(cfg.ZebedeeURL)
 	svc.HealthCheck, err = init.GetHealthCheck(cfg, buildTime, gitCommit, version)
 	if err != nil {
 		return errors.Wrap(err, "failed to get healthcheck")
@@ -45,6 +48,7 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 	svc.datasetAPIClient = init.GetDatasetAPIClient(cfg)
 
 	svc.buildRoutes(ctx)
+
 	svc.Server = init.GetHTTPServer(cfg.BindAddr, svc.Router)
 
 	if err = svc.registerCheckers(ctx); err != nil {
@@ -114,8 +118,12 @@ func (svc *Service) registerCheckers(ctx context.Context) error {
 				return errors.Wrap(err, "error adding check for cantabular client")
 			}
 		} else {
-			log.Info(ctx, "cantabular health checking is disabled")
+			log.Info(ctx, "Cantabular health check is disabled")
 		}
+	}
+
+	if err := svc.HealthCheck.AddCheck("dataset api", svc.datasetAPIClient.Checker); err != nil {
+		return errors.Wrap(err, "error adding check for dataset api client")
 	}
 
 	return nil

@@ -29,7 +29,6 @@ type PopulationTypesComponent struct {
 	Config                       *config.Config
 	ServiceRunning               bool
 	HttpServer                   *http.Server
-	apiFeature                   *componenttest.APIFeature
 	fakeCantabularDatasets       []string
 	fakeCantabularIsUnresponsive bool
 	fakeCantabularGeoDimensions  *cantabular.GetGeographyDimensionsResponse
@@ -38,20 +37,22 @@ type PopulationTypesComponent struct {
 	datasetAPI                   *httpfake.HTTPFake
 }
 
-func NewComponent() (*PopulationTypesComponent, error) {
+func NewComponent(zebedeeURL string) (*PopulationTypesComponent, error) {
 	config, err := config.Get()
 	if err != nil {
 		return nil, err
 	}
 
+	config.EnablePermissionsAuth = false
+
+	config.ZebedeeURL = zebedeeURL
 	c := &PopulationTypesComponent{
 		errorChan:      make(chan error),
 		ServiceRunning: false,
 		Config:         config,
 		HttpServer:     &http.Server{},
+		datasetAPI:     httpfake.New(),
 	}
-
-	c.apiFeature = componenttest.NewAPIFeature(c.InitialiseService)
 
 	c.datasetAPI = httpfake.New()
 	c.Config.DatasetAPIURL = c.datasetAPI.ResolveURL("")
@@ -59,10 +60,13 @@ func NewComponent() (*PopulationTypesComponent, error) {
 	return c, nil
 }
 
-func (c *PopulationTypesComponent) Reset() *PopulationTypesComponent {
-	c.apiFeature.Reset()
+func (c *PopulationTypesComponent) Reset() error {
 	c.datasetAPI.Reset()
-	return c
+	if _, err := c.InitialiseService(); err != nil {
+		return errors.Wrap(err, "failed to reset component.")
+	}
+
+	return nil
 }
 
 func (c *PopulationTypesComponent) Close() error {
@@ -85,6 +89,7 @@ func (c *PopulationTypesComponent) InitialiseService() (http.Handler, error) {
 	var err error
 
 	c.service = service.New()
+	c.Config.DatasetAPIURL = c.datasetAPI.ResolveURL("")
 
 	err = c.service.Init(context.Background(), c.InitialiserMock, c.Config, "", "1", "")
 	if err != nil {

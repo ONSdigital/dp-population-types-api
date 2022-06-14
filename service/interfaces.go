@@ -15,14 +15,15 @@ import (
 //go:generate moq -out mock/health_check.go -pkg mock . HealthChecker
 //go:generate moq -out mock/cantabular_client.go -pkg mock . CantabularClient
 //go:generate moq -out mock/dataset_api_client.go -pkg mock . DatasetAPIClient
+//go:generate moq -out mock/health_check.go -pkg mock . HealthChecker
 
 // Initialiser defines the methods to initialise external services
 type Initialiser interface {
 	GetHTTPServer(bindAddr string, router http.Handler) HTTPServer
 	GetCantabularClient(cfg config.CantabularConfig) CantabularClient
 	GetHealthCheck(cfg *config.Config, time, commit, version string) (HealthChecker, error)
-	GetResponder() Responder
 	GetDatasetAPIClient(cfg *config.Config) DatasetAPIClient
+	GetResponder() Responder
 }
 
 // HTTPServer defines the required methods from the HTTP server
@@ -54,7 +55,6 @@ type Responder interface {
 	StatusCode(http.ResponseWriter, int)
 	Bytes(context.Context, http.ResponseWriter, int, []byte)
 }
-
 type DatasetAPIClient interface {
 	GetDatasets(ctx context.Context, uToken, svcToken, collectionID string, params *dataset.QueryParams) (dataset.List, error)
 	Checker(ctx context.Context, state *healthcheck.CheckState) error

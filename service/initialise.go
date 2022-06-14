@@ -53,13 +53,12 @@ func (i *Init) GetCantabularClient(cfg config.CantabularConfig) CantabularClient
 	)
 }
 
-func cantabularNewClient(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.Client {
-	return cantabular.NewClient(cfg, ua, nil)
-}
-
-// GetDatasetAPIClient gets and initialises the DatasetAPI Client
 func (i *Init) GetDatasetAPIClient(cfg *config.Config) DatasetAPIClient {
 	return dataset.NewAPIClient(cfg.DatasetAPIURL)
+}
+
+func cantabularNewClient(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.Client {
+	return cantabular.NewClient(cfg, ua, nil)
 }
 
 func (i *Init) GetResponder() Responder {

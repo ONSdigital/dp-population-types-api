@@ -12,13 +12,14 @@ import (
 )
 
 func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
-	c.apiFeature.RegisterSteps(ctx)
-
+	ctx.Step(`^private endpoints are enabled`, c.privateEndpointsAreEnabled)
+	ctx.Step(`^private endpoints are not enabled`, c.privateEndpointsAreNotEnabled)
 	ctx.Step(`^cantabular is unresponsive$`, c.cantabularIsUnresponsive)
 	ctx.Step(`^a geography query response is available from Cantabular api extension$`, c.theFollowingCantabularResponseIsAvailable)
 	ctx.Step(`^an error json response is returned from Cantabular api extension$`, c.anErrorJsonResponseIsReturnedFromCantabularApiExtension)
 	ctx.Step(`^I have the following population types in cantabular$`, c.iHaveTheFollowingPopulationTypesInCantabular)
 	ctx.Step(`^the following datasets based on "([^"]*)" are available$`, c.theFollowingDatasetsBasedOnAreAvailable)
+	ctx.Step("^the dp-dataset-api is returning errors", c.datasetClientReturnsErrors)
 }
 
 func (c *PopulationTypesComponent) iHaveTheFollowingPopulationTypesInCantabular(body *godog.DocString) error {
@@ -36,6 +37,28 @@ func (c *PopulationTypesComponent) iHaveTheFollowingDatasetsFromDatasetAPI(body 
 		return fmt.Errorf("failed to unmarshal population types: %w", err)
 	}
 	c.fakeCantabularDatasets = populationTypes
+	return nil
+}
+
+func (c *PopulationTypesComponent) datasetClientReturnsErrors() {
+	url := fmt.Sprintf(
+		`/datasets?offset=0&limit=100&is_based_on=%s`,
+		"Example",
+	)
+
+	c.datasetAPI.NewHandler().
+		Get(url).
+		Reply(http.StatusInternalServerError).
+		BodyString("some test error")
+}
+
+func (c *PopulationTypesComponent) privateEndpointsAreNotEnabled() error {
+	c.Config.EnablePrivateEndpoints = false
+	return nil
+}
+
+func (c *PopulationTypesComponent) privateEndpointsAreEnabled() error {
+	c.Config.EnablePrivateEndpoints = true
 	return nil
 }
 

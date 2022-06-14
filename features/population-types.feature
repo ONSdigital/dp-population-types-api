@@ -138,6 +138,8 @@ Feature: Population types endpoint
   } 
   """
 
+  And private endpoints are not enabled
+  
   Scenario: The root population-types endpoint should return a list of population types
     When I GET "/population-types"
 
