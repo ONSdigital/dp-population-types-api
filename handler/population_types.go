@@ -79,7 +79,12 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if len(published) == 0 {
-		h.respond.Error(ctx, w, http.StatusNotFound, errors.New("no population types found"))
+		h.respond.Error(
+			ctx,
+			w,
+			http.StatusNotFound,
+			errors.New("no population types found"),
+		)
 		return
 	}
 
@@ -103,7 +108,7 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 		h.respond.Error(
 			ctx,
 			w,
-			h.cantabular.StatusCode(err), // Can be changed to ctblr.StatusCode(err) once added to Client
+			h.cantabular.StatusCode(err),
 			errors.Wrap(err, "failed to get area-types"),
 		)
 		return

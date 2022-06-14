@@ -14,7 +14,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Init implements the Initialiser interface to initialise dependencies
 type Init struct {
 	CantabularClientFactory func(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.Client
 }
