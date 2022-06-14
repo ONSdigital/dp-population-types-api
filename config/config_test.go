@@ -28,7 +28,7 @@ func TestConfig(t *testing.T) {
 					GracefulShutdownTimeout:    5 * time.Second,
 					HealthCheckInterval:        30 * time.Second,
 					HealthCheckCriticalTimeout: 90 * time.Second,
-					EnablePrivateEndpoints:     true,
+					EnablePrivateEndpoints:     false,
 					ZebedeeURL:                 "http://localhost:8082",
 					EnablePermissionsAuth:      true,
 					DatasetAPIURL:              "http://localhost:22000",

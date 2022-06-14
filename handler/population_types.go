@@ -65,7 +65,7 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		log.Info(ctx, "datasets found", log.Data{"datasets": datasets})
+		log.Info(ctx, "datasets found", log.Data{"num_datasets": datasets.Count})
 
 		var isPublished bool
 		for _, d := range datasets.Items {
@@ -126,26 +126,38 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 		datasets, err := h.datasets.GetDatasets(
 			ctx,
 			"",
+			h.cfg.ServiceAuthToken,
 			"",
-			"",
-			&dataset.QueryParams{IsBasedOn: isBasedOn, Limit: 100},
+			&dataset.QueryParams{
+				IsBasedOn: isBasedOn,
+				Limit:     1000,
+			},
 		)
 		if err != nil {
 			h.respond.Error(
 				ctx,
 				w,
-				http.StatusInternalServerError,
-				errors.New("failed to get area-types: internal server error"),
+				dperrors.StatusCode(err),
+				errors.New("failed to get area types: failed to get population type"),
 			)
 			return
 
 		}
-		if datasets.TotalCount == 0 {
+
+		var isPublished bool
+		for _, d := range datasets.Items {
+			if d.Current != nil {
+				isPublished = true
+				break
+			}
+		}
+
+		if !isPublished {
 			h.respond.JSON(
 				ctx,
 				w,
 				http.StatusNotFound,
-				errors.New("dataset not found"),
+				errors.New("population type not found"),
 			)
 			return
 		}

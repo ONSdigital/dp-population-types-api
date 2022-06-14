@@ -4,10 +4,66 @@ Feature: Area Types
     Given private endpoints are not enabled
 
   Scenario: Getting published area types
+
     Given the following datasets based on "Example" are available
     """
     {
-        "total_count": 1
+      "items": [
+      {
+      "id": "cantabular-flexible-example",
+      "current": {
+        "contacts": [
+          {}
+        ],
+        "id": "cantabular-flexible-example",
+        "links": {
+          "editions": {
+            "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions"
+          },
+          "latest_version": {
+            "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions/2021/versions/1",
+            "id": "1"
+          },
+          "self": {
+            "href": "http://localhost:22000/datasets/cantabular-flexible-example"
+          }
+        },
+        "qmi": {},
+        "state": "published",
+        "title": "sdf",
+        "type": "cantabular_flexible_table",
+        "is_based_on": {
+          "@type": "cantabular_flexible_table",
+          "@id": "Example"
+        }
+      },
+      "next": {
+        "contacts": [
+            {}
+          ],
+          "id": "cantabular-flexible-example",
+          "links": {
+            "editions": {
+              "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions"
+            },
+            "latest_version": {
+              "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions/2021/versions/1",
+              "id": "1"
+            },
+            "self": {
+              "href": "http://localhost:22000/datasets/cantabular-flexible-example"
+            }
+          },
+          "qmi": {},
+          "state": "published",
+          "title": "sdf",
+          "type": "cantabular_flexible_table",
+          "is_based_on": {
+            "@type": "cantabular_flexible_table",
+            "@id": "Example"
+          }
+        }
+      }]
     }
     """
 
@@ -39,7 +95,33 @@ Feature: Area Types
   Given the following datasets based on "Example" are available
     """
     {
-        "total_count": 0
+      "items": [
+      {
+        "id": "cantabular-flexible-example",
+        "next": {
+          "id": "cantabular-flexible-example",
+          "links": {
+            "editions": {
+              "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions"
+            },
+            "latest_version": {
+              "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions/2021/versions/1",
+              "id": "1"
+            },
+            "self": {
+              "href": "http://localhost:22000/datasets/cantabular-flexible-example"
+            }
+          },
+          "qmi": {},
+          "state": "published",
+          "title": "sdf",
+          "type": "cantabular_flexible_table",
+          "is_based_on": {
+            "@type": "cantabular_flexible_table",
+            "@id": "Example"
+          }
+        }
+      }]
     }
     """
 
@@ -72,5 +154,5 @@ Feature: Area Types
 
     And I should receive the following JSON response:
     """
-    {"errors":["failed to get area-types: internal server error"]}
+    {"errors":["failed to get area types: failed to get population type"]}
     """
