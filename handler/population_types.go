@@ -153,7 +153,7 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if !isPublished {
-			h.respond.JSON(
+			h.respond.Error(
 				ctx,
 				w,
 				http.StatusNotFound,
