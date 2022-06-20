@@ -8,62 +8,7 @@ Feature: Area Types
     Given the following datasets based on "Example" are available
     """
     {
-      "items": [
-      {
-      "id": "cantabular-flexible-example",
-      "current": {
-        "contacts": [
-          {}
-        ],
-        "id": "cantabular-flexible-example",
-        "links": {
-          "editions": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions"
-          },
-          "latest_version": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions/2021/versions/1",
-            "id": "1"
-          },
-          "self": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-example"
-          }
-        },
-        "qmi": {},
-        "state": "published",
-        "title": "sdf",
-        "type": "cantabular_flexible_table",
-        "is_based_on": {
-          "@type": "cantabular_flexible_table",
-          "@id": "Example"
-        }
-      },
-      "next": {
-        "contacts": [
-            {}
-          ],
-          "id": "cantabular-flexible-example",
-          "links": {
-            "editions": {
-              "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions"
-            },
-            "latest_version": {
-              "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions/2021/versions/1",
-              "id": "1"
-            },
-            "self": {
-              "href": "http://localhost:22000/datasets/cantabular-flexible-example"
-            }
-          },
-          "qmi": {},
-          "state": "published",
-          "title": "sdf",
-          "type": "cantabular_flexible_table",
-          "is_based_on": {
-            "@type": "cantabular_flexible_table",
-            "@id": "Example"
-          }
-        }
-      }]
+      "total_count": 1
     }
     """
 
