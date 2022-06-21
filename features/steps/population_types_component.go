@@ -156,42 +156,6 @@ func (c *PopulationTypesComponent) GetCantabularClient(cfg config.CantabularConf
 				)
 			}
 			return c.fakeGetAreasResponse, nil
-			// return &cantabular.GetAreasResponse{
-			// 	Dataset: gql.DatasetRuleBase{
-			// 		RuleBase: gql.RuleBase{
-			// 			IsSourceOf: gql.Variables{
-			// 				Search: gql.Search{
-			// 					Edges: []gql.Edge{
-			// 						{
-			// 							Node: gql.Node{
-			// 								Name:  "country",
-			// 								Label: "Country",
-			// 								Categories: gql.Categories{
-			// 									Search: gql.Search{
-			// 										Edges: []gql.Edge{
-			// 											{
-			// 												Node: gql.Node{
-			// 													Code:  "E",
-			// 													Label: "England",
-			// 												},
-			// 											},
-			// 											{
-			// 												Node: gql.Node{
-			// 													Code:  "N",
-			// 													Label: "Northern Ireland",
-			// 												},
-			// 											},
-			// 										},
-			// 									},
-			// 								},
-			// 							},
-			// 						},
-			// 					},
-			// 				},
-			// 			},
-			// 		},
-			// 	},
-			// }, nil
 		},
 	}
 }
