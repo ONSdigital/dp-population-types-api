@@ -1,13 +1,13 @@
 package contract
 
-// GetAreasRequest defines the schema for the GET /areas query parameter
+// GetAreasRequest defines the schema for the GET /coverage query parameter
 type GetAreasRequest struct {
 	Dataset  string `schema:"dataset"`
 	AreaType string `schema:"area-type"`
 	Text     string `schema:"text"`
 }
 
-// GetAreasResponse is the response object for GET /areas
+// GetAreasResponse is the response object for GET /coverage
 type GetAreasResponse struct {
 	Areas []Areas `json:"areas"`
 }

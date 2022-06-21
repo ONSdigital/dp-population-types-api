@@ -16,15 +16,15 @@ type Areas struct {
 	ctblr   cantabularClient
 }
 
-// NewAreas returns a new Areas handler
-func NewAreas(r responder, c cantabularClient) *Areas {
+// NewCoverage returns a new Areas handler
+func NewCoverage(r responder, c cantabularClient) *Areas {
 	return &Areas{
 		respond: r,
 		ctblr:   c,
 	}
 }
 
-// Get is the handler for GET /areas
+// Get is the handler for GET /coverage
 func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -45,7 +45,7 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 		Category: req.Text,
 	}
 
-	areas, err := h.ctblr.GetAreas(ctx, areaTypeReq)
+	coverage, err := h.ctblr.GetAreas(ctx, areaTypeReq)
 	if err != nil {
 		msg := "failed to get areas"
 		h.respond.Error(
@@ -60,7 +60,7 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.respond.JSON(ctx, w, http.StatusOK, toAreasResponse(areas))
+	h.respond.JSON(ctx, w, http.StatusOK, toAreasResponse(coverage))
 }
 
 // toAreasResponse converts a cantabular.GetAreasResponse to a flattened contract.GetAreasResponse.

@@ -77,7 +77,7 @@ Feature: Areas
         }
       }
       """
-    And I GET "/areas?dataset=Example"
+    And I GET "/coverage?dataset=Example"
     Then I should receive the following JSON response:
       """
       {
@@ -148,7 +148,7 @@ Feature: Areas
       }
     }
     """
-    And I GET "/areas?dataset=Example&area-type=City&text=London"
+    And I GET "/coverage?dataset=Example&area-type=City&text=London"
     Then I should receive the following JSON response:
     """
     {
@@ -234,7 +234,7 @@ Feature: Areas
       }
     }
     """
-    And I GET "/areas"
+    And I GET "/coverage"
     Then I should receive the following JSON response:
     """
     {
@@ -292,7 +292,7 @@ Feature: Areas
       ]
     }
     """
-    And I GET "/areas?dataset=Test"
+    And I GET "/coverage?dataset=Test"
     Then I should receive the following JSON response:
     """
     {
@@ -319,7 +319,7 @@ Feature: Areas
       }
     }
     """
-    And I GET "/areas?dataset=Example&text=rio"
+    And I GET "/coverage?dataset=Example&text=rio"
     Then I should receive the following JSON response:
     """
     {
