@@ -22,13 +22,14 @@ var loggingFlag = flag.Bool("logging", false, "print logging")
 
 type ComponentTest struct {
 	MongoFeature *componenttest.MongoFeature
+	t            testing.TB
 }
 
 func (f *ComponentTest) InitializeScenario(ctx *godog.ScenarioContext) {
 	authFeature := componenttest.NewAuthorizationFeature()
 	zebedeeURL := authFeature.FakeAuthService.ResolveURL("")
 
-	component, err := steps.NewComponent(zebedeeURL)
+	component, err := steps.NewComponent(f.t, zebedeeURL)
 	if err != nil {
 		panic(fmt.Sprintf("failed to create component: %s", err))
 	}
@@ -73,7 +74,7 @@ func TestComponent(t *testing.T) {
 			Paths:  flag.Args(),
 		}
 
-		f := &ComponentTest{}
+		f := &ComponentTest{t: t}
 
 		status = godog.TestSuite{
 			Name:                 "feature_tests",

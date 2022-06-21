@@ -44,6 +44,7 @@ type HealthChecker interface {
 type CantabularClient interface {
 	ListDatasets(ctx context.Context) ([]string, error)
 	GetGeographyDimensions(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error)
+	GetAreas(context.Context, cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error)
 	Checker(ctx context.Context, state *healthcheck.CheckState) error
 	StatusCode(error) int
 }

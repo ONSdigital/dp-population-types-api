@@ -16,10 +16,15 @@ type responder interface {
 type cantabularClient interface {
 	ListDatasets(ctx context.Context) ([]string, error)
 	GetGeographyDimensions(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error)
+	GetAreas(context.Context, cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error)
 	StatusCode(error) int
 }
 
 type datasetAPIClient interface {
 	GetDatasets(ctx context.Context, uToken, svcToken, collectionID string, params *dataset.QueryParams) (dataset.List, error)
 	Checker(context.Context, *healthcheck.CheckState) error
+}
+
+type validator interface {
+	Valid() error
 }

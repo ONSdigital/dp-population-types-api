@@ -3,6 +3,7 @@ package steps
 import (
 	"context"
 	"net/http"
+	"testing"
 
 	"github.com/maxcnunes/httpfake"
 	"github.com/pkg/errors"
@@ -32,12 +33,15 @@ type PopulationTypesComponent struct {
 	fakeCantabularDatasets       []string
 	fakeCantabularIsUnresponsive bool
 	fakeCantabularGeoDimensions  *cantabular.GetGeographyDimensionsResponse
+	fakeGetAreasResponse         *cantabular.GetAreasResponse
 	service                      *service.Service
 	InitialiserMock              service.Initialiser
 	datasetAPI                   *httpfake.HTTPFake
+	CantabularApiExt             *httpfake.HTTPFake
+	CantabularSrv                *httpfake.HTTPFake
 }
 
-func NewComponent(zebedeeURL string) (*PopulationTypesComponent, error) {
+func NewComponent(t testing.TB, zebedeeURL string) (*PopulationTypesComponent, error) {
 	config, err := config.Get()
 	if err != nil {
 		return nil, err
@@ -47,11 +51,13 @@ func NewComponent(zebedeeURL string) (*PopulationTypesComponent, error) {
 
 	config.ZebedeeURL = zebedeeURL
 	c := &PopulationTypesComponent{
-		errorChan:      make(chan error),
-		ServiceRunning: false,
-		Config:         config,
-		HttpServer:     &http.Server{},
-		datasetAPI:     httpfake.New(),
+		errorChan:        make(chan error),
+		ServiceRunning:   false,
+		Config:           config,
+		HttpServer:       &http.Server{},
+		datasetAPI:       httpfake.New(),
+		CantabularSrv:    httpfake.New(),
+		CantabularApiExt: httpfake.New(httpfake.WithTesting(t)),
 	}
 
 	c.datasetAPI = httpfake.New()
@@ -140,6 +146,52 @@ func (c *PopulationTypesComponent) GetCantabularClient(cfg config.CantabularConf
 		},
 		StatusCodeFunc: func(err error) int {
 			return 404
+		},
+		GetAreasFunc: func(ctx context.Context, req cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error) {
+			if c.fakeCantabularIsUnresponsive {
+				return nil, dperrors.New(
+					errors.New("failed to get areas"),
+					http.StatusNotFound,
+					log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+				)
+			}
+			return c.fakeGetAreasResponse, nil
+			// return &cantabular.GetAreasResponse{
+			// 	Dataset: gql.DatasetRuleBase{
+			// 		RuleBase: gql.RuleBase{
+			// 			IsSourceOf: gql.Variables{
+			// 				Search: gql.Search{
+			// 					Edges: []gql.Edge{
+			// 						{
+			// 							Node: gql.Node{
+			// 								Name:  "country",
+			// 								Label: "Country",
+			// 								Categories: gql.Categories{
+			// 									Search: gql.Search{
+			// 										Edges: []gql.Edge{
+			// 											{
+			// 												Node: gql.Node{
+			// 													Code:  "E",
+			// 													Label: "England",
+			// 												},
+			// 											},
+			// 											{
+			// 												Node: gql.Node{
+			// 													Code:  "N",
+			// 													Label: "Northern Ireland",
+			// 												},
+			// 											},
+			// 										},
+			// 									},
+			// 								},
+			// 							},
+			// 						},
+			// 					},
+			// 				},
+			// 			},
+			// 		},
+			// 	},
+			// }, nil
 		},
 	}
 }
