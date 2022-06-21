@@ -32,7 +32,64 @@ func NewPopulationTypes(cfg *config.Config, r responder, c cantabularClient, d d
 	}
 }
 
-func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
+func (h *PopulationTypes) GetPublic(w http.ResponseWriter, req *http.Request) {
+	ctx := req.Context()
+
+	ptypes, err := h.cantabular.ListDatasets(ctx)
+	if err != nil {
+		h.respond.Error(ctx, w, dperrors.StatusCode(err), errors.Wrap(
+			err,
+			"failed to fetch population types",
+		))
+		return
+	}
+
+	log.Info(ctx, "population types found", log.Data{"datasets": ptypes})
+
+	var published []string
+	for _, p := range ptypes {
+		q := dataset.QueryParams{
+			IsBasedOn: p,
+			Limit:     1000,
+		}
+
+		datasets, err := h.datasets.GetDatasets(ctx, "", "", "", &q)
+		if err != nil {
+			if dperrors.StatusCode(err) == http.StatusNotFound {
+				continue
+			}
+			h.respond.Error(ctx, w, dperrors.StatusCode(err), errors.Wrap(
+				err,
+				"failed to get datasets",
+			))
+			return
+		}
+
+		log.Info(ctx, "datasets found", log.Data{"num_datasets": datasets.Count})
+
+		if len(datasets.Items) > 0 {
+			published = append(published, p)
+		}
+	}
+
+	if len(published) == 0 {
+		h.respond.Error(
+			ctx,
+			w,
+			http.StatusNotFound,
+			errors.New("no population types found"),
+		)
+		return
+	}
+
+	resp := contract.GetPopulationTypesResponse{
+		PopulationTypes: contract.NewPopulationTypes(published),
+	}
+
+	h.respond.JSON(ctx, w, http.StatusOK, resp)
+}
+
+func (h *PopulationTypes) GetPrivate(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
 	ptypes, err := h.cantabular.ListDatasets(ctx)
@@ -96,11 +153,75 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }
 
-// GetAreaTypes is the handler for GET /population-type/{id}/area-types
-// Gets area types from cantabular. If not authenticated, then only return
-// area-types if datasets using it published. Whether published determined by making
-// unauthenticated request to dataset api.
-func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
+func (h *PopulationTypes) GetAreaTypesPublic(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	authenticated := h.authenticate(r)
+	isBasedOn := chi.URLParam(r, "population-type")
+
+	req := cantabular.GetGeographyDimensionsRequest{
+		Dataset: isBasedOn,
+	}
+
+	res, err := h.cantabular.GetGeographyDimensions(ctx, req)
+	if err != nil {
+		h.respond.Error(
+			ctx,
+			w,
+			h.cantabular.StatusCode(err),
+			errors.Wrap(err, "failed to get area-types"),
+		)
+		return
+	}
+
+	var resp contract.GetAreaTypesResponse
+
+	if !authenticated {
+		datasets, err := h.datasets.GetDatasets(
+			ctx,
+			"",
+			h.cfg.ServiceAuthToken,
+			"",
+			&dataset.QueryParams{
+				IsBasedOn: isBasedOn,
+				Limit:     1000,
+			},
+		)
+		if err != nil {
+			h.respond.Error(
+				ctx,
+				w,
+				dperrors.StatusCode(err),
+				errors.New("failed to get area types: failed to get population type"),
+			)
+			return
+
+		}
+
+		if datasets.TotalCount == 0 {
+			h.respond.Error(
+				ctx,
+				w,
+				http.StatusNotFound,
+				errors.New("population type not found"),
+			)
+			return
+		}
+	}
+
+	if res != nil {
+		for _, edge := range res.Dataset.RuleBase.IsSourceOf.Edges {
+			resp.AreaTypes = append(resp.AreaTypes, contract.AreaType{
+				ID:         edge.Node.Name,
+				Label:      edge.Node.Label,
+				TotalCount: edge.Node.Categories.TotalCount,
+			})
+		}
+	}
+
+	h.respond.JSON(ctx, w, http.StatusOK, resp)
+}
+
+func (h *PopulationTypes) GetAreaTypesPrivate(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	authenticated := h.authenticate(r)
 	isBasedOn := chi.URLParam(r, "population-type")
@@ -153,7 +274,7 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if !isPublished {
-			h.respond.JSON(
+			h.respond.Error(
 				ctx,
 				w,
 				http.StatusNotFound,
