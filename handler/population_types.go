@@ -32,7 +32,64 @@ func NewPopulationTypes(cfg *config.Config, r responder, c cantabularClient, d d
 	}
 }
 
-func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
+func (h *PopulationTypes) GetPublic(w http.ResponseWriter, req *http.Request) {
+	ctx := req.Context()
+
+	ptypes, err := h.cantabular.ListDatasets(ctx)
+	if err != nil {
+		h.respond.Error(ctx, w, dperrors.StatusCode(err), errors.Wrap(
+			err,
+			"failed to fetch population types",
+		))
+		return
+	}
+
+	log.Info(ctx, "population types found", log.Data{"datasets": ptypes})
+
+	var published []string
+	for _, p := range ptypes {
+		q := dataset.QueryParams{
+			IsBasedOn: p,
+			Limit:     1000,
+		}
+
+		datasets, err := h.datasets.GetDatasets(ctx, "", "", "", &q)
+		if err != nil {
+			if dperrors.StatusCode(err) == http.StatusNotFound {
+				continue
+			}
+			h.respond.Error(ctx, w, dperrors.StatusCode(err), errors.Wrap(
+				err,
+				"failed to get datasets",
+			))
+			return
+		}
+
+		log.Info(ctx, "datasets found", log.Data{"num_datasets": datasets.Count})
+
+		if len(datasets.Items) > 0 {
+			published = append(published, p)
+		}
+	}
+
+	if len(published) == 0 {
+		h.respond.Error(
+			ctx,
+			w,
+			http.StatusNotFound,
+			errors.New("no population types found"),
+		)
+		return
+	}
+
+	resp := contract.GetPopulationTypesResponse{
+		PopulationTypes: contract.NewPopulationTypes(published),
+	}
+
+	h.respond.JSON(ctx, w, http.StatusOK, resp)
+}
+
+func (h *PopulationTypes) GetPrivate(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
 	ptypes, err := h.cantabular.ListDatasets(ctx)

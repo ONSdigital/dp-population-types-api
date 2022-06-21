@@ -7,7 +7,9 @@ Feature: Population types endpoint
 
   Background:
 
-  Given I have the following population types in cantabular
+  Given private endpoints are not enabled
+
+  And I have the following population types in cantabular
   """
   ["dataset_1", "dataset_2", "dataset_3"]
   """
@@ -17,59 +19,7 @@ Feature: Population types endpoint
   {
     "items": [
     {
-      "id": "cantabular-flexible-example",
-      "current": {
-        "contacts": [
-          {}
-        ],
-        "id": "cantabular-flexible-example",
-        "links": {
-          "editions": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions"
-          },
-          "latest_version": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions/2021/versions/1",
-            "id": "1"
-          },
-          "self": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-example"
-          }
-        },
-        "qmi": {},
-        "state": "published",
-        "title": "sdf",
-        "type": "cantabular_flexible_table",
-        "is_based_on": {
-          "@type": "cantabular_flexible_table",
-          "@id": "dataset_1"
-        }
-      },
-      "next": {
-        "contacts": [
-          {}
-        ],
-        "id": "cantabular-flexible-example",
-        "links": {
-          "editions": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions"
-          },
-          "latest_version": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions/2021/versions/1",
-            "id": "1"
-          },
-          "self": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-example"
-          }
-        },
-        "qmi": {},
-        "state": "published",
-        "title": "sdf",
-        "type": "cantabular_flexible_table",
-        "is_based_on": {
-          "@type": "cantabular_flexible_table",
-          "@id": "dataset_1"
-        }
-      }
+      "id": "cantabular-flexible-example"
     }]
   }
   """
@@ -79,66 +29,10 @@ Feature: Population types endpoint
   {
     "items": [
     {
-      "id": "cantabular-flexible-default",
-      "current": {
-        "contacts": [
-          {}
-        ],
-        "description": "Default Cantabular Flexible Published Collection",
-        "id": "cantabular-flexible-default",
-        "links": {
-          "editions": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-default/editions"
-          },
-          "latest_version": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-default/editions/2021/versions/1",
-            "id": "1"
-          },
-          "self": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-default"
-          }
-        },
-        "qmi": {},
-        "state": "published",
-        "title": "Cantabular Flexible Default",
-        "type": "cantabular_flexible_table",
-        "is_based_on": {
-          "@type": "cantabular_flexible_table",
-          "@id": "dataset_2"
-        }
-      },
-      "next": {
-        "contacts": [
-          {}
-        ],
-        "description": "Default Cantabular Flexible Published Collection",
-        "id": "cantabular-flexible-default",
-        "links": {
-          "editions": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-default/editions"
-          },
-          "latest_version": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-default/editions/2021/versions/1",
-            "id": "1"
-          },
-          "self": {
-            "href": "http://localhost:22000/datasets/cantabular-flexible-default"
-          }
-        },
-        "qmi": {},
-        "state": "published",
-        "title": "Cantabular Flexible Default",
-        "type": "cantabular_flexible_table",
-        "is_based_on": {
-          "@type": "cantabular_flexible_table",
-          "@id": "dataset_2"
-        }
-      }
+      "id": "cantabular-flexible-default"
     }]
   } 
   """
-
-  And private endpoints are not enabled
   
   Scenario: The root population-types endpoint should return a list of population types
     When I GET "/population-types"
