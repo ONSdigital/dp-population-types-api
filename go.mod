@@ -1,6 +1,6 @@
 module github.com/ONSdigital/dp-population-types-api
 
-go 1.17
+go 1.18
 
 replace github.com/dgrijalva/jwt-go v3.2.0+incompatible => github.com/golang-jwt/jwt v3.2.2+incompatible
 
