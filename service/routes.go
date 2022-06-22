@@ -41,7 +41,7 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 	svc.Router.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypesPublic)
 
 	areas := handler.NewAreas(svc.responder, svc.cantabularClient)
-	svc.Router.Get("/areas", areas.Get)
+	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.Get)
 }
 
 func (svc *Service) privateEndpoints(ctx context.Context) {
@@ -70,7 +70,7 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 
 	areas := handler.NewAreas(svc.responder, svc.cantabularClient)
 
-	r.Get("/areas", areas.Get)
+	r.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.Get)
 
 	svc.Router.Mount("/", r)
 }

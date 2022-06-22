@@ -17,30 +17,6 @@ Feature: Areas
                   "edges": [
                     {
                       "node": {
-                        "label": "Country",
-                        "name": "country",
-                        "categories": {
-                          "search": {
-                            "edges": [
-                              {
-                                "node": {
-                                  "code": "E",
-                                  "label": "England"
-                                }
-                              },
-                              {
-                                "node": {
-                                  "code": "N",
-                                  "label": "Northern Ireland"
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "node": {
                         "label": "City",
                         "name": "city",
                         "categories": {
@@ -77,21 +53,11 @@ Feature: Areas
         }
       }
       """
-    And I GET "/areas?dataset=Example"
+    And I GET "/population-types/Example/area-types/City/areas"
     Then I should receive the following JSON response:
       """
       {
         "areas": [
-          {
-            "id": "E",
-            "label": "England",
-            "area-type": "country"
-          },
-          {
-            "id": "N",
-            "label": "Northern Ireland",
-            "area-type": "country"
-          },
           {
             "id": "0",
             "label": "London",
@@ -148,7 +114,7 @@ Feature: Areas
       }
     }
     """
-    And I GET "/areas?dataset=Example&area-type=City&text=London"
+    And I GET "/population-types/Example/area-types/City/areas?q=London"
     Then I should receive the following JSON response:
     """
     {
@@ -234,7 +200,7 @@ Feature: Areas
       }
     }
     """
-    And I GET "/areas"
+    And I GET "/population-types/Example/area-types/City/areas"
     Then I should receive the following JSON response:
     """
     {
@@ -292,7 +258,7 @@ Feature: Areas
       ]
     }
     """
-    And I GET "/areas?dataset=Test"
+    And I GET "/population-types/Example/area-types/City/areas"
     Then I should receive the following JSON response:
     """
     {
@@ -319,7 +285,7 @@ Feature: Areas
       }
     }
     """
-    And I GET "/areas?dataset=Example&text=rio"
+    And I GET "/population-types/Example/area-types/City/areas?q=rio"
     Then I should receive the following JSON response:
     """
     {

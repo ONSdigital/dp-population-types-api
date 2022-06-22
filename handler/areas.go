@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-population-types-api/contract"
+	"github.com/go-chi/chi/v5"
 
 	"github.com/pkg/errors"
 )
@@ -28,21 +28,14 @@ func NewAreas(r responder, c cantabularClient) *Areas {
 func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	var req contract.GetAreasRequest
-	if err := parseRequest(r, &req); err != nil {
-		h.respond.Error(
-			ctx,
-			w,
-			http.StatusBadRequest,
-			fmt.Errorf("failed to parse request: %w", err),
-		)
-		return
-	}
+	dataset := chi.URLParam(r, "population-type")
+	areaType := chi.URLParam(r, "area-type")
+	category := r.URL.Query().Get("q")
 
 	areaTypeReq := cantabular.GetAreasRequest{
-		Dataset:  req.Dataset,
-		Variable: req.AreaType,
-		Category: req.Text,
+		Dataset:  dataset,
+		Variable: areaType,
+		Category: category,
 	}
 
 	areas, err := h.ctblr.GetAreas(ctx, areaTypeReq)
