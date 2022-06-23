@@ -37,6 +37,72 @@ paths:
           description: "Unauthorised to fetch"
         500:
           $ref: "#/responses/InternalError"
+  /population-types/{population-type}/area-types:
+    get:
+      summary: "Get list of area types for given dataset "
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: population-type
+          type: string
+          in: path
+          required: true
+      responses:
+        200:
+          description: "area types returned successfully"
+          schema:
+            $ref: '#/definitions/GetAreaTypesResponse'
+        401:
+          $ref: '#/responses/Unauthorised'
+        404:
+          description: "Dataset not found"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          $ref: "#/responses/InternalError"
+        502:
+          $ref: '#/responses/BadGateway'
+  /population-types/{population-type}/area-types/area-types/{area-type}:
+    get:
+      parameters:
+        - name: population-type
+          type: string
+          in: path
+          required: true
+        - name: area-type
+          type: string
+          in: path
+          required: true
+      summary: "Get categories/values for given area type"
+      description: ""
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Categories for area type returned"
+          schema:
+            $ref: '#/definitions/GetAreaTypeResponse'
+  /population-types/{population-type}/area-types/{area-type}/parents:
+    get:
+      summary: "Get list of parents for given area type"
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: population-type
+          type: string
+          in: path
+          required: true
+        - name: area-type
+          type: string
+          in: path
+          required: true
+      responses:
+        200:
+          description: "parent area types returned successfully"
+          schema:
+            $ref: '#/definitions/GetAreaTypeParentsResponse'
   /health:
     get:
       tags:
@@ -56,10 +122,23 @@ paths:
           $ref: "#/responses/InternalError"
 
 responses:
+  BadGateway:
+    description: "Failed to process the request due to an error in a downstream server"
   InternalError:
     description: "Failed to process the request due to an internal error"
+  Unauthorised:
+    description: "The token provided is unauthorised to carry out this operation"
+
+
 
 definitions:
+  ErrorResponse:
+    description: "The response body containing an error message"
+    properties:
+      errors:
+        type: array
+        items:
+          type: string
   Health:
     type: object
     properties:
@@ -144,3 +223,51 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/PopulationType"
+  GetAreaTypesResponse:
+    description: "The response body containing all available area-types for a given dataset"
+    properties:
+      area-types:
+        type: array
+        items:
+          $ref: '#/definitions/AreaType'
+        example:
+          - id: "electoral_wards"
+            label: "Electoral Wards or Divisions"
+            total_count: 1
+          - id: "region"
+            label: "Region"
+            total_count: 2
+          - id: "city"
+            label: "City"
+            total_count: 3
+  GetAreaTypeResponse:
+    description: "The response body containing all available area-types for a given dataset"
+    properties:
+      area-type:
+        allOf:
+          - $ref: '#/definitions/AreaType'
+          - example:
+              id: "electoral_wards"
+              label: "Electoral Wards or Divisions"
+  GetAreaTypeParentsResponse:
+    description: "The response body containing parents of area-type"
+    properties:
+      area-types:
+        type: array
+        items:
+          $ref: '#/definitions/AreaType'
+        example:
+          - id: "country"
+            label: "Country"
+          - id: "region"
+            label: "Region"
+          - id: "city"
+            label: "City"
+  AreaType:
+    properties:
+      id:
+        type: string
+      label:
+        type: string
+      total_count:
+        type: integer

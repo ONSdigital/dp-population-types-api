@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"io"
 	"os"
 	"testing"
@@ -21,16 +22,27 @@ var loggingFlag = flag.Bool("logging", false, "print logging")
 
 type ComponentTest struct {
 	MongoFeature *componenttest.MongoFeature
+	t            testing.TB
 }
 
 func (f *ComponentTest) InitializeScenario(ctx *godog.ScenarioContext) {
-	component, err := steps.NewComponent()
+	authFeature := componenttest.NewAuthorizationFeature()
+	zebedeeURL := authFeature.FakeAuthService.ResolveURL("")
+
+	component, err := steps.NewComponent(f.t, zebedeeURL)
 	if err != nil {
-		panic(err)
+		panic(fmt.Sprintf("failed to create component: %s", err))
 	}
 
+	apiFeature := componenttest.NewAPIFeature(component.InitialiseService)
+
 	ctx.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
-		component.Reset()
+		apiFeature.Reset()
+		if err := component.Reset(); err != nil {
+			return nil, err
+		}
+		authFeature.Reset()
+
 		return ctx, nil
 	})
 
@@ -40,15 +52,14 @@ func (f *ComponentTest) InitializeScenario(ctx *godog.ScenarioContext) {
 	})
 
 	component.RegisterSteps(ctx)
+	apiFeature.RegisterSteps(ctx)
+	authFeature.RegisterSteps(ctx)
 }
 
-func (f *ComponentTest) InitializeTestSuite(ctx *godog.TestSuiteContext) {
-
-}
+func (f *ComponentTest) InitializeTestSuite(ctx *godog.TestSuiteContext) {}
 
 func TestComponent(t *testing.T) {
 	if *componentFlag {
-
 		if !*loggingFlag {
 			// discarding production logging only during the test run, in order to make the BDD output readable
 			log.SetDestination(io.Discard, io.Discard)
@@ -63,7 +74,7 @@ func TestComponent(t *testing.T) {
 			Paths:  flag.Args(),
 		}
 
-		f := &ComponentTest{}
+		f := &ComponentTest{t: t}
 
 		status = godog.TestSuite{
 			Name:                 "feature_tests",

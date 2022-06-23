@@ -12,12 +12,17 @@ type Config struct {
 	GracefulShutdownTimeout    time.Duration `envconfig:"GRACEFUL_SHUTDOWN_TIMEOUT"`
 	HealthCheckInterval        time.Duration `envconfig:"HEALTHCHECK_INTERVAL"`
 	HealthCheckCriticalTimeout time.Duration `envconfig:"HEALTHCHECK_CRITICAL_TIMEOUT"`
+	ServiceAuthToken           string        `envconfig:"SERVICE_AUTH_TOKEN"`
+	EnablePrivateEndpoints     bool          `envconfig:"ENABLE_PRIVATE_ENDPOINTS"`
+	EnablePermissionsAuth      bool          `envconfig:"ENABLE_PERMISSIONS_AUTH"`
+	ZebedeeURL                 string        `envconfig:"ZEBEDEE_URL"`
+	DatasetAPIURL              string        `envconfig:"DATASET_API_URL"`
 	CantabularConfig
 }
 
 type CantabularConfig struct {
 	CantabularURL                string        `envconfig:"CANTABULAR_URL"`
-	CantabularExtURL             string        `envconfig:"CANTABULAR_EXT_API_URL"`
+	CantabularExtURL             string        `envconfig:"CANTABULAR_API_EXT_URL"`
 	DefaultRequestTimeout        time.Duration `envconfig:"DEFAULT_REQUEST_TIMEOUT"`
 	CantabularHealthcheckEnabled bool          `envconfig:"CANTABULAR_HEALTHCHECK_ENABLED"`
 }
@@ -32,10 +37,15 @@ func Get() (*Config, error) {
 	}
 
 	cfg = &Config{
-		BindAddr:                   "localhost:12900",
+		BindAddr:                   "localhost:27300",
 		GracefulShutdownTimeout:    5 * time.Second,
 		HealthCheckInterval:        30 * time.Second,
 		HealthCheckCriticalTimeout: 90 * time.Second,
+		EnablePrivateEndpoints:     false,
+		ZebedeeURL:                 "http://localhost:8082",
+		ServiceAuthToken:           "",
+		EnablePermissionsAuth:      true,
+		DatasetAPIURL:              "http://localhost:22000",
 		CantabularConfig: CantabularConfig{
 			CantabularURL:         "http://localhost:8491",
 			CantabularExtURL:      "http://localhost:8492",

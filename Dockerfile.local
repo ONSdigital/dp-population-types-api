@@ -1,0 +1,8 @@
+FROM golang:1.17-stretch AS base
+
+ENV GOCACHE=/go/.go/cache GOPATH=/go/.go/path TZ=Europe/London
+
+RUN GOBIN=/bin go install github.com/cespare/reflex@latest
+
+RUN ln -s /go /dp-population-types-api
+WORKDIR /dp-population-types-api

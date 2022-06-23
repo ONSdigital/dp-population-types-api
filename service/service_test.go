@@ -40,7 +40,13 @@ func TestInit(t *testing.T) {
 			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error { return nil },
 		}
 
+		datasetAPIClientMock := &mock.DatasetAPIClientMock{
+			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error { return nil },
+		}
+
 		initialiserMock.GetCantabularClientFunc = func(cfg config.CantabularConfig) service.CantabularClient { return cantabularClientMock }
+
+		initialiserMock.GetDatasetAPIClientFunc = func(cfg *config.Config) service.DatasetAPIClient { return datasetAPIClientMock }
 
 		serverMock := &mock.HTTPServerMock{
 			ListenAndServeFunc: func() error { return nil },
@@ -167,13 +173,21 @@ func TestClose(t *testing.T) {
 
 		// healthcheck Stop does not depend on any other service being closed/stopped
 		hcMock := &mock.HealthCheckerMock{
-			AddCheckFunc: func(name string, checker healthcheck.Checker) error { return nil },
-			StartFunc:    func(ctx context.Context) {},
+			AddCheckFunc: func(_ string, _ healthcheck.Checker) error { return nil },
+			StartFunc:    func(_ context.Context) {},
 			StopFunc:     func() { hcStopped = true },
 		}
 
-		initialiserMock.GetHealthCheckFunc = func(cfg *config.Config, buildTime, gitCommit, version string) (service.HealthChecker, error) {
+		datasetAPIClientMock := &mock.DatasetAPIClientMock{
+			CheckerFunc: func(_ context.Context, _ *healthcheck.CheckState) error { return nil },
+		}
+
+		initialiserMock.GetHealthCheckFunc = func(_ *config.Config, _, _, _ string) (service.HealthChecker, error) {
 			return hcMock, nil
+		}
+
+		initialiserMock.GetDatasetAPIClientFunc = func(_ *config.Config) service.DatasetAPIClient {
+			return datasetAPIClientMock
 		}
 
 		// server Shutdown will fail if healthcheck is not stopped
@@ -267,6 +281,9 @@ func buildInitialiserMockWithNilDependencies() mock.InitialiserMock {
 			return nil, nil
 		},
 		GetHTTPServerFunc: func(bindAddr string, router http.Handler) service.HTTPServer {
+			return nil
+		},
+		GetDatasetAPIClientFunc: func(cfg *config.Config) service.DatasetAPIClient {
 			return nil
 		},
 	}

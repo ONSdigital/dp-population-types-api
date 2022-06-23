@@ -15,7 +15,6 @@ audit:
 
 .PHONY: lint
 lint:
-	golangci-lint run ./... --timeout 10m --skip-dirs=features --verbose --enable=gosec --enable=gocritic --enable=gofmt --enable=gocyclo --enable=bodyclose --enable=gocognit --enable=goimports
 
 .PHONY: build
 build:
@@ -25,6 +24,10 @@ build:
 debug:
 	go build -tags 'debug' $(LDFLAGS) -o $(BINPATH)/dp-population-types-api
 	HUMAN_LOG=1 DEBUG=1 $(BINPATH)/dp-population-types-api
+
+.PHONY: run
+debug-run:
+	HUMAN_LOG=1 DEBUG=1 go run -race -tags 'debug' $(LDFLAGS) main.go
 
 .PHONY: test
 test:
@@ -41,3 +44,7 @@ test-component:
 .PHONY: test-feature
 test-feature:
 	go test -cover -coverpkg=github.com/ONSdigital/dp-population-types-api/... -component
+
+.PHONY: run
+run:
+	HUMAN_LOG=1 go run -tags 'production' -ldflags "-X $(SERVICE_PATH).BuildTime=$(BUILD_TIME) -X $(SERVICE_PATH).GitCommit=$(GIT_COMMIT) -X $(SERVICE_PATH).Version=$(VERSION)" -race $(LDFLAGS) main.go

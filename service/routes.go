@@ -6,7 +6,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
+	"github.com/ONSdigital/dp-authorisation/auth"
+	dphandlers "github.com/ONSdigital/dp-net/v2/handlers"
 	"github.com/ONSdigital/dp-population-types-api/handler"
+	"github.com/ONSdigital/dp-population-types-api/middleware"
 	"github.com/ONSdigital/log.go/v2/log"
 )
 
@@ -15,13 +18,59 @@ func (svc *Service) buildRoutes(ctx context.Context) {
 	if svc.HealthCheck != nil {
 		svc.Router.Handle("/health", http.HandlerFunc(svc.HealthCheck.Handler))
 	}
-	svc.publicEndpoints(ctx)
+
+	if svc.Config.EnablePrivateEndpoints {
+		svc.privateEndpoints(ctx)
+	} else {
+		svc.publicEndpoints(ctx)
+	}
+
 }
 
 func (svc *Service) publicEndpoints(ctx context.Context) {
 	log.Info(ctx, "enabling public endpoints")
 
 	// Routes
-	populationTypes := handler.NewPopulationTypes(svc.responder, svc.cantabularClient)
-	svc.Router.Get("/population-types", populationTypes.Get)
+	populationTypes := handler.NewPopulationTypes(
+		svc.Config,
+		svc.responder,
+		svc.cantabularClient,
+		svc.datasetAPIClient,
+	)
+	svc.Router.Get("/population-types", populationTypes.GetPublic)
+	svc.Router.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypesPublic)
+
+	areas := handler.NewAreas(svc.responder, svc.cantabularClient)
+	svc.Router.Get("/areas", areas.Get)
+}
+
+func (svc *Service) privateEndpoints(ctx context.Context) {
+	log.Info(ctx, "enabling private endpoints")
+
+	r := chi.NewRouter()
+
+	// Middleware
+	permissions := middleware.NewPermissions(svc.Config.ZebedeeURL, svc.Config.EnablePermissionsAuth)
+	checkIdentity := dphandlers.IdentityWithHTTPClient(svc.identityClient)
+
+	// Routes
+	populationTypes := handler.NewPopulationTypes(
+		svc.Config,
+		svc.responder,
+		svc.cantabularClient,
+		svc.datasetAPIClient,
+	)
+
+	r.Use(checkIdentity)
+	r.Use(middleware.LogIdentity())
+	r.Use(permissions.Require(auth.Permissions{Read: true}))
+
+	r.Get("/population-types", populationTypes.GetPrivate)
+	r.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypesPrivate)
+
+	areas := handler.NewAreas(svc.responder, svc.cantabularClient)
+
+	r.Get("/areas", areas.Get)
+
+	svc.Router.Mount("/", r)
 }

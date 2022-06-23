@@ -3,18 +3,25 @@ package steps
 import (
 	"context"
 	"net/http"
+	"testing"
 
+	"github.com/maxcnunes/httpfake"
 	"github.com/pkg/errors"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
+	dperrors "github.com/ONSdigital/dp-api-clients-go/v2/errors"
 	componenttest "github.com/ONSdigital/dp-component-test"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-net/v2/responder"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"github.com/ONSdigital/dp-population-types-api/service/mock"
+	"github.com/ONSdigital/log.go/v2/log"
 )
 
 const fakeCantabularFailedToRespondErrorMessage = "cantabular failed to respond"
+const fakeCantabularGeoDimensionsErrorMessage = "failed to get area-types: error(s) returned by graphQL query"
 
 type PopulationTypesComponent struct {
 	componenttest.ErrorFeature
@@ -23,35 +30,49 @@ type PopulationTypesComponent struct {
 	Config                       *config.Config
 	ServiceRunning               bool
 	HttpServer                   *http.Server
-	apiFeature                   *componenttest.APIFeature
 	fakeCantabularDatasets       []string
 	fakeCantabularIsUnresponsive bool
+	fakeCantabularGeoDimensions  *cantabular.GetGeographyDimensionsResponse
+	fakeGetAreasResponse         *cantabular.GetAreasResponse
 	service                      *service.Service
 	InitialiserMock              service.Initialiser
+	datasetAPI                   *httpfake.HTTPFake
+	CantabularApiExt             *httpfake.HTTPFake
+	CantabularSrv                *httpfake.HTTPFake
 }
 
-func NewComponent() (*PopulationTypesComponent, error) {
-
+func NewComponent(t testing.TB, zebedeeURL string) (*PopulationTypesComponent, error) {
 	config, err := config.Get()
 	if err != nil {
 		return nil, err
 	}
 
+	config.EnablePermissionsAuth = false
+
+	config.ZebedeeURL = zebedeeURL
 	c := &PopulationTypesComponent{
-		errorChan:      make(chan error),
-		ServiceRunning: false,
-		Config:         config,
-		HttpServer:     &http.Server{},
+		errorChan:        make(chan error),
+		ServiceRunning:   false,
+		Config:           config,
+		HttpServer:       &http.Server{},
+		datasetAPI:       httpfake.New(),
+		CantabularSrv:    httpfake.New(),
+		CantabularApiExt: httpfake.New(httpfake.WithTesting(t)),
 	}
 
-	c.apiFeature = componenttest.NewAPIFeature(c.InitialiseService)
+	c.datasetAPI = httpfake.New()
+	c.Config.DatasetAPIURL = c.datasetAPI.ResolveURL("")
 
 	return c, nil
 }
 
-func (c *PopulationTypesComponent) Reset() *PopulationTypesComponent {
-	c.apiFeature.Reset()
-	return c
+func (c *PopulationTypesComponent) Reset() error {
+	c.datasetAPI.Reset()
+	if _, err := c.InitialiseService(); err != nil {
+		return errors.Wrap(err, "failed to reset component.")
+	}
+
+	return nil
 }
 
 func (c *PopulationTypesComponent) Close() error {
@@ -63,17 +84,18 @@ func (c *PopulationTypesComponent) Close() error {
 }
 
 func (c *PopulationTypesComponent) InitialiseService() (http.Handler, error) {
-
 	c.InitialiserMock = &mock.InitialiserMock{
 		GetHealthCheckFunc:      c.GetHealthcheck,
 		GetHTTPServerFunc:       c.GetHttpServer,
 		GetCantabularClientFunc: c.GetCantabularClient,
 		GetResponderFunc:        c.GetResponder,
+		GetDatasetAPIClientFunc: c.GetDatasetAPIClient,
 	}
 
 	var err error
 
 	c.service = service.New()
+	c.Config.DatasetAPIURL = c.datasetAPI.ResolveURL("")
 
 	err = c.service.Init(context.Background(), c.InitialiserMock, c.Config, "", "1", "")
 	if err != nil {
@@ -112,5 +134,32 @@ func (c *PopulationTypesComponent) GetCantabularClient(cfg config.CantabularConf
 			}
 			return c.fakeCantabularDatasets, nil
 		},
+		GetGeographyDimensionsFunc: func(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
+			if c.fakeCantabularIsUnresponsive {
+				return nil, dperrors.New(
+					errors.New("error(s) returned by graphQL query"),
+					http.StatusNotFound,
+					log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+				)
+			}
+			return c.fakeCantabularGeoDimensions, nil
+		},
+		StatusCodeFunc: func(err error) int {
+			return 404
+		},
+		GetAreasFunc: func(ctx context.Context, req cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error) {
+			if c.fakeCantabularIsUnresponsive {
+				return nil, dperrors.New(
+					errors.New("failed to get areas"),
+					http.StatusNotFound,
+					log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+				)
+			}
+			return c.fakeGetAreasResponse, nil
+		},
 	}
+}
+
+func (c *PopulationTypesComponent) GetDatasetAPIClient(_ *config.Config) service.DatasetAPIClient {
+	return dataset.NewAPIClient(c.Config.DatasetAPIURL)
 }

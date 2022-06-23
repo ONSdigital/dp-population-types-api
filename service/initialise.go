@@ -3,16 +3,17 @@ package service
 import (
 	"net/http"
 
-	"github.com/pkg/errors"
+	"github.com/ONSdigital/dp-population-types-api/config"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	dphttp "github.com/ONSdigital/dp-net/http"
 	"github.com/ONSdigital/dp-net/v2/responder"
-	"github.com/ONSdigital/dp-population-types-api/config"
+
+	"github.com/pkg/errors"
 )
 
-// Init implements the Initialiser interface to initialise dependencies
 type Init struct {
 	CantabularClientFactory func(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.Client
 }
@@ -50,6 +51,10 @@ func (i *Init) GetCantabularClient(cfg config.CantabularConfig) CantabularClient
 		},
 		dphttp.NewClient(),
 	)
+}
+
+func (i *Init) GetDatasetAPIClient(cfg *config.Config) DatasetAPIClient {
+	return dataset.NewAPIClient(cfg.DatasetAPIURL)
 }
 
 func cantabularNewClient(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.Client {

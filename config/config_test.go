@@ -2,7 +2,6 @@
 package config_test
 
 import (
-	"os"
 	"reflect"
 	"testing"
 	"time"
@@ -13,7 +12,6 @@ import (
 )
 
 func TestConfig(t *testing.T) {
-	os.Clearenv()
 
 	Convey("Given an environment with no environment variables set", t, func() {
 
@@ -21,12 +19,19 @@ func TestConfig(t *testing.T) {
 
 			Convey("Then there should be no error returned, and values are as expected", func() {
 				configuration, err := config.Get() // This Get() is only called once, when inside this function
+				// set as a env var, setting manually so not clashing.
+				configuration.ServiceAuthToken = ""
+
 				So(err, ShouldBeNil)
 				So(configuration, ShouldResemble, &config.Config{
-					BindAddr:                   "localhost:12900",
+					BindAddr:                   "localhost:27300",
 					GracefulShutdownTimeout:    5 * time.Second,
 					HealthCheckInterval:        30 * time.Second,
 					HealthCheckCriticalTimeout: 90 * time.Second,
+					EnablePrivateEndpoints:     false,
+					ZebedeeURL:                 "http://localhost:8082",
+					EnablePermissionsAuth:      true,
+					DatasetAPIURL:              "http://localhost:22000",
 					CantabularConfig: config.CantabularConfig{
 						CantabularURL:         "http://localhost:8491",
 						CantabularExtURL:      "http://localhost:8492",
@@ -51,7 +56,7 @@ func TestConfig(t *testing.T) {
 		Convey("Cantabular config", func() {
 			cantabularConfigMetadata := reflect.TypeOf(config.CantabularConfig{})
 			assertTagEnvConfig(cantabularConfigMetadata, "CantabularURL", "CANTABULAR_URL")
-			assertTagEnvConfig(cantabularConfigMetadata, "CantabularExtURL", "CANTABULAR_EXT_API_URL")
+			assertTagEnvConfig(cantabularConfigMetadata, "CantabularExtURL", "CANTABULAR_API_EXT_URL")
 			assertTagEnvConfig(cantabularConfigMetadata, "DefaultRequestTimeout", "DEFAULT_REQUEST_TIMEOUT")
 		})
 	})
