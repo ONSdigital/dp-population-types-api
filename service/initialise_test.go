@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
-	dphttp "github.com/ONSdigital/dp-net/http"
+	dphttp "github.com/ONSdigital/dp-net/v2/http"
 	"github.com/ONSdigital/dp-population-types-api/config"
 
 	. "github.com/smartystreets/goconvey/convey"
