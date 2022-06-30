@@ -112,7 +112,7 @@ paths:
         200:
           description: "parent area types returned successfully"
           schema:
-            $ref: '#/definitions/GetAreaTypeParentsResponse'
+            $ref: '#/definitions/GetAreaTypesResponse'
   /health:
     get:
       tags:
@@ -259,20 +259,6 @@ definitions:
           - example:
               id: "electoral_wards"
               label: "Electoral Wards or Divisions"
-  GetAreaTypeParentsResponse:
-    description: "The response body containing parents of area-type"
-    properties:
-      area-types:
-        type: array
-        items:
-          $ref: '#/definitions/AreaType'
-        example:
-          - id: "country"
-            label: "Country"
-          - id: "region"
-            label: "Region"
-          - id: "city"
-            label: "City"
   AreaType:
     properties:
       id:
