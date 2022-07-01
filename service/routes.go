@@ -10,6 +10,7 @@ import (
 	dphandlers "github.com/ONSdigital/dp-net/v2/handlers"
 	"github.com/ONSdigital/dp-population-types-api/handler"
 	"github.com/ONSdigital/dp-population-types-api/middleware"
+
 	"github.com/ONSdigital/log.go/v2/log"
 )
 
@@ -24,7 +25,6 @@ func (svc *Service) buildRoutes(ctx context.Context) {
 	} else {
 		svc.publicEndpoints(ctx)
 	}
-
 }
 
 func (svc *Service) publicEndpoints(ctx context.Context) {
@@ -42,6 +42,7 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 
 	areas := handler.NewAreas(svc.Config, svc.datasetAPIClient, svc.responder, svc.cantabularClient)
 	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.Get)
+	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/parents", populationTypes.GetAreaTypeParents)
 }
 
 func (svc *Service) privateEndpoints(ctx context.Context) {
@@ -62,11 +63,12 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	)
 
 	r.Use(checkIdentity)
-	r.Use(middleware.LogIdentity())
+	//r.Use(middleware.LogIdentity())
 	r.Use(permissions.Require(auth.Permissions{Read: true}))
 
 	r.Get("/population-types", populationTypes.GetPrivate)
 	r.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypesPrivate)
+	r.Get("/population-types/{population-type}/area-types/{area-type}/parents", populationTypes.GetAreaTypeParents)
 
 	areas := handler.NewAreas(svc.Config, svc.datasetAPIClient, svc.responder, svc.cantabularClient)
 	r.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.Get)

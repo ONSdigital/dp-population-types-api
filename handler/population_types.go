@@ -297,6 +297,38 @@ func (h *PopulationTypes) GetAreaTypesPrivate(w http.ResponseWriter, r *http.Req
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }
 
+func (h *PopulationTypes) GetAreaTypeParents(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	cReq := cantabular.GetParentsRequest{
+		Dataset:  chi.URLParam(r, "population-type"),
+		Variable: chi.URLParam(r, "area-type"),
+	}
+
+	res, err := h.cantabular.GetParents(ctx, cReq)
+	if err != nil {
+		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), errors.Wrap(err, "failed to get parents"))
+		return
+	}
+
+	var resp contract.GetAreaTypeParentsResponse
+
+	if len(res.Dataset.Variables.Edges) != 1 {
+		h.respond.Error(ctx, w, http.StatusInternalServerError, errors.New("failed to get parents"))
+		return
+	}
+
+	for _, e := range res.Dataset.Variables.Edges[0].Node.IsDirectSourceOf.Edges {
+		resp.AreaTypes = append(resp.AreaTypes, contract.AreaType{
+			ID:         e.Node.Name,
+			Label:      e.Node.Label,
+			TotalCount: e.Node.Categories.TotalCount,
+		})
+	}
+
+	h.respond.JSON(ctx, w, http.StatusOK, res)
+}
+
 func (h *PopulationTypes) authenticate(r *http.Request) bool {
 	var authorised bool
 

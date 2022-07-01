@@ -11,3 +11,7 @@ type AreaType struct {
 type GetAreaTypesResponse struct {
 	AreaTypes []AreaType `json:"area-types"`
 }
+
+type GetAreaTypeParentsResponse struct {
+	AreaTypes []AreaType `json:"area-types"`
+}
