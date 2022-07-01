@@ -79,7 +79,7 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 		authToken,
 		"",
 		&dataset.QueryParams{
-			IsBasedOn: areaType,
+			IsBasedOn: datasetName,
 			Limit:     1000,
 		},
 	)

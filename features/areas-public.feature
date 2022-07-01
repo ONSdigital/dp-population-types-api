@@ -5,7 +5,7 @@ Feature: Areas
     And I am not authorised
     And cantabular server is healthy
     And cantabular api extension is healthy
-    And the following datasets based on "City" are available
+    And the following datasets based on "Example" are available
     """
     {"count": 1}
     """
@@ -348,11 +348,11 @@ Feature: Areas
       }
       """
     
-    When the following datasets based on "City2" are available
+    When the following datasets based on "Example2" are available
     """
     {"count": 0}
     """
-    And I GET "/population-types/Example/area-types/City2/areas"
+    And I GET "/population-types/Example2/area-types/City/areas"
     Then I should receive the following JSON response:
       """
       {
