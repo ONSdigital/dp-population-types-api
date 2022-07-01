@@ -54,7 +54,7 @@ Feature: Areas
   Scenario: Getting areas 
     Given I am identified as "user@ons.gov.uk"
     And I am authorised
-    And the following datasets based on "City" are available
+    And the following datasets based on "Example" are available
     """
     {
       "items": [
@@ -123,7 +123,7 @@ Feature: Areas
   Scenario: Getting areas with none published
     Given I am identified as "user@ons.gov.uk"
     And I am authorised
-    And the following datasets based on "City" are available
+    And the following datasets based on "Example" are available
     """
     {
       "items": [
