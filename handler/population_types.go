@@ -179,7 +179,7 @@ func (h *PopulationTypes) GetAreaTypesPublic(w http.ResponseWriter, r *http.Requ
 		datasets, err := h.datasets.GetDatasets(
 			ctx,
 			"",
-			h.cfg.ServiceAuthToken,
+			"",
 			"",
 			&dataset.QueryParams{
 				IsBasedOn: isBasedOn,

@@ -11,7 +11,7 @@ Feature: Population types endpoint
 
   And I have the following population types in cantabular
   """
-  ["dataset_1", "dataset_2", "dataset_3"]
+  ["dataset_1", "dataset_2"]
   """
 
   And the following datasets based on "dataset_1" are available

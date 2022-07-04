@@ -4,7 +4,7 @@ package contract
 type GetAreasRequest struct {
 	Dataset  string `schema:"dataset"`
 	AreaType string `schema:"area-type"`
-	Text     string `schema:"text"`
+	Category string `schema:"q"`
 }
 
 // GetAreasResponse is the response object for GET /areas
