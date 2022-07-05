@@ -13,9 +13,16 @@ Feature: Population types endpoint
 
   And I am authorised
 
-  And I have the following population types in cantabular
+  And I have the following list datasets response available in cantabular
   """
-  ["dataset_1", "dataset_2"]
+  {
+    "data": {
+      "datasets": [
+        {"name": "dataset_1"},
+        {"name": "dataset_2"}
+      ]
+    }
+  }
   """
 
   And the following datasets based on "dataset_1" are available

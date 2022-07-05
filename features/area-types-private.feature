@@ -2,6 +2,18 @@ Feature: Area Types
   Background:
     Given private endpoints are enabled
 
+    And I have the following list datasets response available in cantabular
+    """
+    {
+      "data": {
+        "datasets": [
+          {"name": "dataset_1"},
+          {"name": "dataset_2"}
+        ]
+      }
+    }
+    """
+
     And the following datasets based on "dataset_1" are available
     """
     {
@@ -63,17 +75,57 @@ Feature: Area Types
       }]
     }
     """
+
+    And the following geography response is available from Cantabular for the dataset "dataset_1":
+    """
+    {
+      "data": {
+        "dataset": {
+          "ruleBase": {
+            "isSourceOf": {
+              "edges": [
+                {
+                  "node": {
+                    "label": "City",
+                    "name":  "city",
+                    "categories": {
+                      "totalCount": 3
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "country",
+                    "label": "Country",
+                    "categories": {
+                      "totalCount": 2
+                    },
+                    "mapFrom":[
+                      {
+                        "edges":[
+                          {
+                            "node":{
+                              "name": "city",
+                              "label": "City",
+                              "filterOnly": "false"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+    """
   Scenario: Getting Published area-types
     Given I am identified as "user@ons.gov.uk"
 
     And I am authorised
-
-    And I have the following population types in cantabular
-    """
-    ["dataset_1", "dataset_2"]
-    """
-
-    And a geography query response is available from Cantabular api extension
 
     When I GET "/population-types/dataset_1/area-types"
 
@@ -103,13 +155,6 @@ Feature: Area Types
 
     And I am authorised
     
-    And I have the following population types in cantabular
-    """
-    ["dataset_1", "dataset_2"]
-    """
-
-    And a geography query response is available from Cantabular api extension
-
     When I GET "/population-types/dataset_1/area-types"
 
     Then the HTTP status code should be "200"

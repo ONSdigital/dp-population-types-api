@@ -7,14 +7,16 @@ go 1.18
 //     - sonatype-2021-1401 # pkg:golang/github.com/miekg/dns@v1.0.14
 replace github.com/spf13/cobra => github.com/spf13/cobra v1.4.0
 
+replace github.com/ONSdigital/dp-api-clients-go/v2 => /Users/JoshuaMedley/go-modules/ONSdigital/dp-api-clients-go
+
 require (
-	github.com/ONSdigital/dp-api-clients-go/v2 v2.144.0
+	github.com/ONSdigital/dp-api-clients-go/v2 v2.150.0-beta
 	github.com/ONSdigital/dp-authorisation v0.2.0
 	github.com/ONSdigital/dp-component-test v0.7.0
-	github.com/ONSdigital/dp-healthcheck v1.3.0
+	github.com/ONSdigital/dp-healthcheck v1.4.0-beta
 	github.com/ONSdigital/dp-net v1.4.1
-	github.com/ONSdigital/dp-net/v2 v2.4.0
-	github.com/ONSdigital/log.go/v2 v2.2.0
+	github.com/ONSdigital/dp-net/v2 v2.5.0-beta
+	github.com/ONSdigital/log.go/v2 v2.3.0-beta
 	github.com/cucumber/godog v0.12.5
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/kelseyhightower/envconfig v1.4.0
@@ -23,7 +25,7 @@ require (
 	github.com/smartystreets/goconvey v1.7.2
 )
 
-require github.com/ONSdigital/dp-api-clients-go v1.43.0
+require github.com/ONSdigital/dp-api-clients-go v1.43.0 // indirect
 
 require (
 	github.com/ONSdigital/dp-mongodb-in-memory v1.3.1 // indirect
@@ -59,6 +61,7 @@ require (
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/shurcooL/graphql v0.0.0-20220606043923-3cf50f8a0a29 // indirect
 	github.com/smartystreets/assertions v1.13.0 // indirect
 	github.com/spf13/afero v1.8.2 // indirect

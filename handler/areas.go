@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
@@ -93,7 +92,7 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
-	fmt.Printf("Dataset count :%d", datasets.Count)
+
 	if datasets.Count == 0 {
 		h.respond.Error(
 			ctx,

@@ -3,6 +3,53 @@ Feature: Area Types
   Background:
     Given private endpoints are not enabled
 
+    And the following geography response is available from Cantabular for the dataset "Example":
+        """
+        {
+          "data": {
+            "dataset": {
+              "ruleBase": {
+                "isSourceOf": {
+                  "edges": [
+                    {
+                      "node": {
+                        "label": "City",
+                        "name":  "city",
+                        "categories": {
+                          "totalCount": 3
+                        }
+                      }
+                    },
+                    {
+                      "node": {
+                        "name": "country",
+                        "label": "Country",
+                        "categories": {
+                          "totalCount": 2
+                        },
+                        "mapFrom":[
+                          {
+                            "edges":[
+                              {
+                                "node":{
+                                  "name": "city",
+                                  "label": "City",
+                                  "filterOnly": "false"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+        """
+
   Scenario: Getting published area types
 
     Given the following datasets based on "Example" are available
@@ -11,8 +58,6 @@ Feature: Area Types
       "total_count": 1
     }
     """
-
-    And a geography query response is available from Cantabular api extension
 
     When I GET "/population-types/Example/area-types"
 
@@ -23,14 +68,14 @@ Feature: Area Types
     {
         "area-types":[
           {
-                "id":"country",
-                "label":"Country",
-                "total_count": 2
-          },
-          {
                 "id":"city",
                 "label":"City",
                 "total_count": 3
+          },
+          {
+                "id":"country",
+                "label":"Country",
+                "total_count": 2
           }
         ]
     }
@@ -70,8 +115,6 @@ Feature: Area Types
     }
     """
 
-    And a geography query response is available from Cantabular api extension
-
     When I GET "/population-types/Example/area-types"
 
     Then the HTTP status code should be "404"
@@ -90,8 +133,6 @@ Feature: Area Types
 
   Scenario: Dataset Client returns errors
     Given the dp-dataset-api is returning errors
-
-    And a geography query response is available from Cantabular api extension
 
     When I GET "/population-types/Example/area-types"
 
