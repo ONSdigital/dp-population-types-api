@@ -2,9 +2,13 @@ Feature: Areas
 
   Background:
     Given private endpoints are not enabled
+    And I am not authorised
     And cantabular server is healthy
     And cantabular api extension is healthy
-
+    And the following datasets based on "Example" are available
+    """
+    {"count": 1}
+    """
   Scenario: Getting areas happy
     When the following area query response is available from Cantabular api extension for the dataset "Example":
       """
@@ -15,30 +19,6 @@ Feature: Areas
               "isSourceOf": {
                 "search": {
                   "edges": [
-                    {
-                      "node": {
-                        "label": "Country",
-                        "name": "country",
-                        "categories": {
-                          "search": {
-                            "edges": [
-                              {
-                                "node": {
-                                  "code": "E",
-                                  "label": "England"
-                                }
-                              },
-                              {
-                                "node": {
-                                  "code": "N",
-                                  "label": "Northern Ireland"
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    },
                     {
                       "node": {
                         "label": "City",
@@ -77,21 +57,13 @@ Feature: Areas
         }
       }
       """
-    And I GET "/areas?dataset=Example"
+
+    And I GET "/population-types/Example/area-types/City/areas"
+
     Then I should receive the following JSON response:
       """
       {
         "areas": [
-          {
-            "id": "E",
-            "label": "England",
-            "area-type": "country"
-          },
-          {
-            "id": "N",
-            "label": "Northern Ireland",
-            "area-type": "country"
-          },
           {
             "id": "0",
             "label": "London",
@@ -148,7 +120,7 @@ Feature: Areas
       }
     }
     """
-    And I GET "/areas?dataset=Example&area-type=City&text=London"
+    And I GET "/population-types/Example/area-types/City/areas?q=London"
     Then I should receive the following JSON response:
     """
     {
@@ -234,7 +206,7 @@ Feature: Areas
       }
     }
     """
-    And I GET "/areas"
+    And I GET "/population-types/Example/area-types/City/areas"
     Then I should receive the following JSON response:
     """
     {
@@ -292,7 +264,7 @@ Feature: Areas
       ]
     }
     """
-    And I GET "/areas?dataset=Test"
+    And I GET "/population-types/Example/area-types/City/areas"
     Then I should receive the following JSON response:
     """
     {
@@ -319,10 +291,72 @@ Feature: Areas
       }
     }
     """
-    And I GET "/areas?dataset=Example&text=rio"
+    And I GET "/population-types/Example/area-types/City/areas?q=rio"
     Then I should receive the following JSON response:
     """
     {
       "areas": null
     }
     """
+
+  Scenario: Getting areas when dataset is not available
+    When the following area query response is available from Cantabular api extension for the dataset "Example":
+      """
+      {
+        "data": {
+          "dataset": {
+            "ruleBase": {
+              "isSourceOf": {
+                "search": {
+                  "edges": [
+                    {
+                      "node": {
+                        "label": "City2",
+                        "name": "city",
+                        "categories": {
+                          "search": {
+                            "edges": [
+                              {
+                                "node": {
+                                  "code": "0",
+                                  "label": "London"
+                                }
+                              },
+                              {
+                                "node": {
+                                  "code": "1",
+                                  "label": "Liverpool"
+                                }
+                              },
+                              {
+                                "node": {
+                                  "code": "2",
+                                  "label": "Belfast"
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+      """
+    
+    When the following datasets based on "Example2" are available
+    """
+    {"count": 0}
+    """
+    And I GET "/population-types/Example2/area-types/City/areas"
+    Then I should receive the following JSON response:
+      """
+      {
+        "errors": ["areas not found"]
+      }
+      """
+    And the HTTP status code should be "404"
