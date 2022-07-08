@@ -23,7 +23,7 @@ require (
 	github.com/smartystreets/goconvey v1.7.2
 )
 
-require github.com/ONSdigital/dp-api-clients-go v1.43.0
+require github.com/ONSdigital/dp-api-clients-go v1.43.0 // indirect
 
 require (
 	github.com/ONSdigital/dp-mongodb-in-memory v1.3.1 // indirect

@@ -3,10 +3,13 @@ package service
 import (
 	"context"
 
+	"net/http"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/identity"
+	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/log.go/v2/log"
 )
@@ -113,12 +116,23 @@ func (svc *Service) Close(ctx context.Context) error {
 
 func (svc *Service) registerCheckers(ctx context.Context) error {
 	if svc.cantabularClient != nil {
-		if svc.Config.CantabularHealthcheckEnabled {
+		// TODO - when Cantabular server is deployed to Production, remove this placeholder and the flag,
+		// and always use the real Checker instead: svc.cantabularClient.Checker
+		cantabularChecker := svc.cantabularClient.Checker
+
+		if !svc.Config.CantabularHealthcheckEnabled {
+			cantabularChecker = func(ctx context.Context, state *healthcheck.CheckState) error {
+				return state.Update(healthcheck.StatusOK, "Cantabular healthcheck placeholder", http.StatusOK)
+			}
+		} else if svc.Config.CantabularHealthcheckEnabled {
 			if err := svc.HealthCheck.AddCheck("Cantabular client", svc.cantabularClient.Checker); err != nil {
 				return errors.Wrap(err, "error adding check for cantabular client")
 			}
 		} else {
 			log.Info(ctx, "Cantabular health check is disabled")
+		}
+		if err := svc.HealthCheck.AddCheck("Cantabular server", cantabularChecker); err != nil {
+			return errors.Wrap(err, "error adding check for Cantabular server: %w")
 		}
 	}
 
