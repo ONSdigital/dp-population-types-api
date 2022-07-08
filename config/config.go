@@ -47,9 +47,10 @@ func Get() (*Config, error) {
 		EnablePermissionsAuth:      true,
 		DatasetAPIURL:              "http://localhost:22000",
 		CantabularConfig: CantabularConfig{
-			CantabularURL:         "http://localhost:8491",
-			CantabularExtURL:      "http://localhost:8492",
-			DefaultRequestTimeout: 10 * time.Second,
+			CantabularURL:                "http://localhost:8491",
+			CantabularExtURL:             "http://localhost:8492",
+			DefaultRequestTimeout:        10 * time.Second,
+			CantabularHealthcheckEnabled: false,
 		},
 	}
 
