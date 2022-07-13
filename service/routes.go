@@ -63,7 +63,7 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	)
 
 	r.Use(checkIdentity)
-	//r.Use(middleware.LogIdentity())
+	r.Use(middleware.LogIdentity())
 	r.Use(permissions.Require(auth.Permissions{Read: true}))
 
 	r.Get("/population-types", populationTypes.GetPrivate)

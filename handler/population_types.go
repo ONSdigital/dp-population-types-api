@@ -326,7 +326,7 @@ func (h *PopulationTypes) GetAreaTypeParents(w http.ResponseWriter, r *http.Requ
 		})
 	}
 
-	h.respond.JSON(ctx, w, http.StatusOK, res)
+	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }
 
 func (h *PopulationTypes) authenticate(r *http.Request) bool {

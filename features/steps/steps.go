@@ -21,6 +21,7 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^cantabular api extension is healthy`, c.cantabularAPIExtIsHealthy)
 	ctx.Step(`^cantabular server is healthy`, c.cantabularServerIsHealthy)
 	ctx.Step(`^the following area query response is available from Cantabular:$`, c.theFollowingCantabularAreaResponseIsAvailable)
+	ctx.Step(`^the following parents response is available from Cantabular:$`, c.theFollowingCantabularParentsResponseIsAvailable)
 }
 
 func (c *PopulationTypesComponent) iHaveTheFollowingPopulationTypesInCantabular(body *godog.DocString) error {
@@ -110,5 +111,16 @@ func (c *PopulationTypesComponent) theFollowingCantabularAreaResponseIsAvailable
 	}
 
 	c.fakeCantabular.GetAreasResponse = &resp
+	return nil
+}
+
+func (c *PopulationTypesComponent) theFollowingCantabularParentsResponseIsAvailable(body *godog.DocString) error {
+	var resp cantabular.GetParentsResponse
+
+	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
+		return fmt.Errorf("failed to unmarshal body: %w", err)
+	}
+
+	c.fakeCantabular.GetParentsResponse = &resp
 	return nil
 }

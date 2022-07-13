@@ -20,6 +20,7 @@ type CantabularClient struct {
 	Healthy                        bool
 	GetGeographyDimensionsResponse *cantabular.GetGeographyDimensionsResponse
 	GetAreasResponse               *cantabular.GetAreasResponse
+	GetParentsResponse             *cantabular.GetParentsResponse
 	ListDatasetsResponse           []string
 }
 
@@ -64,4 +65,15 @@ func (c *CantabularClient) GetAreas(ctx context.Context, _ cantabular.GetAreasRe
 	}
 
 	return c.GetAreasResponse, nil
+}
+
+func (c *CantabularClient) GetParents(_ context.Context, _ cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error) {
+	if !c.Healthy {
+		return nil, dperrors.New(
+			errors.New("test error response"),
+			http.StatusNotFound,
+			nil,
+		)
+	}
+	return c.GetParentsResponse, nil
 }
