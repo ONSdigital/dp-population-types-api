@@ -63,6 +63,53 @@ Feature: Area Types
       }]
     }
     """
+
+    And the following geography response is available from Cantabular:
+    """
+    {
+        "dataset": {
+          "ruleBase": {
+            "isSourceOf": {
+              "edges": [
+                {
+                  "node": {
+                    "label": "City",
+                    "name":  "city",
+                    "categories": {
+                      "totalCount": 3
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "country",
+                    "label": "Country",
+                    "categories": {
+                      "totalCount": 2
+                    },
+                    "mapFrom":[
+                      {
+                        "edges":[
+                          {
+                            "node":{
+                              "name": "city",
+                              "label": "City",
+                              "filterOnly": "false"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+
+    }
+    """
+
   Scenario: Getting Published area-types
     Given I am identified as "user@ons.gov.uk"
 
@@ -73,8 +120,6 @@ Feature: Area Types
     ["dataset_1", "dataset_2"]
     """
 
-    And a geography query response is available from Cantabular api extension
-
     When I GET "/population-types/dataset_1/area-types"
 
     Then the HTTP status code should be "200"
@@ -84,14 +129,13 @@ Feature: Area Types
     {
         "area-types":[
           {
-                "id":"country",
-                "label":"Country",
-                "total_count": 2
-          },
-          {
                 "id":"city",
                 "label":"City",
                 "total_count": 3
+          },{
+                "id":"country",
+                "label":"Country",
+                "total_count": 2
           }
         ]
     }
@@ -108,8 +152,6 @@ Feature: Area Types
     ["dataset_1", "dataset_2"]
     """
 
-    And a geography query response is available from Cantabular api extension
-
     When I GET "/population-types/dataset_1/area-types"
 
     Then the HTTP status code should be "200"
@@ -119,14 +161,13 @@ Feature: Area Types
     {
         "area-types":[
           {
-                "id":"country",
-                "label":"Country",
-                "total_count": 2
-          },
-          {
                 "id":"city",
                 "label":"City",
                 "total_count": 3
+          },{
+                "id":"country",
+                "label":"Country",
+                "total_count": 2
           }
         ]
     }

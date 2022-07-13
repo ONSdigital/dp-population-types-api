@@ -6,25 +6,21 @@ import (
 	"net/http"
 
 	"github.com/cucumber/godog"
-	"github.com/pkg/errors"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
-	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular/gql"
 )
 
 func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^private endpoints are enabled`, c.privateEndpointsAreEnabled)
 	ctx.Step(`^private endpoints are not enabled`, c.privateEndpointsAreNotEnabled)
 	ctx.Step(`^cantabular is unresponsive$`, c.cantabularIsUnresponsive)
-	ctx.Step(`^a geography query response is available from Cantabular api extension$`, c.theFollowingCantabularResponseIsAvailable)
-	ctx.Step(`^an error json response is returned from Cantabular api extension$`, c.anErrorJsonResponseIsReturnedFromCantabularApiExtension)
+	ctx.Step(`^the following geography response is available from Cantabular:$`, c.theFollowingCantabularGeographyResponseIsAvailable)
 	ctx.Step(`^I have the following population types in cantabular$`, c.iHaveTheFollowingPopulationTypesInCantabular)
 	ctx.Step(`^the following datasets based on "([^"]*)" are available$`, c.theFollowingDatasetsBasedOnAreAvailable)
 	ctx.Step("^the dp-dataset-api is returning errors", c.datasetClientReturnsErrors)
 	ctx.Step(`^cantabular api extension is healthy`, c.cantabularAPIExtIsHealthy)
 	ctx.Step(`^cantabular server is healthy`, c.cantabularServerIsHealthy)
-	ctx.Step(`^the following area query response is available from Cantabular api extension for the dataset "([^"]*)":$`, c.theFollowingCantabularAreaResponseIsAvailable)
-	ctx.Step(`^the following area query response is available from Cantabular api extension for the dataset "([^"]*)", area type "([^"]*)" and text "([^"]*)":$`, c.theFollowingCantabularFilteredAreaResponseIsAvailable)
+	ctx.Step(`^the following area query response is available from Cantabular:$`, c.theFollowingCantabularAreaResponseIsAvailable)
 }
 
 func (c *PopulationTypesComponent) iHaveTheFollowingPopulationTypesInCantabular(body *godog.DocString) error {
@@ -32,7 +28,8 @@ func (c *PopulationTypesComponent) iHaveTheFollowingPopulationTypesInCantabular(
 	if err := json.Unmarshal([]byte(body.Content), &populationTypes); err != nil {
 		return fmt.Errorf("failed to unmarshal population types: %w", err)
 	}
-	c.fakeCantabularDatasets = populationTypes
+
+	c.fakeCantabular.ListDatasetsResponse = populationTypes
 	return nil
 }
 
@@ -59,7 +56,7 @@ func (c *PopulationTypesComponent) privateEndpointsAreEnabled() error {
 }
 
 func (c *PopulationTypesComponent) cantabularIsUnresponsive() error {
-	c.fakeCantabularIsUnresponsive = true
+	c.fakeCantabular.Healthy = false
 	return nil
 }
 
@@ -74,40 +71,14 @@ func (c *PopulationTypesComponent) theFollowingDatasetsBasedOnAreAvailable(popul
 }
 
 // theFollowingCantabularResponseIsAvailable generates a mocked response for Cantabular Server POST /graphql
-func (c *PopulationTypesComponent) theFollowingCantabularResponseIsAvailable() error {
-	gd := &cantabular.GetGeographyDimensionsResponse{Dataset: gql.DatasetRuleBase{RuleBase: gql.RuleBase{
-		IsSourceOf: gql.Variables{Edges: []gql.Edge{
-			{
-				Node: gql.Node{
-					Name:       "country",
-					Label:      "Country",
-					Categories: gql.Categories{TotalCount: 2},
-					MapFrom: []gql.Variables{{Edges: []gql.Edge{{
-						Node: gql.Node{
-							Name:       "city",
-							Label:      "City",
-							FilterOnly: "false",
-						},
-					}}}},
-				},
-			},
-			{
-				Node: gql.Node{
-					Name:       "city",
-					Label:      "City",
-					Categories: gql.Categories{TotalCount: 3},
-					MapFrom:    []gql.Variables{},
-				},
-			},
-		}},
-	}}}
-	c.fakeCantabularGeoDimensions = gd
-	return nil
-}
+func (c *PopulationTypesComponent) theFollowingCantabularGeographyResponseIsAvailable(body *godog.DocString) error {
+	var resp cantabular.GetGeographyDimensionsResponse
 
-func (c *PopulationTypesComponent) anErrorJsonResponseIsReturnedFromCantabularApiExtension() error {
-	c.fakeCantabularGeoDimensions = nil
-	c.fakeCantabularIsUnresponsive = true
+	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
+		return fmt.Errorf("failed to unmarshal body: %w", err)
+	}
+
+	c.fakeCantabular.GetGeographyDimensionsResponse = &resp
 	return nil
 }
 
@@ -131,59 +102,13 @@ func (c *PopulationTypesComponent) cantabularServerIsHealthy() error {
 	return nil
 }
 
-func (c *PopulationTypesComponent) theFollowingCantabularAreaResponseIsAvailable(dataset string, cb *godog.DocString) error {
-	data := cantabular.QueryData{
-		Dataset: dataset,
+func (c *PopulationTypesComponent) theFollowingCantabularAreaResponseIsAvailable(body *godog.DocString) error {
+	var resp cantabular.GetAreasResponse
+
+	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
+		return fmt.Errorf("failed to unmarshal body: %w", err)
 	}
 
-	b, err := data.Encode(cantabular.QueryAreas)
-	if err != nil {
-		return errors.Wrap(err, "failed to encode GraphQL query")
-	}
-
-	// create graphql handler with expected query body
-	c.CantabularApiExt.NewHandler().
-		Post("/graphql").
-		AssertBody(b.Bytes()).
-		Reply(http.StatusOK).
-		BodyString(cb.Content)
-
-	var resp = &struct {
-		Data   cantabular.GetAreasResponse `json:"data"`
-		Errors []gql.Error                 `json:"errors,omitempty"`
-	}{}
-	if err := json.Unmarshal([]byte(cb.Content), &resp); err != nil {
-		return errors.Wrap(err, "failed to unmarshal GraphQL query")
-	}
-	c.fakeGetAreasResponse = &resp.Data
-	return nil
-}
-
-func (c *PopulationTypesComponent) theFollowingCantabularFilteredAreaResponseIsAvailable(dataset, areaType, text string, cb *godog.DocString) error {
-	data := cantabular.QueryData{
-		Dataset:  dataset,
-		Text:     areaType,
-		Category: text,
-	}
-
-	b, err := data.Encode(cantabular.QueryAreas)
-	if err != nil {
-		return errors.Wrap(err, "failed to encode GraphQL query")
-	}
-
-	// create graphql handler with expected query body
-	c.CantabularApiExt.NewHandler().
-		Post("/graphql").
-		AssertBody(b.Bytes()).
-		Reply(http.StatusOK).
-		BodyString(cb.Content)
-	var resp = &struct {
-		Data   cantabular.GetAreasResponse `json:"data"`
-		Errors []gql.Error                 `json:"errors,omitempty"`
-	}{}
-	if err := json.Unmarshal([]byte(cb.Content), &resp); err != nil {
-		return errors.Wrap(err, "failed to unmarshal GraphQL query")
-	}
-	c.fakeGetAreasResponse = &resp.Data
+	c.fakeCantabular.GetAreasResponse = &resp
 	return nil
 }

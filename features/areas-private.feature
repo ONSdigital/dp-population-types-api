@@ -4,10 +4,9 @@ Feature: Areas
     Given private endpoints are enabled
     Given cantabular server is healthy
     And cantabular api extension is healthy
-    When the following area query response is available from Cantabular api extension for the dataset "Example":
+    When the following area query response is available from Cantabular:
     """
     {
-      "data": {
         "dataset": {
           "ruleBase": {
             "isSourceOf": {
@@ -48,7 +47,6 @@ Feature: Areas
             }
           }
         }
-      }
     }
     """
   Scenario: Getting areas 
