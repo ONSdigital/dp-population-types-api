@@ -3,7 +3,7 @@ package contract
 // GetAreasRequest defines the schema for the GET /areas query parameter
 type GetAreasRequest struct {
 	Dataset  string `schema:"dataset"`
-	AreaType string `schema:"area-type"`
+	AreaType string `schema:"area_type"`
 	Category string `schema:"q"`
 }
 
@@ -16,5 +16,5 @@ type GetAreasResponse struct {
 type Areas struct {
 	ID       string `json:"id"`
 	Label    string `json:"label"`
-	AreaType string `json:"area-type"`
+	AreaType string `json:"area_type"`
 }

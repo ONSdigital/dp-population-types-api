@@ -70,17 +70,17 @@ Feature: Areas
           {
             "id": "0",
             "label": "London",
-            "area-type": "city"
+            "area_type": "city"
           },
           {
             "id": "1",
             "label": "Liverpool",
-            "area-type": "city"
+            "area_type": "city"
           },
           {
             "id": "2",
             "label": "Belfast",
-            "area-type": "city"
+            "area_type": "city"
           }
         ]
       }
@@ -131,7 +131,7 @@ Feature: Areas
         {
           "id": "0",
           "label": "London",
-          "area-type": "city"
+          "area_type": "city"
         }
       ]
     }
@@ -217,27 +217,27 @@ Feature: Areas
         {
           "id": "E",
           "label": "England",
-          "area-type": "country"
+          "area_type": "country"
         },
         {
           "id": "N",
           "label": "Northern Ireland",
-          "area-type": "country"
+          "area_type": "country"
         },
         {
           "id": "0",
           "label": "London",
-          "area-type": "city"
+          "area_type": "city"
         },
         {
           "id": "1",
           "label": "Liverpool",
-          "area-type": "city"
+          "area_type": "city"
         },
         {
           "id": "2",
           "label": "Belfast",
-          "area-type": "city"
+          "area_type": "city"
         }
       ]
     }

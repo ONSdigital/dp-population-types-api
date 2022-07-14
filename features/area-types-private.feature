@@ -127,7 +127,7 @@ Feature: Area Types
     And I should receive the following JSON response:
     """
     {
-        "area-types":[
+        "area_types":[
           {
                 "id":"city",
                 "label":"City",
@@ -159,7 +159,7 @@ Feature: Area Types
     And I should receive the following JSON response:
     """
     {
-        "area-types":[
+        "area_types":[
           {
                 "id":"city",
                 "label":"City",

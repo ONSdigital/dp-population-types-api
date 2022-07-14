@@ -42,7 +42,7 @@ Background:
         Then I should receive the following JSON response:
         """
         {
-            "area-types": [
+            "area_types": [
                 {
                     "id": "country",
                     "label": "Country",

@@ -9,9 +9,9 @@ type AreaType struct {
 
 // GetAreaTypesResponse is the response object for GET /area-types
 type GetAreaTypesResponse struct {
-	AreaTypes []AreaType `json:"area-types"`
+	AreaTypes []AreaType `json:"area_types"`
 }
 
 type GetAreaTypeParentsResponse struct {
-	AreaTypes []AreaType `json:"area-types"`
+	AreaTypes []AreaType `json:"area_types"`
 }
