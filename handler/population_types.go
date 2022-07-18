@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -155,7 +157,7 @@ func (h *PopulationTypes) GetPrivate(w http.ResponseWriter, req *http.Request) {
 
 func (h *PopulationTypes) GetAreaTypesPublic(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	authenticated := h.authenticate(r)
+	authenticated := h.authenticate(ctx)
 	isBasedOn := chi.URLParam(r, "population-type")
 
 	req := cantabular.GetGeographyDimensionsRequest{
@@ -223,7 +225,7 @@ func (h *PopulationTypes) GetAreaTypesPublic(w http.ResponseWriter, r *http.Requ
 
 func (h *PopulationTypes) GetAreaTypesPrivate(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	authenticated := h.authenticate(r)
+	authenticated := h.authenticate(ctx)
 	isBasedOn := chi.URLParam(r, "population-type")
 
 	req := cantabular.GetGeographyDimensionsRequest{
@@ -305,6 +307,13 @@ func (h *PopulationTypes) GetAreaTypeParents(w http.ResponseWriter, r *http.Requ
 		Variable: chi.URLParam(r, "area-type"),
 	}
 
+	if !h.cfg.EnablePrivateEndpoints && !h.authenticate(ctx) {
+		if err := h.published(ctx, cReq.Dataset); err != nil {
+			h.respond.Error(ctx, w, http.StatusNotFound, errors.New("population type not found"))
+			return
+		}
+	}
+
 	res, err := h.cantabular.GetParents(ctx, cReq)
 	if err != nil {
 		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), errors.Wrap(err, "failed to get parents"))
@@ -314,11 +323,11 @@ func (h *PopulationTypes) GetAreaTypeParents(w http.ResponseWriter, r *http.Requ
 	var resp contract.GetAreaTypeParentsResponse
 
 	if len(res.Dataset.Variables.Edges) != 1 {
-		h.respond.Error(ctx, w, http.StatusInternalServerError, errors.New("failed to get parents"))
+		h.respond.Error(ctx, w, http.StatusInternalServerError, fmt.Errorf("failed to get parents"))
 		return
 	}
 
-	for _, e := range res.Dataset.Variables.Edges[0].Node.IsDirectSourceOf.Edges {
+	for _, e := range res.Dataset.Variables.Edges[0].Node.IsSourceOf.Edges {
 		resp.AreaTypes = append(resp.AreaTypes, contract.AreaType{
 			ID:         e.Node.Name,
 			Label:      e.Node.Label,
@@ -329,24 +338,51 @@ func (h *PopulationTypes) GetAreaTypeParents(w http.ResponseWriter, r *http.Requ
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }
 
-func (h *PopulationTypes) authenticate(r *http.Request) bool {
-	var authorised bool
-
-	var hasCallerIdentity, hasUserIdentity bool
-	callerIdentity := dprequest.Caller(r.Context())
-
-	if callerIdentity != "" {
-		hasCallerIdentity = true
+func (h *PopulationTypes) authenticate(ctx context.Context) bool {
+	if callerIdentity := dprequest.Caller(ctx); callerIdentity != "" {
+		return true
 	}
 
-	userIdentity := dprequest.User(r.Context())
-	if userIdentity != "" {
-		hasUserIdentity = true
+	if userIdentity := dprequest.User(ctx); userIdentity != "" {
+		return true
 	}
 
-	if hasCallerIdentity || hasUserIdentity {
-		authorised = true
+	return false
+}
+
+func (h *PopulationTypes) published(ctx context.Context, populationType string) error {
+	authToken := ""
+	if h.cfg.EnablePrivateEndpoints {
+		authToken = h.cfg.ServiceAuthToken
 	}
 
-	return authorised
+	datasets, err := h.datasets.GetDatasets(
+		ctx,
+		authToken,
+		"",
+		"",
+		&dataset.QueryParams{
+			IsBasedOn: populationType,
+			Limit:     1000,
+		},
+	)
+	if err != nil {
+		return errors.Wrap(err, "failed to get datasets for population type")
+	}
+
+	if datasets.TotalCount == 0 {
+		return errors.New("no published datasets found for population type")
+	}
+
+	if !h.cfg.EnablePrivateEndpoints {
+		return nil
+	}
+
+	for _, d := range datasets.Items {
+		if d.Current != nil {
+			return nil
+		}
+	}
+
+	return errors.New("no published datasets found for population type")
 }

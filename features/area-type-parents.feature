@@ -4,8 +4,76 @@ Background:
 
     Given private endpoints are not enabled
 
+    And the following datasets based on "Example" are available
+    """
+    {
+      "total_count": 1,
+      "items": [
+      {
+        "id": "cantabular-flexible-example",
+        "current": {
+          "contacts": [
+            {}
+          ],
+          "id": "cantabular-flexible-example",
+          "links": {
+            "editions": {
+              "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions"
+            },
+            "latest_version": {
+              "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions/2021/versions/1",
+              "id": "1"
+            },
+            "self": {
+              "href": "http://localhost:22000/datasets/cantabular-flexible-example"
+            }
+          },
+          "qmi": {},
+          "state": "published",
+          "title": "sdf",
+          "type": "cantabular_flexible_table",
+          "is_based_on": {
+            "@type": "cantabular_flexible_table",
+            "@id": "dataset_1"
+          }
+        },
+        "next": {
+          "contacts": [
+            {}
+          ],
+          "id": "cantabular-flexible-example",
+          "links": {
+            "editions": {
+              "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions"
+            },
+            "latest_version": {
+              "href": "http://localhost:22000/datasets/cantabular-flexible-example/editions/2021/versions/1",
+              "id": "1"
+            },
+            "self": {
+              "href": "http://localhost:22000/datasets/cantabular-flexible-example"
+            }
+          },
+          "qmi": {},
+          "state": "published",
+          "title": "sdf",
+          "type": "cantabular_flexible_table",
+          "is_based_on": {
+            "@type": "cantabular_flexible_table",
+            "@id": "Example"
+          }
+        }
+      }]
+    }
+    """
+
     Scenario: Getting area type parents successfully
-        Given the following parents response is available from Cantabular:
+
+        Given I am identified as "user@ons.gov.uk"
+
+        And I am authorised
+
+        And the following parents response is available from Cantabular:
         """
         {
             "dataset": {
@@ -15,7 +83,7 @@ Background:
                             "node": {
                                 "name":  "city",
                                 "label": "City",
-                                "isDirectSourceOf": {
+                                "isSourceOf": {
                                     "edges": [
                                         {
                                             "node": {
@@ -55,7 +123,11 @@ Background:
         And the HTTP status code should be "200"
 
     Scenario: Getting area type parents but Cantabular returns an error
-        Given cantabular is unresponsive
+        Given I am identified as "user@ons.gov.uk"
+
+        And I am authorised
+
+        And cantabular is unresponsive
 
         When I GET "/population-types/Example/area-types/city/parents"
 
