@@ -17,7 +17,7 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the following geography response is available from Cantabular:$`, c.theFollowingCantabularGeographyResponseIsAvailable)
 	ctx.Step(`^I have the following population types in cantabular$`, c.iHaveTheFollowingPopulationTypesInCantabular)
 	ctx.Step(`^the following datasets based on "([^"]*)" are available$`, c.theFollowingDatasetsBasedOnAreAvailable)
-	ctx.Step("^the dp-dataset-api is returning errors", c.datasetClientReturnsErrors)
+	ctx.Step(`^the dp-dataset-api is returning errors for datasets based on "([^"]*)"`, c.datasetClientReturnsErrors)
 	ctx.Step(`^cantabular api extension is healthy`, c.cantabularAPIExtIsHealthy)
 	ctx.Step(`^cantabular server is healthy`, c.cantabularServerIsHealthy)
 	ctx.Step(`^the following area query response is available from Cantabular:$`, c.theFollowingCantabularAreaResponseIsAvailable)
@@ -34,10 +34,10 @@ func (c *PopulationTypesComponent) iHaveTheFollowingPopulationTypesInCantabular(
 	return nil
 }
 
-func (c *PopulationTypesComponent) datasetClientReturnsErrors() {
+func (c *PopulationTypesComponent) datasetClientReturnsErrors(populationType string) {
 	url := fmt.Sprintf(
-		`/datasets?offset=0&limit=100&is_based_on=%s`,
-		"Example",
+		`/datasets?offset=0&limit=1000&is_based_on=%s`,
+		populationType,
 	)
 
 	c.datasetAPI.NewHandler().

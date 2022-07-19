@@ -69,11 +69,7 @@ Background:
 
     Scenario: Getting area type parents successfully
 
-        Given I am identified as "user@ons.gov.uk"
-
-        And I am authorised
-
-        And the following parents response is available from Cantabular:
+        Given the following parents response is available from Cantabular:
         """
         {
             "dataset": {
@@ -122,10 +118,59 @@ Background:
 
         And the HTTP status code should be "200"
 
-    Scenario: Getting area type parents but Cantabular returns an error
-        Given I am identified as "user@ons.gov.uk"
+    Scenario: Getting area type parents on unpublished population type
 
-        And I am authorised
+        Given the following parents response is available from Cantabular:
+        """
+        {
+            "dataset": {
+                "variables": {
+                    "edges": [
+                        {
+                            "node": {
+                                "name":  "city",
+                                "label": "City",
+                                "isSourceOf": {
+                                    "edges": [
+                                        {
+                                            "node": {
+                                                "name":  "country",
+                                                "label": "Country",
+                                                "categories": {
+                                                    "totalCount": 2
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "totalCount": 1
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        """
+
+        And the following datasets based on "NotPublished" are available
+        """
+        {
+          "total_count": 0
+        }
+        """
+
+        When I GET "/population-types/NotPublished/area-types/city/parents"
+
+        Then I should receive the following JSON response:
+        """
+        {
+            "errors": ["population type not found"]
+        }
+        """
+
+        And the HTTP status code should be "404"
+
+    Scenario: Getting area type parents but Cantabular returns an error
 
         And cantabular is unresponsive
 

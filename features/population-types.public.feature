@@ -17,6 +17,7 @@ Feature: Population types endpoint
   And the following datasets based on "dataset_1" are available
   """
   {
+    "total_count": 1,
     "items": [
     {
       "id": "cantabular-flexible-example"
@@ -27,6 +28,7 @@ Feature: Population types endpoint
   And the following datasets based on "dataset_2" are available
   """
   {
+    "total_count": 1,
     "items": [
     {
       "id": "cantabular-flexible-default"

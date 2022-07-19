@@ -3,18 +3,17 @@ Feature: Areas
   Background:
     Given private endpoints are not enabled
 
-    And I am not authorised
-
     And cantabular server is healthy
 
     And cantabular api extension is healthy
 
     And the following datasets based on "Example" are available
     """
-    {"count": 1}
+    {"total_count": 1}
     """
 
   Scenario: Getting areas happy
+
     When the following area query response is available from Cantabular:
       """
       {
@@ -88,7 +87,8 @@ Feature: Areas
     And the HTTP status code should be "200"
 
   Scenario: Getting areas specific search
-    When the following area query response is available from Cantabular:
+    
+    And the following area query response is available from Cantabular:
     """
     {
         "dataset": {
@@ -138,7 +138,11 @@ Feature: Areas
     """
 
   Scenario: Getting areas no dataset or search text
-    When the following area query response is available from Cantabular:
+    Given I am identified as "user@ons.gov.uk"
+
+    And I am authorised
+    
+    And the following area query response is available from Cantabular:
     """
     {
         "dataset": {
@@ -243,8 +247,9 @@ Feature: Areas
     }
     """
 
-  Scenario: Getting areas invalid dataset
-    Given cantabular is unresponsive
+  Scenario: Getting areas invalid Dataset
+
+    And cantabular is unresponsive
 
     When the following area query response is available from Cantabular:
     """
@@ -265,7 +270,8 @@ Feature: Areas
     """
 
   Scenario: Get areas area does not exist
-    When the following area query response is available from Cantabular:
+    
+    And the following area query response is available from Cantabular:
     """
     {
         "dataset": {
@@ -291,8 +297,9 @@ Feature: Areas
     """
 
   Scenario: Getting areas when dataset is not available
-    When the following area query response is available from Cantabular:
-      """
+    
+    And the following area query response is available from Cantabular:
+    """
       {
           "dataset": {
             "ruleBase": {
@@ -335,9 +342,9 @@ Feature: Areas
             }
           }
       }
-      """
+    """
     
-    When the following datasets based on "Example2" are available
+    And the following datasets based on "Example2" are available
     """
     {"count": 0}
     """
@@ -347,7 +354,7 @@ Feature: Areas
     Then I should receive the following JSON response:
       """
       {
-        "errors": ["areas not found"]
+        "errors": ["population type not found"]
       }
       """
     And the HTTP status code should be "404"
