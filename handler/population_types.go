@@ -307,7 +307,7 @@ func (h *PopulationTypes) GetAreaTypeParents(w http.ResponseWriter, r *http.Requ
 		Variable: chi.URLParam(r, "area-type"),
 	}
 
-	if !h.cfg.EnablePrivateEndpoints && !h.authenticate(ctx) {
+	if !h.cfg.EnablePrivateEndpoints {
 		if err := h.published(ctx, cReq.Dataset); err != nil {
 			h.respond.Error(ctx, w, http.StatusNotFound, errors.New("population type not found"))
 			return
@@ -351,14 +351,9 @@ func (h *PopulationTypes) authenticate(ctx context.Context) bool {
 }
 
 func (h *PopulationTypes) published(ctx context.Context, populationType string) error {
-	authToken := ""
-	if h.cfg.EnablePrivateEndpoints {
-		authToken = h.cfg.ServiceAuthToken
-	}
-
 	datasets, err := h.datasets.GetDatasets(
 		ctx,
-		authToken,
+		"",
 		"",
 		"",
 		&dataset.QueryParams{
@@ -374,15 +369,5 @@ func (h *PopulationTypes) published(ctx context.Context, populationType string) 
 		return errors.New("no published datasets found for population type")
 	}
 
-	if !h.cfg.EnablePrivateEndpoints {
-		return nil
-	}
-
-	for _, d := range datasets.Items {
-		if d.Current != nil {
-			return nil
-		}
-	}
-
-	return errors.New("no published datasets found for population type")
+	return nil
 }
