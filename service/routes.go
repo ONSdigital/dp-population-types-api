@@ -38,7 +38,7 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 		svc.datasetAPIClient,
 	)
 	svc.Router.Get("/population-types", populationTypes.Get)
-	svc.Router.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypesPublic)
+	svc.Router.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypes)
 
 	areas := handler.NewAreas(svc.Config, svc.datasetAPIClient, svc.responder, svc.cantabularClient)
 	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.Get)
@@ -67,7 +67,7 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	r.Use(permissions.Require(auth.Permissions{Read: true}))
 
 	r.Get("/population-types", populationTypes.Get)
-	r.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypesPrivate)
+	r.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypes)
 	r.Get("/population-types/{population-type}/area-types/{area-type}/parents", populationTypes.GetAreaTypeParents)
 
 	areas := handler.NewAreas(svc.Config, svc.datasetAPIClient, svc.responder, svc.cantabularClient)

@@ -11,7 +11,6 @@ import (
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	dperrors "github.com/ONSdigital/dp-net/v2/errors"
-	dprequest "github.com/ONSdigital/dp-net/v2/request"
 	"github.com/ONSdigital/log.go/v2/log"
 
 	"github.com/ONSdigital/dp-population-types-api/config"
@@ -89,16 +88,23 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }
 
-func (h *PopulationTypes) GetAreaTypesPublic(w http.ResponseWriter, r *http.Request) {
+func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	authenticated := h.authenticate(ctx)
 	isBasedOn := chi.URLParam(r, "population-type")
 
-	req := cantabular.GetGeographyDimensionsRequest{
+	cReq := cantabular.GetGeographyDimensionsRequest{
 		Dataset: isBasedOn,
 	}
 
-	res, err := h.cantabular.GetGeographyDimensions(ctx, req)
+	// only return results for published population-types on web
+	if !h.cfg.EnablePrivateEndpoints {
+		if err := h.published(ctx, cReq.Dataset); err != nil {
+			h.respond.Error(ctx, w, http.StatusNotFound, errors.New("population type not found"))
+			return
+		}
+	}
+
+	res, err := h.cantabular.GetGeographyDimensions(ctx, cReq)
 	if err != nil {
 		h.respond.Error(
 			ctx,
@@ -110,115 +116,6 @@ func (h *PopulationTypes) GetAreaTypesPublic(w http.ResponseWriter, r *http.Requ
 	}
 
 	var resp contract.GetAreaTypesResponse
-
-	if !authenticated {
-		datasets, err := h.datasets.GetDatasets(
-			ctx,
-			"",
-			"",
-			"",
-			&dataset.QueryParams{
-				IsBasedOn: isBasedOn,
-				Limit:     1000,
-			},
-		)
-		if err != nil {
-			h.respond.Error(
-				ctx,
-				w,
-				dperrors.StatusCode(err),
-				errors.New("failed to get area types: failed to get population type"),
-			)
-			return
-
-		}
-
-		if datasets.TotalCount == 0 {
-			h.respond.Error(
-				ctx,
-				w,
-				http.StatusNotFound,
-				errors.New("population type not found"),
-			)
-			return
-		}
-	}
-
-	if res != nil {
-		for _, edge := range res.Dataset.RuleBase.IsSourceOf.Edges {
-			resp.AreaTypes = append(resp.AreaTypes, contract.AreaType{
-				ID:         edge.Node.Name,
-				Label:      edge.Node.Label,
-				TotalCount: edge.Node.Categories.TotalCount,
-			})
-		}
-	}
-
-	h.respond.JSON(ctx, w, http.StatusOK, resp)
-}
-
-func (h *PopulationTypes) GetAreaTypesPrivate(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	authenticated := h.authenticate(ctx)
-	isBasedOn := chi.URLParam(r, "population-type")
-
-	req := cantabular.GetGeographyDimensionsRequest{
-		Dataset: isBasedOn,
-	}
-
-	res, err := h.cantabular.GetGeographyDimensions(ctx, req)
-	if err != nil {
-		h.respond.Error(
-			ctx,
-			w,
-			h.cantabular.StatusCode(err),
-			errors.Wrap(err, "failed to get area-types"),
-		)
-		return
-	}
-
-	var resp contract.GetAreaTypesResponse
-
-	if !authenticated {
-		datasets, err := h.datasets.GetDatasets(
-			ctx,
-			"",
-			h.cfg.ServiceAuthToken,
-			"",
-			&dataset.QueryParams{
-				IsBasedOn: isBasedOn,
-				Limit:     1000,
-			},
-		)
-		if err != nil {
-			h.respond.Error(
-				ctx,
-				w,
-				dperrors.StatusCode(err),
-				errors.New("failed to get area types: failed to get population type"),
-			)
-			return
-
-		}
-
-		var isPublished bool
-		for _, d := range datasets.Items {
-			if d.Current != nil {
-				isPublished = true
-				break
-			}
-		}
-
-		if !isPublished {
-			h.respond.Error(
-				ctx,
-				w,
-				http.StatusNotFound,
-				errors.New("population type not found"),
-			)
-			return
-		}
-	}
 
 	if res != nil {
 		for _, edge := range res.Dataset.RuleBase.IsSourceOf.Edges {
@@ -241,6 +138,7 @@ func (h *PopulationTypes) GetAreaTypeParents(w http.ResponseWriter, r *http.Requ
 		Variable: chi.URLParam(r, "area-type"),
 	}
 
+	// only return results for published population-types on web
 	if !h.cfg.EnablePrivateEndpoints {
 		if err := h.published(ctx, cReq.Dataset); err != nil {
 			h.respond.Error(ctx, w, http.StatusNotFound, errors.New("population type not found"))
@@ -270,18 +168,6 @@ func (h *PopulationTypes) GetAreaTypeParents(w http.ResponseWriter, r *http.Requ
 	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
-}
-
-func (h *PopulationTypes) authenticate(ctx context.Context) bool {
-	if callerIdentity := dprequest.Caller(ctx); callerIdentity != "" {
-		return true
-	}
-
-	if userIdentity := dprequest.User(ctx); userIdentity != "" {
-		return true
-	}
-
-	return false
 }
 
 func (h *PopulationTypes) published(ctx context.Context, populationType string) error {
