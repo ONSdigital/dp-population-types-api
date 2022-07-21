@@ -8,6 +8,7 @@ import (
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/contract"
+	"github.com/ONSdigital/log.go/v2/log"
 	"github.com/go-chi/chi/v5"
 
 	"github.com/pkg/errors"
@@ -41,24 +42,34 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 		Category: r.URL.Query().Get("q"),
 	}
 
+	logData := log.Data{
+		"population_type": cReq.Dataset,
+		"area_type":       cReq.Variable,
+		"query":           cReq.Category,
+	}
+
 	// only return results for published population-types on web
 	if !h.cfg.EnablePrivateEndpoints {
 		if err := h.published(ctx, cReq.Dataset); err != nil {
-			h.respond.Error(ctx, w, http.StatusNotFound, errors.New("population type not found"))
+			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+				err:     errors.Wrap(err, "failed to check published state"),
+				message: "population type not found",
+				logData: logData,
+			})
 			return
 		}
 	}
 
 	res, err := h.ctblr.GetAreas(ctx, cReq)
 	if err != nil {
-		msg := "failed to get areas"
 		h.respond.Error(
 			ctx,
 			w,
 			h.ctblr.StatusCode(err),
 			&Error{
-				err:     errors.Wrap(err, msg),
-				message: msg,
+				err:     errors.Wrap(err, "failed to get areas"),
+				message: "failed to get areas",
+				logData: logData,
 			},
 		)
 		return

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -38,14 +37,15 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 
 	ptypes, err := h.cantabular.ListDatasets(ctx)
 	if err != nil {
-		h.respond.Error(ctx, w, dperrors.StatusCode(err), errors.Wrap(
-			err,
-			"failed to fetch population types",
-		))
+		h.respond.Error(ctx, w, dperrors.StatusCode(err), &Error{
+			err:     errors.Wrap(err, "failed to fetch population types"),
+			message: "failed to get population types",
+		})
 		return
 	}
 
-	log.Info(ctx, "population types found", log.Data{"datasets": ptypes})
+	logData := log.Data{"datasets": ptypes}
+	log.Info(ctx, "population types found", logData)
 
 	// return all population types on publishing
 	if h.cfg.EnablePrivateEndpoints {
@@ -61,10 +61,11 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 			if dperrors.StatusCode(err) == http.StatusNotFound {
 				continue
 			}
-			h.respond.Error(ctx, w, dperrors.StatusCode(err), errors.Wrap(
-				err,
-				"failed to get datasets",
-			))
+			h.respond.Error(ctx, w, dperrors.StatusCode(err), &Error{
+				err:     errors.Wrap(err, "failed to check published state"),
+				message: "failed to get population types",
+				logData: logData,
+			})
 			return
 		}
 
@@ -90,28 +91,34 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 
 func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	isBasedOn := chi.URLParam(r, "population-type")
 
 	cReq := cantabular.GetGeographyDimensionsRequest{
-		Dataset: isBasedOn,
+		Dataset: chi.URLParam(r, "population-type"),
+	}
+
+	logData := log.Data{
+		"population_type": cReq.Dataset,
 	}
 
 	// only return results for published population-types on web
 	if !h.cfg.EnablePrivateEndpoints {
 		if err := h.published(ctx, cReq.Dataset); err != nil {
-			h.respond.Error(ctx, w, http.StatusNotFound, errors.New("population type not found"))
+			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+				err:     errors.Wrap(err, "failed to check published state"),
+				message: "population type not found",
+				logData: logData,
+			})
 			return
 		}
 	}
 
 	res, err := h.cantabular.GetGeographyDimensions(ctx, cReq)
 	if err != nil {
-		h.respond.Error(
-			ctx,
-			w,
-			h.cantabular.StatusCode(err),
-			errors.Wrap(err, "failed to get area-types"),
-		)
+		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), &Error{
+			err:     errors.Wrap(err, "failed to get geography dimensions"),
+			message: "failed to get area-types",
+			logData: logData,
+		})
 		return
 	}
 
@@ -138,24 +145,42 @@ func (h *PopulationTypes) GetAreaTypeParents(w http.ResponseWriter, r *http.Requ
 		Variable: chi.URLParam(r, "area-type"),
 	}
 
+	logData := log.Data{
+		"population_type": cReq.Dataset,
+		"area_type":       cReq.Variable,
+	}
 	// only return results for published population-types on web
 	if !h.cfg.EnablePrivateEndpoints {
 		if err := h.published(ctx, cReq.Dataset); err != nil {
-			h.respond.Error(ctx, w, http.StatusNotFound, errors.New("population type not found"))
+			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+				err:     errors.Wrap(err, "failed to check published state"),
+				message: "population type not found",
+				logData: logData,
+			})
 			return
 		}
 	}
 
 	res, err := h.cantabular.GetParents(ctx, cReq)
 	if err != nil {
-		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), errors.Wrap(err, "failed to get parents"))
+		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), &Error{
+			err:     errors.Wrap(err, "failed to get parents"),
+			message: "failed to get parents",
+			logData: logData,
+		})
 		return
 	}
 
 	var resp contract.GetAreaTypeParentsResponse
 
-	if len(res.Dataset.Variables.Edges) != 1 {
-		h.respond.Error(ctx, w, http.StatusInternalServerError, fmt.Errorf("failed to get parents"))
+	if l := len(res.Dataset.Variables.Edges); l != 1 {
+		logData["edges_expected_length"] = 1
+		logData["edges_length"] = l
+		h.respond.Error(ctx, w, http.StatusInternalServerError, &Error{
+			err:     errors.New("invalid response from Cantabular"),
+			message: "failed to get parents",
+			logData: logData,
+		})
 		return
 	}
 
