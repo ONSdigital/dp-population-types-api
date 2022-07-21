@@ -6,13 +6,34 @@ import (
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
+	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/contract"
 	"github.com/ONSdigital/log.go/v2/log"
 	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
 )
 
-func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
+// AreaTypes handles requests sent to the /population-types/{population-type}/area-types
+// set of routes
+type AreaTypes struct {
+	cfg        *config.Config
+	respond    responder
+	cantabular cantabularClient
+	datasets   datasetAPIClient
+}
+
+// NewAreaTypes returns a new AreaTypes handler set
+func NewAreaTypes(cfg *config.Config, r responder, c cantabularClient, d datasetAPIClient) *AreaTypes {
+	return &AreaTypes{
+		cfg:        cfg,
+		respond:    r,
+		cantabular: c,
+		datasets:   d,
+	}
+}
+
+// Get is the handler for GET /population-types/{population-type}/area-types
+func (h *AreaTypes) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	cReq := cantabular.GetGeographyDimensionsRequest{
@@ -60,7 +81,8 @@ func (h *PopulationTypes) GetAreaTypes(w http.ResponseWriter, r *http.Request) {
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }
 
-func (h *PopulationTypes) GetAreaTypeParents(w http.ResponseWriter, r *http.Request) {
+// GetParents is the handler for /population-types/{population-type}/area-types/{area-type}/parents
+func (h *AreaTypes) GetParents(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	cReq := cantabular.GetParentsRequest{
@@ -118,7 +140,7 @@ func (h *PopulationTypes) GetAreaTypeParents(w http.ResponseWriter, r *http.Requ
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }
 
-func (h *PopulationTypes) published(ctx context.Context, populationType string) error {
+func (h *AreaTypes) published(ctx context.Context, populationType string) error {
 	datasets, err := h.datasets.GetDatasets(
 		ctx,
 		"",

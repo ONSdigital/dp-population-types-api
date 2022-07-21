@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/pkg/errors"
 
+	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	dperrors "github.com/ONSdigital/dp-net/v2/errors"
 	"github.com/ONSdigital/log.go/v2/log"
 
@@ -83,4 +85,26 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
+}
+
+func (h *PopulationTypes) published(ctx context.Context, populationType string) error {
+	datasets, err := h.datasets.GetDatasets(
+		ctx,
+		"",
+		"",
+		"",
+		&dataset.QueryParams{
+			IsBasedOn: populationType,
+			Limit:     1000,
+		},
+	)
+	if err != nil {
+		return errors.Wrap(err, "failed to get datasets for population type")
+	}
+
+	if datasets.TotalCount == 0 {
+		return errors.New("no published datasets found for population type")
+	}
+
+	return nil
 }
