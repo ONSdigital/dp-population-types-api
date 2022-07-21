@@ -71,7 +71,7 @@ Background:
         Then I should receive the following JSON response:
         """
         {
-            "errors": ["failed to get parents: test error response"]
+            "errors": ["failed to get parents"]
         }
         """
 

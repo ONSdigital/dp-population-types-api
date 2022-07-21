@@ -51,5 +51,5 @@ Feature: Population types endpoint
     
     Then I should receive the following JSON response:
     """
-    {"errors": ["failed to fetch population types: cantabular failed to respond"]}
+    {"errors": ["failed to get population types"]}
     """
