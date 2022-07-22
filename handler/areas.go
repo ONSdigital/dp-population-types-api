@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"net/http"
+	"strconv"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
@@ -35,9 +36,18 @@ func NewAreas(cfg *config.Config, r responder, c cantabularClient, d datasetAPIC
 // Get is the handler for GET /population-types/{population-type}/area-types/{area-type}/areas
 func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
+
+	if limit <= 0 {
+		limit = 20
+	}
 
 	cReq := cantabular.GetAreasRequest{
-		//add pagination
+		PaginationParams: cantabular.PaginationParams{
+			Limit:  limit,
+			Offset: offset,
+		},
 		Dataset:  chi.URLParam(r, "population-type"),
 		Variable: chi.URLParam(r, "area-type"),
 		Category: r.URL.Query().Get("q"),
@@ -78,7 +88,7 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 
 	var resp contract.GetAreasResponse
 
-	for _, variable := range res.Dataset.RuleBase.IsSourceOf.Search.Edges {
+	for _, variable := range res.Dataset.Variables.Edges {
 		for _, category := range variable.Node.Categories.Search.Edges {
 			resp.Areas = append(resp.Areas, contract.Area{
 				ID:       category.Node.Code,

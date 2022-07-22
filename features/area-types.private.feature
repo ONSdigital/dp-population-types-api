@@ -31,11 +31,7 @@ Feature: Area Types
                           {
                             "node":{
                               "name": "city",
-<<<<<<< HEAD:features/area-types.private.feature
                               "label": "City"
-=======
-                              "label": "City",
->>>>>>> work for pagination:features/area-types-private.feature
                             }
                           }
                         ]

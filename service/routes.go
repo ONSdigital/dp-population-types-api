@@ -85,8 +85,8 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 		svc.cantabularClient,
 		svc.datasetAPIClient,
 	)
-	svc.Router.Get("/population-types/{population-type}/area-types", areaTypes.Get)
-	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/parents", areaTypes.GetParents)
+	r.Get("/population-types/{population-type}/area-types", areaTypes.Get)
+	r.Get("/population-types/{population-type}/area-types/{area-type}/parents", areaTypes.GetParents)
 
 	areas := handler.NewAreas(
 		svc.Config,
