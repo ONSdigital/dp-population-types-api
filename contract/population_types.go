@@ -1,8 +1,9 @@
 package contract
 
-type GetPopulationTypesResponse struct {
-	PopulationTypes
+type PopulationType struct {
+	Name string `json:"name"`
 }
+
 type PopulationTypes struct {
 	Items []PopulationType `json:"items"`
 }
@@ -10,7 +11,11 @@ type PopulationTypes struct {
 func NewPopulationTypes(names []string) PopulationTypes {
 	items := make([]PopulationType, len(names))
 	for i, name := range names {
-		items[i] = *NewPopulationType(name)
+		items[i] = PopulationType{name}
 	}
 	return PopulationTypes{Items: items}
+}
+
+type GetPopulationTypesResponse struct {
+	PopulationTypes
 }

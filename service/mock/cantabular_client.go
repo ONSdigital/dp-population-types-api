@@ -30,6 +30,9 @@ var _ service.CantabularClient = &CantabularClientMock{}
 // 			GetGeographyDimensionsFunc: func(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
 // 				panic("mock out the GetGeographyDimensions method")
 // 			},
+// 			GetParentsFunc: func(contextMoqParam context.Context, getParentsRequest cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error) {
+// 				panic("mock out the GetParents method")
+// 			},
 // 			ListDatasetsFunc: func(ctx context.Context) ([]string, error) {
 // 				panic("mock out the ListDatasets method")
 // 			},
@@ -51,6 +54,9 @@ type CantabularClientMock struct {
 
 	// GetGeographyDimensionsFunc mocks the GetGeographyDimensions method.
 	GetGeographyDimensionsFunc func(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error)
+
+	// GetParentsFunc mocks the GetParents method.
+	GetParentsFunc func(contextMoqParam context.Context, getParentsRequest cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error)
 
 	// ListDatasetsFunc mocks the ListDatasets method.
 	ListDatasetsFunc func(ctx context.Context) ([]string, error)
@@ -81,6 +87,13 @@ type CantabularClientMock struct {
 			// Req is the req argument value.
 			Req cantabular.GetGeographyDimensionsRequest
 		}
+		// GetParents holds details about calls to the GetParents method.
+		GetParents []struct {
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
+			// GetParentsRequest is the getParentsRequest argument value.
+			GetParentsRequest cantabular.GetParentsRequest
+		}
 		// ListDatasets holds details about calls to the ListDatasets method.
 		ListDatasets []struct {
 			// Ctx is the ctx argument value.
@@ -95,6 +108,7 @@ type CantabularClientMock struct {
 	lockChecker                sync.RWMutex
 	lockGetAreas               sync.RWMutex
 	lockGetGeographyDimensions sync.RWMutex
+	lockGetParents             sync.RWMutex
 	lockListDatasets           sync.RWMutex
 	lockStatusCode             sync.RWMutex
 }
@@ -201,6 +215,41 @@ func (mock *CantabularClientMock) GetGeographyDimensionsCalls() []struct {
 	mock.lockGetGeographyDimensions.RLock()
 	calls = mock.calls.GetGeographyDimensions
 	mock.lockGetGeographyDimensions.RUnlock()
+	return calls
+}
+
+// GetParents calls GetParentsFunc.
+func (mock *CantabularClientMock) GetParents(contextMoqParam context.Context, getParentsRequest cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error) {
+	if mock.GetParentsFunc == nil {
+		panic("CantabularClientMock.GetParentsFunc: method is nil but CantabularClient.GetParents was just called")
+	}
+	callInfo := struct {
+		ContextMoqParam   context.Context
+		GetParentsRequest cantabular.GetParentsRequest
+	}{
+		ContextMoqParam:   contextMoqParam,
+		GetParentsRequest: getParentsRequest,
+	}
+	mock.lockGetParents.Lock()
+	mock.calls.GetParents = append(mock.calls.GetParents, callInfo)
+	mock.lockGetParents.Unlock()
+	return mock.GetParentsFunc(contextMoqParam, getParentsRequest)
+}
+
+// GetParentsCalls gets all the calls that were made to GetParents.
+// Check the length with:
+//     len(mockedCantabularClient.GetParentsCalls())
+func (mock *CantabularClientMock) GetParentsCalls() []struct {
+	ContextMoqParam   context.Context
+	GetParentsRequest cantabular.GetParentsRequest
+} {
+	var calls []struct {
+		ContextMoqParam   context.Context
+		GetParentsRequest cantabular.GetParentsRequest
+	}
+	mock.lockGetParents.RLock()
+	calls = mock.calls.GetParents
+	mock.lockGetParents.RUnlock()
 	return calls
 }
 

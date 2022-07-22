@@ -10,6 +10,7 @@ import (
 	dphandlers "github.com/ONSdigital/dp-net/v2/handlers"
 	"github.com/ONSdigital/dp-population-types-api/handler"
 	"github.com/ONSdigital/dp-population-types-api/middleware"
+
 	"github.com/ONSdigital/log.go/v2/log"
 )
 
@@ -24,7 +25,6 @@ func (svc *Service) buildRoutes(ctx context.Context) {
 	} else {
 		svc.publicEndpoints(ctx)
 	}
-
 }
 
 func (svc *Service) publicEndpoints(ctx context.Context) {
@@ -37,10 +37,23 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 		svc.cantabularClient,
 		svc.datasetAPIClient,
 	)
-	svc.Router.Get("/population-types", populationTypes.GetPublic)
-	svc.Router.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypesPublic)
+	svc.Router.Get("/population-types", populationTypes.Get)
 
-	areas := handler.NewAreas(svc.Config, svc.datasetAPIClient, svc.responder, svc.cantabularClient)
+	areaTypes := handler.NewAreaTypes(
+		svc.Config,
+		svc.responder,
+		svc.cantabularClient,
+		svc.datasetAPIClient,
+	)
+	svc.Router.Get("/population-types/{population-type}/area-types", areaTypes.Get)
+	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/parents", areaTypes.GetParents)
+
+	areas := handler.NewAreas(
+		svc.Config,
+		svc.responder,
+		svc.cantabularClient,
+		svc.datasetAPIClient,
+	)
 	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.Get)
 }
 
@@ -53,6 +66,10 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	permissions := middleware.NewPermissions(svc.Config.ZebedeeURL, svc.Config.EnablePermissionsAuth)
 	checkIdentity := dphandlers.IdentityWithHTTPClient(svc.identityClient)
 
+	r.Use(checkIdentity)
+	r.Use(middleware.LogIdentity())
+	r.Use(permissions.Require(auth.Permissions{Read: true}))
+
 	// Routes
 	populationTypes := handler.NewPopulationTypes(
 		svc.Config,
@@ -60,15 +77,23 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 		svc.cantabularClient,
 		svc.datasetAPIClient,
 	)
+	r.Get("/population-types", populationTypes.Get)
 
-	r.Use(checkIdentity)
-	r.Use(middleware.LogIdentity())
-	r.Use(permissions.Require(auth.Permissions{Read: true}))
+	areaTypes := handler.NewAreaTypes(
+		svc.Config,
+		svc.responder,
+		svc.cantabularClient,
+		svc.datasetAPIClient,
+	)
+	svc.Router.Get("/population-types/{population-type}/area-types", areaTypes.Get)
+	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/parents", areaTypes.GetParents)
 
-	r.Get("/population-types", populationTypes.GetPrivate)
-	r.Get("/population-types/{population-type}/area-types", populationTypes.GetAreaTypesPrivate)
-
-	areas := handler.NewAreas(svc.Config, svc.datasetAPIClient, svc.responder, svc.cantabularClient)
+	areas := handler.NewAreas(
+		svc.Config,
+		svc.responder,
+		svc.cantabularClient,
+		svc.datasetAPIClient,
+	)
 	r.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.Get)
 
 	svc.Router.Mount("/", r)

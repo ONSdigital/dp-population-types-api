@@ -2,18 +2,21 @@ Feature: Areas
 
   Background:
     Given private endpoints are not enabled
-    And I am not authorised
+
     And cantabular server is healthy
+
     And cantabular api extension is healthy
+
     And the following datasets based on "Example" are available
     """
-    {"count": 1}
+    {"total_count": 1}
     """
+
   Scenario: Getting areas happy
-    When the following area query response is available from Cantabular api extension for the dataset "Example":
+
+    When the following area query response is available from Cantabular:
       """
       {
-        "data": {
           "dataset": {
             "ruleBase": {
               "isSourceOf": {
@@ -54,7 +57,6 @@ Feature: Areas
               }
             }
           }
-        }
       }
       """
 
@@ -67,17 +69,17 @@ Feature: Areas
           {
             "id": "0",
             "label": "London",
-            "area-type": "city"
+            "area_type": "city"
           },
           {
             "id": "1",
             "label": "Liverpool",
-            "area-type": "city"
+            "area_type": "city"
           },
           {
             "id": "2",
             "label": "Belfast",
-            "area-type": "city"
+            "area_type": "city"
           }
         ]
       }
@@ -85,10 +87,10 @@ Feature: Areas
     And the HTTP status code should be "200"
 
   Scenario: Getting areas specific search
-    When the following area query response is available from Cantabular api extension for the dataset "Example", area type "City" and text "London":
+    
+    And the following area query response is available from Cantabular:
     """
     {
-      "data": {
         "dataset": {
           "ruleBase": {
             "isSourceOf": {
@@ -117,10 +119,11 @@ Feature: Areas
             }
           }
         }
-      }
     }
     """
+
     And I GET "/population-types/Example/area-types/City/areas?q=London"
+
     Then I should receive the following JSON response:
     """
     {
@@ -128,17 +131,20 @@ Feature: Areas
         {
           "id": "0",
           "label": "London",
-          "area-type": "city"
+          "area_type": "city"
         }
       ]
     }
     """
 
   Scenario: Getting areas no dataset or search text
-    When the following area query response is available from Cantabular api extension for the dataset "", area type "" and text "":
+    Given I am identified as "user@ons.gov.uk"
+
+    And I am authorised
+    
+    And the following area query response is available from Cantabular:
     """
     {
-      "data": {
         "dataset": {
           "ruleBase": {
             "isSourceOf": {
@@ -202,11 +208,12 @@ Feature: Areas
               }
             }
           }
-        }
       }
     }
     """
+
     And I GET "/population-types/Example/area-types/City/areas"
+
     Then I should receive the following JSON response:
     """
     {
@@ -214,57 +221,45 @@ Feature: Areas
         {
           "id": "E",
           "label": "England",
-          "area-type": "country"
+          "area_type": "country"
         },
         {
           "id": "N",
           "label": "Northern Ireland",
-          "area-type": "country"
+          "area_type": "country"
         },
         {
           "id": "0",
           "label": "London",
-          "area-type": "city"
+          "area_type": "city"
         },
         {
           "id": "1",
           "label": "Liverpool",
-          "area-type": "city"
+          "area_type": "city"
         },
         {
           "id": "2",
           "label": "Belfast",
-          "area-type": "city"
+          "area_type": "city"
         }
       ]
     }
     """
 
-  Scenario: Getting areas invalid dataset
-    Given cantabular is unresponsive
-    When the following area query response is available from Cantabular api extension for the dataset "Test":
+  Scenario: Getting areas invalid Dataset
+
+    And cantabular is unresponsive
+
+    When the following area query response is available from Cantabular:
     """
     {
-      "data": {
-        "dataset": null
-      },
-      "errors": [
-        {
-          "message": "404 Not Found: dataset not loaded in this server",
-          "locations": [
-            {
-              "line": 2,
-              "column": 2
-            }
-          ],
-          "path": [
-            "dataset"
-          ]
-        }
-      ]
+      "dataset": null
     }
     """
+    
     And I GET "/population-types/Example/area-types/City/areas"
+    
     Then I should receive the following JSON response:
     """
     {
@@ -275,10 +270,10 @@ Feature: Areas
     """
 
   Scenario: Get areas area does not exist
-    When the following area query response is available from Cantabular api extension for the dataset "Example", area type "" and text "rio":
+    
+    And the following area query response is available from Cantabular:
     """
     {
-      "data": {
         "dataset": {
           "ruleBase": {
             "isSourceOf": {
@@ -288,10 +283,12 @@ Feature: Areas
             }
           }
         }
-      }
+
     }
     """
+
     And I GET "/population-types/Example/area-types/City/areas?q=rio"
+
     Then I should receive the following JSON response:
     """
     {
@@ -300,10 +297,10 @@ Feature: Areas
     """
 
   Scenario: Getting areas when dataset is not available
-    When the following area query response is available from Cantabular api extension for the dataset "Example":
-      """
+    
+    And the following area query response is available from Cantabular:
+    """
       {
-        "data": {
           "dataset": {
             "ruleBase": {
               "isSourceOf": {
@@ -344,19 +341,20 @@ Feature: Areas
               }
             }
           }
-        }
       }
-      """
+    """
     
-    When the following datasets based on "Example2" are available
+    And the following datasets based on "Example2" are available
     """
     {"count": 0}
     """
+
     And I GET "/population-types/Example2/area-types/City/areas"
+
     Then I should receive the following JSON response:
       """
       {
-        "errors": ["areas not found"]
+        "errors": ["population type not found"]
       }
       """
     And the HTTP status code should be "404"
