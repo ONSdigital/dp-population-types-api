@@ -10,46 +10,43 @@ Feature: Areas
     When the following area query response is available from Cantabular:
     """
     {
-        "dataset": {
-          "ruleBase": {
-            "isSourceOf": {
-              "search": {
-                "edges": [
-                  {
-                    "node": {
-                      "label": "City",
-                      "name": "city",
-                      "categories": {
-                        "search": {
-                          "edges": [
-                            {
-                              "node": {
-                                "code": "0",
-                                "label": "London"
-                              }
-                            },
-                            {
-                              "node": {
-                                "code": "1",
-                                "label": "Liverpool"
-                              }
-                            },
-                            {
-                              "node": {
-                                "code": "2",
-                                "label": "Belfast"
-                              }
-                            }
-                          ]
+      "dataset": {
+        "variables": {
+          "edges": [
+            {
+              "node": {
+                "categories": {
+                  "search": {
+                    "edges": [
+                      {
+                        "node": {
+                            "code": "0",
+                            "label": "London"
+                        }
+                      },
+                      {
+                        "node": {
+                          "code": "1",
+                          "label": "Liverpool"
+                        }
+                      },
+                      {
+                        "node": {
+                          "code": "2",
+                          "label": "Belfast"
                         }
                       }
-                    }
-                  }
-                ]
+                    ]
+                  },
+                  "totalCount": 3
+                },
+                "label": "City",
+                "name": "city"
               }
             }
-          }
+          ]
         }
+      }
     }
     """
 
