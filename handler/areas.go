@@ -37,6 +37,7 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	cReq := cantabular.GetAreasRequest{
+		//add pagination
 		Dataset:  chi.URLParam(r, "population-type"),
 		Variable: chi.URLParam(r, "area-type"),
 		Category: r.URL.Query().Get("q"),

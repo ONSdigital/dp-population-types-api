@@ -41,7 +41,7 @@ func Get() (*Config, error) {
 		GracefulShutdownTimeout:    5 * time.Second,
 		HealthCheckInterval:        30 * time.Second,
 		HealthCheckCriticalTimeout: 90 * time.Second,
-		EnablePrivateEndpoints:     false,
+		EnablePrivateEndpoints:     true,
 		ZebedeeURL:                 "http://localhost:8082",
 		ServiceAuthToken:           "",
 		EnablePermissionsAuth:      true,
