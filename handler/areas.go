@@ -23,7 +23,7 @@ type Areas struct {
 }
 
 // NewAreas returns a new Areas handler
-func NewAreas(cfg *config.Config, d datasetAPIClient, r responder, c cantabularClient) *Areas {
+func NewAreas(cfg *config.Config, r responder, c cantabularClient, d datasetAPIClient) *Areas {
 	return &Areas{
 		cfg:      cfg,
 		datasets: d,
