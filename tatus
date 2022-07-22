@@ -1,0 +1,777 @@
+[33mcommit a00dca031718831f0f012651724ae71578ccc8f6[m[33m ([m[1;36mHEAD -> [m[1;32mdevelop[m[33m, [m[1;31morigin/fix/get-parents-endpoint[m[33m, [m[1;31morigin/develop[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Mon Jul 18 12:42:00 2022 +0100
+
+    Use IsSourceOf instead of IsDirectSource of in GetParents
+
+[33mcommit d6a5cc57d0904def6eca6241d35280a3b8f0af1a[m[33m ([m[1;31morigin/feature/get-parents-endpoint[m[33m)[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Thu Jul 14 12:18:29 2022 +0100
+
+    correct to snake_case for JSON
+
+[33mcommit 027bd3fbe9a6f9af16d01190e264acf057507be8[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Thu Jul 14 11:58:58 2022 +0100
+
+    bump dp-api-clients-go dependency
+
+[33mcommit c95591a8dbac2c24d3c821d93ec8eea23dacfc44[m[33m ([m[1;32mfeature/get-parents-endpoint[m[33m)[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Wed Jul 13 16:21:27 2022 +0100
+
+    add component tests
+
+[33mcommit b56ebedde6cdd07f38817f1aae83177d2cb02dbe[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Fri Jul 1 15:31:54 2022 +0100
+
+    generate mocked dependencies
+
+[33mcommit 5824ce1776bc583b92d4095e716574296a7dea7b[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Fri Jul 1 12:34:45 2022 +0100
+
+    add GET /population-types/{pt}/area-types/{at}/parents
+
+[33mcommit a2f2c9cd17693eac88997a0837a6dbee2a5528b0[m
+Merge: 1c877a4 4af9c2e
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Wed Jul 13 16:54:12 2022 +0100
+
+    Merge branch 'fix/refactor-component-tests.2' into develop
+
+[33mcommit 4af9c2e6b00337758403975496622ad938ca2356[m[33m ([m[1;31morigin/fix/refactor-component-tests.2[m[33m)[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Wed Jul 13 14:39:18 2022 +0100
+
+    Refactor component test, removed redundant code
+
+[33mcommit 1c877a4f4f590e46d739c846ad8649c61e5c700a[m[33m ([m[1;31morigin/feature/add-healthcheck-placeholder[m[33m)[m
+Author: Andre Urbani <dredizzle@live.co.uk>
+Date:   Thu Jul 7 16:16:22 2022 +0100
+
+    add healthcheck placeholder for deployment to prod
+
+[33mcommit a24913a5ff68cda9930c77a209d65b18bc3824ee[m
+Merge: 45d01ca 473bbc7
+Author: jitendar <jitendar.rawat@methods.co.uk>
+Date:   Fri Jul 1 14:55:47 2022 +0100
+
+    Merge branch 'feature/5717-published-rule-check' into develop
+
+[33mcommit 473bbc7872624ef53c62a720bbbb411a179259d1[m[33m ([m[1;31morigin/feature/5717-published-rule-check[m[33m, [m[1;32mfeature/5717-published-rule-check[m[33m)[m
+Author: jitendar <jitendar.rawat@methods.co.uk>
+Date:   Fri Jul 1 14:46:17 2022 +0100
+
+    fix for dataset search
+
+[33mcommit 45d01caa5a8cdca3cd2dd614455cd4ed75ff6791[m[33m ([m[1;31morigin/feature/update-area-type-parents-endpoint[m[33m)[m
+Author: fran moore <franmoore05@gmail.com>
+Date:   Thu Jun 30 11:35:09 2022 +0100
+
+    Updating response from area-types/area-type/parents endpoint
+
+[33mcommit 46663723038157da807e58210b161a94a7e6f26e[m
+Author: jitendar <jitendar.rawat@methods.co.uk>
+Date:   Thu Jun 23 12:20:32 2022 +0100
+
+    added published check rule
+
+[33mcommit 20954e4f55dce4cfef382433a5c14f1ce87da251[m
+Merge: 592c925 69302af
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Thu Jun 23 11:13:44 2022 +0100
+
+    Merge branch 'feature/5709-go-back-and-check-vulnerabilities-added-to-nancyignore-fix-where-possible' into develop
+
+[33mcommit 69302af9891e941aa4a89a259f2b9326641d5243[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Thu Jun 23 10:15:13 2022 +0100
+
+    5709 - Remove jwt-go replace rule
+
+[33mcommit 9ac78096c33f29fe7a5b720d9818769da1c329d7[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Wed Jun 22 11:11:52 2022 +0100
+
+    Update Go version to 1.18
+
+[33mcommit e50e9337e77d7bf4d4d4b2d04ca0690e9e4ca5a0[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Wed Jun 22 11:10:27 2022 +0100
+
+    Exclude github.com/gorilla/sessions from our dependencies
+    
+    * We are not using `github.com/gorilla/sessions` and there is a non-CVE
+      vulnerability found.
+    
+    * Get the latest dependency versions
+
+[33mcommit 592c92596bcdc6ace5ca1acf601001b2350a38a4[m[33m ([m[1;31morigin/feature/5716-update-areas-endpoint[m[33m)[m
+Author: Andre Urbani <dredizzle@live.co.uk>
+Date:   Wed Jun 22 12:44:46 2022 +0100
+
+    #5716 update areas endpoint
+
+[33mcommit c4288b7b57562de22c4ca099ee6d2254acf63cca[m[33m ([m[1;31morigin/release/v1.2.0[m[33m, [m[1;31morigin/feature/5716-add-areas[m[33m)[m
+Author: Andre Urbani <dredizzle@live.co.uk>
+Date:   Tue Jun 21 14:13:09 2022 +0100
+
+    remove commented out code
+
+[33mcommit ee02cfb488b1b8498ff9993f53ba06a314ad3c18[m
+Merge: c52ac43 638c0d7
+Author: Andre Urbani <dredizzle@live.co.uk>
+Date:   Tue Jun 21 13:26:46 2022 +0100
+
+    resolve conflict
+
+[33mcommit c52ac43b6943ffc4ea0318e7607fefae5ef276bc[m
+Author: Andre Urbani <dredizzle@live.co.uk>
+Date:   Tue Jun 21 13:21:59 2022 +0100
+
+    #5761 move /areas endpoint from dp-cantabular-dimension-api to dp-population-types-api
+
+[33mcommit 638c0d7f9236e94b22274ab9faf1240a5a4063a7[m[33m ([m[1;31morigin/fix/area-types-dataset-struct[m[33m)[m
+Merge: 9fe3f90 1434cf9
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Tue Jun 21 09:05:02 2022 +0100
+
+    Merge remote-tracking branch 'origin/develop' into fix/area-types-dataset-struct
+
+[33mcommit 9fe3f907a3bd67c03d6a44cc764ad5d89c96ce57[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Mon Jun 20 16:18:07 2022 +0100
+
+    fix: area-types
+    
+    web journey returned 0 datasets. despite published datasets.
+    This was because the (web) dataset-api would return different
+    data structs (did not have) ".current".
+    
+    handler split into two. Public and Private. Public changed to
+    reflect the datset api response.
+
+[33mcommit 1434cf9f9d888badfcc4b4dcc8b5d92533679797[m[33m ([m[1;31morigin/feature/add-separate-handlers-for-pub-priv-get-population-types[m[33m)[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Mon Jun 20 14:05:36 2022 +0100
+
+    add separate public and private GET /population-types handler and component tests
+
+[33mcommit 870121bc7d0c11b965768bf51c261c26235443a1[m[33m ([m[1;31morigin/fix/pop-types-response[m[33m)[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Mon Jun 20 11:51:01 2022 +0100
+
+    fix: error response
+
+[33mcommit bcdfc383abeee8958fbcbd060a2d8cc8b7230b3f[m
+Merge: a9673dd 27c41b7
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Tue Jun 14 17:21:29 2022 +0100
+
+    Merge branch 'fix/ignore-audit-vulnerabilities' into develop
+
+[33mcommit 27c41b74307edeb431868b2c53b89cd43745b470[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Tue Jun 14 16:05:29 2022 +0100
+
+    Ignore consul api and sdk vulnerabilities
+
+[33mcommit a9673dd668e0bd28b6f613d882d53179c97ade4b[m[33m ([m[1;31morigin/feature/add-published-check-to-get-population-types[m[33m)[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Tue Jun 14 15:37:30 2022 +0100
+
+    use current doc test to determine published state for /populaation-types/{id}/area-types
+
+[33mcommit 05d97382f554c31a74e82c861e5a4d2f14db01f6[m
+Merge: c91e6c5 ef919f7
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Tue Jun 14 13:11:31 2022 +0100
+
+    Merge branch 'develop' into feature/add-published-check-to-get-population-types
+
+[33mcommit c91e6c5c27cb1ee3084ee2d722d37a25d0599eed[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Tue Jun 14 12:03:43 2022 +0100
+
+    CR amendments
+
+[33mcommit ef919f72586214ce0f2e96af83131ea9ad0a6dcf[m[33m ([m[1;31morigin/feature/5701-is-based-on[m[33m)[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Mon Jun 13 15:01:02 2022 +0100
+
+    pr: address comments
+
+[33mcommit 255c66bfa1242da4ad3e1a48786f8a24f1a102f2[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Mon Jun 13 15:03:22 2022 +0100
+
+    disable linter checks in ci
+
+[33mcommit 03f9172a79b1e3f3ecf2ef93fcfe9d6406df4de5[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Mon Jun 13 12:01:40 2022 +0100
+
+    test: add failing dataset test
+
+[33mcommit 8b59fb54ad8ec2622394601d1f17e2f1b3d96eaa[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Mon Jun 13 11:08:34 2022 +0100
+
+    go mod tidy
+
+[33mcommit db5c92649fb6c2548db4f3d0a748ca4545e2f441[m
+Merge: de99828 913f9af
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Mon Jun 13 11:04:01 2022 +0100
+
+    Merge branch 'develop' into feature/5701-is-based-on
+
+[33mcommit de99828382e5abaf27bcdf2fcced29784b17c2e3[m
+Author: NickL <19624419+mr-nick17@users.noreply.github.com>
+Date:   Thu Jun 9 16:23:05 2022 +0100
+
+    test: fix unit && lint test
+
+[33mcommit 83b611296b76628eaf491f492d2e2edc6855f754[m
+Author: NickL <19624419+mr-nick17@users.noreply.github.com>
+Date:   Thu Jun 9 16:14:19 2022 +0100
+
+    adding service to docker container for cantubular import
+
+[33mcommit 469f00602b76f47464a15e3ff2da824bbfd641cf[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Mon Jun 6 17:39:08 2022 +0100
+
+    Remove ack of HTTP Response code from method that checks message
+
+[33mcommit c7960b1190da071226db395029e6024b8aad8e23[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Mon Jun 13 10:55:59 2022 +0100
+
+    clean: clearer component test defs
+
+[33mcommit 8f8e16444be8ddf3a40a00a530fb137dcb69e2dc[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Fri Jun 10 11:35:48 2022 +0100
+
+    docs: commeted confusing code
+
+[33mcommit 3ebfecba96cb7caad8ee44c4d07909521d0da02c[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Fri Jun 10 08:42:35 2022 +0100
+
+    feat: config changes && cleanup
+
+[33mcommit 79d12ff660c52146f1aeac2d7c1ff3e75fce1c8b[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Thu Jun 9 10:44:55 2022 +0100
+
+    feat: dp-compose dockerfile && reflex
+
+[33mcommit c25c611f4c03efc5c6a74b9a51674d9ca90167d1[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Wed Jun 8 11:41:09 2022 +0100
+
+    test: authenticated/unauthenticated tests
+    
+    Working component tests for population area types
+    based on private/public endpoints
+
+[33mcommit 16dc54d1188e10a45f8001fb8f3fed8acd064900[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Wed Jun 8 11:40:54 2022 +0100
+
+    feat: identityClient && datasetAPI
+
+[33mcommit af411a55aaec3f414fea25a3ef592751f9476d35[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Wed Jun 8 11:40:19 2022 +0100
+
+    feat: mocks and interfaces
+
+[33mcommit 3e3728310d3fca3d70de51d3779c66b10d86352b[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Mon Jun 6 10:59:56 2022 +0100
+
+    test: authenticated feature test cases
+
+[33mcommit 670d010854f28eb89abafc86ea02089388645e5e[m
+Author: saminahbab <saminahbab0@gmail.com>
+Date:   Mon Jun 13 10:53:47 2022 +0100
+
+    feat: go mod scaffolding
+
+[33mcommit 56e14726976617a993b8023165e3ff9a88fc0a4a[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Fri Jun 10 17:19:10 2022 +0100
+
+    update tests after rebase
+
+[33mcommit 8a5c266ddf34193f51bdb8d0ac679991578d047e[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Fri Jun 10 16:51:45 2022 +0100
+
+    update unit tests, remove redundant tests
+
+[33mcommit 208cc5248c0a7a8f8951e3702c80823d79356bf1[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Fri Jun 10 15:24:56 2022 +0100
+
+    component tests for published check
+
+[33mcommit e57e633a0e1813a7a4cf6dc7328ec2e83bc8ed8d[m
+Author: Joshua Medley <jmedleyx7@gmail.com>
+Date:   Thu Jun 9 16:03:13 2022 +0100
+
+    Add published check ro GET /population-types
+
+[33mcommit 913f9af341f9c6df7053b899820b4fc31897148e[m
+Merge: bb18169 83d0e9a
+Author: NickL <19624419+mr-nick17@users.noreply.github.com>
+Date:   Thu Jun 9 16:43:46 2022 +0100
+
+    Merge branch 'feature/add-service-to-docker' into develop
+
+[33mcommit 83d0e9a0c8ebe25a01df1314c1d3844e3094e088[m
+Author: NickL <19624419+mr-nick17@users.noreply.github.com>
+Date:   Thu Jun 9 16:23:05 2022 +0100
+
+    fix failing test
+
+[33mcommit 8eeb46e55c7f0fa4c42d7976f7d519d30e7a0646[m
+Author: NickL <19624419+mr-nick17@users.noreply.github.com>
+Date:   Thu Jun 9 16:14:19 2022 +0100
+
+    adding service to docker container for cantubular import
+
+[33mcommit bb181690a3f3bf99921b3b14c28e2129995fcbb3[m
+Merge: d4e51db 8bdf4a6
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Mon Jun 6 17:47:15 2022 +0100
+
+    Merge branch '5672-create-population-types-population-type-area-types-endpoint' into develop
+
+[33mcommit 8bdf4a652f8ff0d83245b82482653e6da6060c6b[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Mon Jun 6 17:39:08 2022 +0100
+
+    Remove ack of HTTP Response code from method that checks message
+
+[33mcommit c4b55d538f27bebc082df802a1ef7ff996a05e7d[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Fri May 27 16:29:31 2022 +0100
+
+    Use Cantabular Client 'StatusCode(err)'
+
+[33mcommit 7dc46f5a5f4c5e28b4ca97cc4822dc78d52b2497[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Fri May 27 15:29:37 2022 +0100
+
+    Group ONSDigital import dependencies
+
+[33mcommit d9594f8c928832f33162271147e4883615a97ebc[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Fri May 27 14:25:02 2022 +0100
+
+    Add golangci-lin as an indirect dependency
+
+[33mcommit 2f32b11656371774846a7f42b8e9d4b818c9b758[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Thu May 26 23:24:11 2022 +0100
+
+    Update dp-api-clients-go and GetGeographyDimensions(...) method
+    
+    The updating `dp-api-clients-go` to the latest version meant that we had
+    to refactor the code to use the new method signature.
+
+[33mcommit 16e6d67642f8cd5a49894d2fa1028316c0573665[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Thu May 26 21:22:37 2022 +0100
+
+    Update dependencies and ignore nancy warnings
+
+[33mcommit 9842b3aecf994decdda567efa8d0ddab865a8446[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Tue May 3 19:28:20 2022 +0100
+
+    5672 - Add /population-types/{population-type}/area-types endpoint docs
+    
+    Resolves: 5672
+
+[33mcommit ead54e8512b499836238fa712baeab57633693c7[m
+Author: Paulo Monteiro <paulo.from.portugal@gmail.com>
+Date:   Tue May 3 17:41:24 2022 +0100
+
+    5672 - Add /population-types/{population-type}/area-types endpoint
+    
+    We need to create a new endpoint in dp-population-types-api with a route
+    `/population-types/{population-type}/area-types` and move the handler
+    code from dp-cantabular-dimensions-api in to the handler for this
+    route in the population-types-api.
+    
+    The code should be removed from dp-cantabular-dimensions-api to avoid
+    duplication.
+    
+    Resolves: 5672
+
+[33mcommit d4e51dba3fe4a71c7373afd0623ef509108bec64[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Fri Mar 4 11:32:45 2022 +0000
+
+    simplified builder
+
+[33mcommit 0516aec655f1d4b3edafc4713f4928f5fee6fb69[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Fri Mar 4 09:52:48 2022 +0000
+
+    component tests
+
+[33mcommit 8e5032b6d45771eecd07323b1a4c90de7e56779b[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Mar 3 20:02:12 2022 +0000
+
+    fixed component tests
+
+[33mcommit abd55aeb8ae18fb0af89be70ec675eccb5acd6d1[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Mar 3 19:22:08 2022 +0000
+
+    remove fake responder
+
+[33mcommit 389eabb1581a7889e66b5e4b6e2caf26e5ea8a3c[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Mar 3 19:19:14 2022 +0000
+
+    lint
+
+[33mcommit 0fcb65e4f5305ccb3f41ee1c90364261714e4a77[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Mar 3 19:12:02 2022 +0000
+
+    error handling
+
+[33mcommit 5021c86836c81134be69d233a40fce10a0d73df9[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Mar 3 18:53:55 2022 +0000
+
+    call cantabular and return response
+
+[33mcommit 06bf74f45a5edd2ae7c80ae7b4f76d36d8bc0189[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Mar 3 16:58:39 2022 +0000
+
+    clean up
+
+[33mcommit 992764b3cf10fb90f5a491b85fe4fbe2296e702d[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Mar 3 16:57:12 2022 +0000
+
+    simplify
+
+[33mcommit 64c21575f954e4795b978225a7d00ad1fc9fa46e[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Mar 3 16:54:44 2022 +0000
+
+    lint
+
+[33mcommit ba0da232472bb9ce27ebe84940b1f1b8dde8a891[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Mar 3 16:51:57 2022 +0000
+
+    add config flag to disable health check for cantabular
+
+[33mcommit ec6aba40b1af1a8308449c051798594e6caa1060[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Mar 2 14:19:32 2022 +0000
+
+    fixed hard coded http code
+
+[33mcommit 7b5550e0c26f2f96b567f375951985db4859cc28[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Mar 2 14:16:19 2022 +0000
+
+    updated linting timeout to help with pipeline
+
+[33mcommit 678bf40b4fc74a42e5b8146aca90cbb84c06515e[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Mar 2 14:07:47 2022 +0000
+
+    build before lint
+
+[33mcommit 504fd9328446ea2c90bb1af5fb0bc8f298ae3e00[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Mar 2 12:55:23 2022 +0000
+
+    update version of lint
+
+[33mcommit c5f992fe9d61ff4a3ee3631769776c4c67c6b112[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Mar 2 12:54:05 2022 +0000
+
+    Add linting tool to module dependencies
+
+[33mcommit c66e20b8e4d52a7f54c7801e70ff7da7c2cf0ef7[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Mar 2 12:03:21 2022 +0000
+
+    diagnostics for lint step
+
+[33mcommit d13c1b595bdd610d20645fd65c88a0b3931aedff[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Mar 2 09:35:29 2022 +0000
+
+    fixed http status code
+
+[33mcommit 50a0851ce5d10aef80cf54774d737df766a5e97c[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Tue Mar 1 17:56:17 2022 +0000
+
+    fix component tests
+
+[33mcommit f509d4a0607409414f69984226e7bf22c14a9cfb[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Tue Mar 1 17:40:30 2022 +0000
+
+    remove blah struct
+
+[33mcommit 1979c595b33ba952d842061e8e0b6f38f713a4dc[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Tue Mar 1 17:37:54 2022 +0000
+
+    close body lint
+
+[33mcommit 1b382e3b63c13d2feb9abbbd27d326863210457a[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Tue Mar 1 17:34:13 2022 +0000
+
+    Add population types route
+
+[33mcommit f9eca0bbfe7c5c3ba7711f1ab100a4612f3e1f9d[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Tue Mar 1 15:41:06 2022 +0000
+
+    whitespace lint
+
+[33mcommit b20c654b7a6e2b496c8253f8b045afde1878922e[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Tue Mar 1 15:38:42 2022 +0000
+
+    various tweaks to match josh's style
+
+[33mcommit f74df476cbbbe8b9a70ad490b4ecaeca808a1451[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Tue Mar 1 15:07:31 2022 +0000
+
+    wrap all the errors
+
+[33mcommit 69c4506579aefd9229beec26a00795a7543bb758[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Tue Mar 1 14:58:34 2022 +0000
+
+    lowercase error
+
+[33mcommit 0ca0d523b25c30496083307771b3c9ecd78e58fd[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Tue Mar 1 14:56:24 2022 +0000
+
+    wrap errors
+
+[33mcommit d6e95e28bfe57acf24fd65bc0d70a0f017bc60d6[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Mon Feb 28 18:51:44 2022 +0000
+
+    clarified changes
+
+[33mcommit ac95b398d5a895091efad1ebf20c29cad8ff6cc1[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Mon Feb 28 18:49:34 2022 +0000
+
+    clarified changes
+
+[33mcommit ae6ed99b66c4e9ec4976b2b95a8c98c5e983a067[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Mon Feb 28 18:48:32 2022 +0000
+
+    refactor to Josh's pattern
+
+[33mcommit adb51c85a93346ff7439f3cd0da105d4029ce3b2[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Mon Feb 28 15:59:07 2022 +0000
+
+    fixed logging convention to use lowercase error messages
+
+[33mcommit 9c0bcd4c9fe3d29b9d2c1b4d4cd48d296d097680[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Mon Feb 28 13:57:27 2022 +0000
+
+    map cantabular client configuration across
+
+[33mcommit 3a48ca7c012bbe68c72d371e76b3648c0e8850b8[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Mon Feb 28 11:54:18 2022 +0000
+
+    pass configuration to actual cantabular client factory
+
+[33mcommit b723ad6a19937d56d74f3b936083142e6c9f7f48[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Mon Feb 28 11:53:05 2022 +0000
+
+    Add cantabular client service into service struct
+
+[33mcommit 7e4b6e0df8f15f3160c9f7ef84a1620d21a10f44[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Mon Feb 28 11:27:48 2022 +0000
+
+    undo
+
+[33mcommit 75fb24cc759d455acf062c8a620a1050da2004d0[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Mon Feb 28 11:26:24 2022 +0000
+
+    cantabular configuration
+
+[33mcommit 65422d850d34e4ea53e5906ef7590df189b2bc83[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Feb 24 17:44:15 2022 +0000
+
+    healthcheck testing
+
+[33mcommit fbb677a8b4d7cd26c974480da029f7b9d4edec4a[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Feb 24 11:44:37 2022 +0000
+
+    add cantabular client dependency
+
+[33mcommit 8f271f0635b4663c5cbde6ebc2720ccb265f843c[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Feb 24 11:23:09 2022 +0000
+
+    added whitespace
+
+[33mcommit f580ea9027966cf03f544794a11deb02079f31a2[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Feb 24 11:21:39 2022 +0000
+
+    Added new make target requested by Rhys
+
+[33mcommit bf7d9a1c8543f647c7b6f4506d4901ec87ef9b1c[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Feb 24 10:06:32 2022 +0000
+
+    optionally suppress print logging
+
+[33mcommit dde7a31b1f87e718f02d497d0f1822ac212f83ed[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Feb 24 09:43:57 2022 +0000
+
+    Final carriage return on save
+
+[33mcommit 0eb6ba4d538d6ac4ec621a97a02c925c176249e2[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Thu Feb 24 09:36:15 2022 +0000
+
+    increased the linting timeout
+
+[33mcommit 107b639b60b21b96432d1694c8d743c08d141a86[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 17:54:28 2022 +0000
+
+    disable direct output logging for component tests
+
+[33mcommit ac07e79b33e794cc0d362942413f22b6fe63b508[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 17:50:20 2022 +0000
+
+    fixed bug in main test, pending tests
+
+[33mcommit 16a26e557b24f7ffdfc1c60a839b0542b3e8ed90[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 16:46:02 2022 +0000
+
+    component test added population types end-point
+
+[33mcommit b973611f6fa349f53b6108d7d1355836a82005be[m[33m ([m[1;33mtag: v1.0.0[m[33m)[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 15:58:20 2022 +0000
+
+    make linting verbose
+
+[33mcommit b2fe40d9e6a711a0b3e50f66f44317bbb886b223[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 15:44:39 2022 +0000
+
+    linting fixes
+
+[33mcommit cf32b0ac127b724ddd14869ecbc547aa54fb946a[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 15:32:02 2022 +0000
+
+    update lint script to install the linting tool
+
+[33mcommit 6183fbcd688c8cb6559a34187c706ae0278b03c2[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 14:51:40 2022 +0000
+
+    replace jwt-go in order to fix security vuln
+
+[33mcommit 244c8157e82fe5f9f6e294ea3727d01870ad8cfe[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 14:36:06 2022 +0000
+
+    update go sum
+
+[33mcommit a383946c0b0d969a12d6e2f8ba4cf71fd2dc42b0[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 14:35:43 2022 +0000
+
+    pin etcd to 3.3.24
+
+[33mcommit 96c41b64a46d91e57832f0be42e2332a752ed9d2[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 14:27:18 2022 +0000
+
+    reset go dependencies
+
+[33mcommit 6854258b54e528766ba04de62dba6f06557a0b51[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 13:29:39 2022 +0000
+
+    module dependencies
+
+[33mcommit 3e129e4d5d22a2dd691b378fc80dcb73828e2dcb[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 10:58:40 2022 +0000
+
+    updated to add security and private to endpoint
+
+[33mcommit bf9518cb26ec54551547a5fc042b44eaf029debd[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 10:32:02 2022 +0000
+
+    added security and tags
+
+[33mcommit d875546535aef578bd5d03cdd0f6f32c04fc38b5[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 10:30:08 2022 +0000
+
+    add tags
+
+[33mcommit b95de73933192ab00a04b3ecc1a2f5434a44a755[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 23 10:17:37 2022 +0000
+
+    Swagger spec for getting population types
+
+[33mcommit 58ca0a17316202913ffebb9bf1cae7d4a3d9fcd6[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 2 14:43:32 2022 +0000
+
+    tests and linting
+
+[33mcommit b998e8a8d326cd567501601639385b224ee28e9d[m
+Author: Andrew Gibson <andrew.gibson@armakuni.com>
+Date:   Wed Feb 2 14:17:03 2022 +0000
+
+    first commit

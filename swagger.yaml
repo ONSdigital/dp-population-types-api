@@ -9,6 +9,28 @@ info:
 basePath: "/v1"
 schemes:
   - http
+parameters:
+  page_limit:
+    name: limit
+    description: >-
+      Limit the number of items that will be returned. Defaults to 20 and capped
+      at 500
+    in: query
+    required: false
+    type: integer
+    default: 20
+    minimum: 0
+    maximum: 500
+  offset:
+    name: offset
+    description: >-
+      Starting index of the items array that will be returned. By default it is
+      zero, meaning that the returned items will start from the beginning.
+    in: query
+    required: false
+    type: integer
+    default: 0
+    minimum: 0
 tags:
   - name: "Public"
   - name: "Private"
@@ -74,6 +96,8 @@ paths:
           type: string
           in: path
           required: true
+        - $ref: '#/parameters/page_limit'
+        - $ref: '#/parameters/offset'
       summary: "Get categories/values for given area type"
       description: ""
       produces:

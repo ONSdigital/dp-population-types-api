@@ -94,7 +94,6 @@ Feature: Area Types
                             "node":{
                               "name": "city",
                               "label": "City",
-                              "filterOnly": "false"
                             }
                           }
                         ]

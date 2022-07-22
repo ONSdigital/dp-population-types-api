@@ -67,6 +67,10 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 	category := r.URL.Query().Get("q")
 
 	areaTypeReq := cantabular.GetAreasRequest{
+		PaginationParams: cantabular.PaginationParams{
+			Limit:  10,
+			Offset: 10,
+		},
 		Dataset:  datasetName,
 		Variable: areaType,
 		Category: category,
