@@ -69,7 +69,7 @@ func (h *AreaTypes) Get(w http.ResponseWriter, r *http.Request) {
 	var resp contract.GetAreaTypesResponse
 
 	if res != nil {
-		for _, edge := range res.Dataset.RuleBase.IsSourceOf.Edges {
+		for _, edge := range res.Dataset.Variables.Edges {
 			resp.AreaTypes = append(resp.AreaTypes, contract.AreaType{
 				ID:         edge.Node.Name,
 				Label:      edge.Node.Label,
