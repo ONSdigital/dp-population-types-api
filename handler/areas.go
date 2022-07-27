@@ -3,14 +3,12 @@ package handler
 import (
 	"context"
 	"net/http"
-	"strconv"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/contract"
 	"github.com/ONSdigital/log.go/v2/log"
-	"github.com/go-chi/chi/v5"
 
 	"github.com/pkg/errors"
 )
@@ -36,14 +34,26 @@ func NewAreas(cfg *config.Config, r responder, c cantabularClient, d datasetAPIC
 // Get is the handler for GET /population-types/{population-type}/area-types/{area-type}/areas
 func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+
+	variables := UrlQueryParam{
+		"population-type": {true, "string"},
+		"area-type":       {true, "string"},
+		"q":               {false, "string"},
+		"limit":           {false, "int"},
+		"offset":          {false, "int"},
+	}
+
+	var cReq cantabular.GetAreasRequest
+	ParseRequest(r, variables, &cReq)
+
+	/*limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
 	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 
 	if limit <= 0 {
 		limit = 20
 	}
 
-	cReq := cantabular.GetAreasRequest{
+	cReq = cantabular.GetAreasRequest{
 		PaginationParams: cantabular.PaginationParams{
 			Limit:  limit,
 			Offset: offset,
@@ -52,7 +62,7 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 		Variable: chi.URLParam(r, "area-type"),
 		Category: r.URL.Query().Get("q"),
 	}
-
+	*/
 	logData := log.Data{
 		"population_type": cReq.Dataset,
 		"area_type":       cReq.Variable,
