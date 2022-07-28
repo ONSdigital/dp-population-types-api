@@ -25,3 +25,7 @@ type datasetAPIClient interface {
 	GetDatasets(ctx context.Context, uToken, svcToken, collectionID string, params *dataset.QueryParams) (dataset.List, error)
 	Checker(context.Context, *healthcheck.CheckState) error
 }
+
+type validator interface {
+	Valid() error
+}
