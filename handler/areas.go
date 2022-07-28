@@ -3,7 +3,6 @@ package handler
 import (
 	"context"
 	"net/http"
-	"strconv"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
@@ -33,24 +32,32 @@ func NewAreas(cfg *config.Config, r responder, c cantabularClient, d datasetAPIC
 	}
 }
 
+type areaRequest struct {
+	Limit    int    `json:"limit" schema:"limit"`
+	Offset   int    `json:"offset" schema:"offset"`
+	Category string `json:"q" schema:"q"`
+}
+
 // Get is the handler for GET /population-types/{population-type}/area-types/{area-type}/areas
 func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
-	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 
-	if limit <= 0 {
-		limit = 20
+	var ar areaRequest
+	if err := parseRequest(r, &ar); err != nil {
+		h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+			err: errors.Wrap(err, "query parameter error"),
+		})
+		return
 	}
 
 	cReq := cantabular.GetAreasRequest{
 		PaginationParams: cantabular.PaginationParams{
-			Limit:  limit,
-			Offset: offset,
+			Limit:  ar.Limit,
+			Offset: ar.Offset,
 		},
 		Dataset:  chi.URLParam(r, "population-type"),
 		Variable: chi.URLParam(r, "area-type"),
-		Category: r.URL.Query().Get("q"),
+		Category: ar.Category,
 	}
 
 	logData := log.Data{
@@ -120,5 +127,12 @@ func (h *Areas) published(ctx context.Context, populationType string) error {
 		return errors.New("no published datasets found for population type")
 	}
 
+	return nil
+}
+
+func (a *areaRequest) Valid() error {
+	if a.Limit <= 0 {
+		a.Limit = 20
+	}
 	return nil
 }
