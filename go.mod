@@ -17,6 +17,7 @@ require (
 	github.com/ONSdigital/log.go/v2 v2.2.0
 	github.com/cucumber/godog v0.12.5
 	github.com/go-chi/chi/v5 v5.0.7
+	github.com/gorilla/schema v1.1.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/maxcnunes/httpfake v1.2.4
 	github.com/pkg/errors v0.9.1
