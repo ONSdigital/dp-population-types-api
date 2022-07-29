@@ -54,7 +54,9 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 		svc.cantabularClient,
 		svc.datasetAPIClient,
 	)
-	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.Get)
+	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.GetAll)
+	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/areas/{area-id}", areas.Get)
+
 }
 
 func (svc *Service) privateEndpoints(ctx context.Context) {
@@ -94,7 +96,7 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 		svc.cantabularClient,
 		svc.datasetAPIClient,
 	)
-	r.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.Get)
-
+	r.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.GetAll)
+	r.Get("/population-types/{population-type}/area-types/{area-type}/areas/{area-id}", areas.Get)
 	svc.Router.Mount("/", r)
 }
