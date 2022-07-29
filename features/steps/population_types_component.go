@@ -58,7 +58,9 @@ func NewComponent(t testing.TB, zebedeeURL string) (*PopulationTypesComponent, e
 	c.datasetAPI = httpfake.New()
 	c.Config.DatasetAPIURL = c.datasetAPI.ResolveURL("")
 	c.fakeCantabular = &mock.CantabularClient{
-		Healthy: true,
+		Healthy:    true,
+		BadRequest: false,
+		NotFound:   false,
 	}
 
 	return c, nil

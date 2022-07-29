@@ -18,6 +18,8 @@ var (
 
 type CantabularClient struct {
 	Healthy                        bool
+	BadRequest                     bool
+	NotFound                       bool
 	GetGeographyDimensionsResponse *cantabular.GetGeographyDimensionsResponse
 	GetAreasResponse               *cantabular.GetAreasResponse
 	GetParentsResponse             *cantabular.GetParentsResponse
@@ -49,6 +51,14 @@ func (c *CantabularClient) GetGeographyDimensions(ctx context.Context, _ cantabu
 }
 
 func (c *CantabularClient) StatusCode(_ error) int {
+	if c.BadRequest {
+		return http.StatusBadRequest
+	}
+
+	if c.NotFound {
+		return http.StatusNotFound
+	}
+
 	return http.StatusNotFound
 }
 
@@ -60,6 +70,22 @@ func (c *CantabularClient) GetAreas(ctx context.Context, _ cantabular.GetAreasRe
 			log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
 		)
 	}
+	if c.BadRequest {
+		return nil, dperrors.New(
+			errors.New("bad request"),
+			http.StatusBadRequest,
+			log.Data{"errors": map[string]string{"message": "400 Bad Request: dataset not loaded in this server"}},
+		)
+	}
+	if c.NotFound {
+		return nil, dperrors.New(
+			errors.New("not found"),
+			http.StatusNotFound,
+			log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+		)
+	}
+
+	// like is this below an accurate representation of its behaviour?
 	if c.GetAreasResponse == nil {
 		return &cantabular.GetAreasResponse{}, nil
 	}

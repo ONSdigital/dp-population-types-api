@@ -20,25 +20,13 @@ Feature: Areas
                     "edges": [
                       {
                         "node": {
-                            "code": "0",
-                            "label": "London"
-                        }
-                      },
-                      {
-                        "node": {
-                          "code": "1",
-                          "label": "Liverpool"
-                        }
-                      },
-                      {
-                        "node": {
                           "code": "2",
                           "label": "Belfast"
                         }
                       }
                     ]
                   },
-                  "totalCount": 3
+                  "totalCount": 1
                 },
                 "label": "City",
                 "name": "city"
@@ -55,6 +43,16 @@ Feature: Areas
 
     And I am authorised
 
-    And I GET "/population-types/Example/area-types/City/areas"
+    And I GET "/population-types/Example/area-types/City/areas/Belfast"
 
     Then the HTTP status code should be "200"
+    Then I should receive the following JSON response:
+    """
+    {"area":
+    {
+      "id": "2",
+      "label": "Belfast",
+      "area_type": "city"
+    }
+    }
+    """

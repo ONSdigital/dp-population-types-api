@@ -172,7 +172,22 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 		h.respond.Error(
 			ctx,
 			w,
-			h.ctblr.StatusCode(err),
+			http.StatusNotFound,
+			&Error{
+				err:     errors.Wrap(err, "failed to get area"),
+				message: "failed to get area",
+				logData: logData,
+			},
+		)
+		return
+	}
+	// Stop gap until cantabular returns a better solution
+	// this temporarily stops partial matches
+	if area.Label != cReq.Category {
+		h.respond.Error(
+			ctx,
+			w,
+			http.StatusNotFound,
 			&Error{
 				err:     errors.Wrap(err, "failed to get area"),
 				message: "failed to get area",
