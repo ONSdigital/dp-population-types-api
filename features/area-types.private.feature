@@ -6,44 +6,43 @@ Feature: Area Types
     """
     {
         "dataset": {
-          "ruleBase": {
-            "isSourceOf": {
-              "edges": [
-                {
-                  "node": {
-                    "label": "City",
-                    "name":  "city",
-                    "categories": {
-                      "totalCount": 3
-                    }
-                  }
-                },
-                {
-                  "node": {
-                    "name": "country",
-                    "label": "Country",
-                    "categories": {
-                      "totalCount": 2
-                    },
-                    "mapFrom":[
-                      {
-                        "edges":[
-                          {
-                            "node":{
-                              "name": "city",
-                              "label": "City"
-                            }
-                          }
-                        ]
-                      }
-                    ]
+          "variables": {
+          "total_count": 2,
+            "edges": [
+              {
+                "node": {
+                  "label": "City",
+                   "name":  "city",
+                   "categories": {
+                     "totalCount": 3
                   }
                 }
-              ]
-            }
-          }
-        }
-
+              },
+              {
+                "node": {
+                  "name": "country",
+                  "label": "Country",
+                  "categories": {
+                    "totalCount": 2
+                   },
+                   "mapFrom":[
+                     {
+                       "edges":[
+                         {
+                           "node":{
+                             "name": "city",
+                             "label": "City",
+                             "filterOnly": "false"
+                           }
+                         }
+                       ]
+                     }
+                   ]
+                 }
+               }
+             ]
+           }
+         }
     }
     """
 

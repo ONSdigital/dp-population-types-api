@@ -8,8 +8,8 @@ Feature: Area Types
     {
 
         "dataset": {
-          "ruleBase": {
-            "isSourceOf": {
+          "variables": {
+            "total_count": 2,
               "edges": [
                 {
                   "node": {
@@ -44,8 +44,6 @@ Feature: Area Types
               ]
             }
           }
-        }
-
     }
     """
 
