@@ -25,8 +25,8 @@ func (r *GetAreasRequest) Valid() error {
 		return errors.New("invalid query string")
 	}
 
-	if r.Limit <= 0 {
-		r.Limit = 20
+	if err := r.QueryParams.Valid(); err != nil {
+		return errors.Wrap(err, "invalid query pameters")
 	}
 
 	return nil
