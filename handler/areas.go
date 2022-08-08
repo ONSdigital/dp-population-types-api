@@ -32,18 +32,12 @@ func NewAreas(cfg *config.Config, r responder, c cantabularClient, d datasetAPIC
 	}
 }
 
-type areaRequest struct {
-	Limit    int    `json:"limit" schema:"limit"`
-	Offset   int    `json:"offset" schema:"offset"`
-	Category string `json:"q" schema:"q"`
-}
-
 // Get is the handler for GET /population-types/{population-type}/area-types/{area-type}/areas
 func (h *Areas) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	var ar areaRequest
-	if err := parseRequest(r, &ar); err != nil {
+	var req contract.GetAreasRequest
+	if err := parseRequest(r, &req); err != nil {
 		h.respond.Error(ctx, w, http.StatusNotFound, &Error{
 			err: errors.Wrap(err, "query parameter error"),
 		})
@@ -52,12 +46,12 @@ func (h *Areas) GetAll(w http.ResponseWriter, r *http.Request) {
 
 	cReq := cantabular.GetAreasRequest{
 		PaginationParams: cantabular.PaginationParams{
-			Limit:  ar.Limit,
-			Offset: ar.Offset,
+			Limit:  req.Limit,
+			Offset: req.Offset,
 		},
 		Dataset:  chi.URLParam(r, "population-type"),
 		Variable: chi.URLParam(r, "area-type"),
-		Category: ar.Category,
+		Category: req.Category,
 	}
 
 	logData := log.Data{
@@ -220,12 +214,5 @@ func (h *Areas) published(ctx context.Context, populationType string) error {
 		return errors.New("no published datasets found for population type")
 	}
 
-	return nil
-}
-
-func (a *areaRequest) Valid() error {
-	if a.Limit <= 0 {
-		a.Limit = 20
-	}
 	return nil
 }
