@@ -22,6 +22,9 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^cantabular server is healthy`, c.cantabularServerIsHealthy)
 	ctx.Step(`^the following area query response is available from Cantabular:$`, c.theFollowingCantabularAreaResponseIsAvailable)
 	ctx.Step(`^the following parents response is available from Cantabular:$`, c.theFollowingCantabularParentsResponseIsAvailable)
+
+	ctx.Step(`^the cantabular area response is not found`, c.cantabularIsNotFound)
+	ctx.Step(`^the cantabular area response is bad request`, c.cantabularIsBadRequest)
 }
 
 func (c *PopulationTypesComponent) iHaveTheFollowingPopulationTypesInCantabular(body *godog.DocString) error {
@@ -58,6 +61,16 @@ func (c *PopulationTypesComponent) privateEndpointsAreEnabled() error {
 
 func (c *PopulationTypesComponent) cantabularIsUnresponsive() error {
 	c.fakeCantabular.Healthy = false
+	return nil
+}
+
+func (c *PopulationTypesComponent) cantabularIsNotFound() error {
+	c.fakeCantabular.NotFound = true
+	return nil
+}
+
+func (c *PopulationTypesComponent) cantabularIsBadRequest() error {
+	c.fakeCantabular.BadRequest = true
 	return nil
 }
 

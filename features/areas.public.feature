@@ -84,7 +84,7 @@ Feature: Areas
     And the HTTP status code should be "200"
 
   Scenario: Getting areas specific search
-    
+
     And the following area query response is available from Cantabular:
     """
     {
@@ -135,7 +135,7 @@ Feature: Areas
     Given I am identified as "user@ons.gov.uk"
 
     And I am authorised
-    
+
     And the following area query response is available from Cantabular:
     """
     {
@@ -250,9 +250,9 @@ Feature: Areas
       "dataset": null
     }
     """
-    
+
     And I GET "/population-types/Example/area-types/City/areas"
-    
+
     Then I should receive the following JSON response:
     """
     {
@@ -263,7 +263,7 @@ Feature: Areas
     """
 
   Scenario: Get areas area does not exist
-    
+
     And the following area query response is available from Cantabular:
     """
     {
@@ -290,7 +290,7 @@ Feature: Areas
     """
 
   Scenario: Getting areas when dataset is not available
-    
+
     And the following area query response is available from Cantabular:
     """
     {
@@ -333,7 +333,7 @@ Feature: Areas
       }
     }
     """
-    
+
     And the following datasets based on "Example2" are available
     """
     {"count": 0}

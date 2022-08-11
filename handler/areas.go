@@ -39,7 +39,7 @@ type areaRequest struct {
 }
 
 // Get is the handler for GET /population-types/{population-type}/area-types/{area-type}/areas
-func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
+func (h *Areas) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var ar areaRequest
@@ -106,6 +106,99 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
+}
+
+// GetID returns the information for a particular area
+// for GET /population-types/{population-type}/
+func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	cReq := cantabular.GetAreasRequest{
+		PaginationParams: cantabular.PaginationParams{
+			Limit:  1,
+			Offset: 0,
+		},
+		Dataset:  chi.URLParam(r, "population-type"),
+		Variable: chi.URLParam(r, "area-type"),
+		Category: chi.URLParam(r, "area-id"),
+	}
+
+	logData := log.Data{
+		"population_type": cReq.Dataset,
+		"area_type":       cReq.Variable,
+		"query":           cReq.Category,
+	}
+
+	// only return results for published population-types on web
+	if !h.cfg.EnablePrivateEndpoints {
+		if err := h.published(ctx, cReq.Dataset); err != nil {
+			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+				err:     errors.Wrap(err, "failed to check published state"),
+				message: "population type not found",
+				logData: logData,
+			})
+			return
+		}
+	}
+
+	res, err := h.ctblr.GetAreas(ctx, cReq)
+	if err != nil {
+		h.respond.Error(
+			ctx,
+			w,
+			h.ctblr.StatusCode(err),
+			&Error{
+				err:     errors.Wrap(err, "failed to get area"),
+				message: "failed to get area",
+				logData: logData,
+			},
+		)
+		return
+	}
+
+	var area *contract.Area
+
+	for _, variable := range res.Dataset.Variables.Edges {
+		for _, category := range variable.Node.Categories.Search.Edges {
+			area = &contract.Area{
+				ID:       category.Node.Code,
+				Label:    category.Node.Label,
+				AreaType: variable.Node.Name,
+			}
+		}
+	}
+
+	if area == nil {
+		h.respond.Error(
+			ctx,
+			w,
+			http.StatusNotFound,
+			&Error{
+				err:     errors.Wrap(err, "failed to get area"),
+				message: "failed to get area",
+				logData: logData,
+			},
+		)
+		return
+	}
+	// Stop gap until cantabular returns a better solution
+	// this temporarily stops partial matches
+	if area.Label != cReq.Category {
+		h.respond.Error(
+			ctx,
+			w,
+			http.StatusNotFound,
+			&Error{
+				err:     errors.Wrap(err, "failed to get area"),
+				message: "failed to get area",
+				logData: logData,
+			},
+		)
+		return
+	}
+	h.respond.JSON(ctx, w, http.StatusOK, contract.GetAreaResponse{
+		Area: *area,
+	})
 }
 
 func (h *Areas) published(ctx context.Context, populationType string) error {

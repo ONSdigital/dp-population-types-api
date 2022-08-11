@@ -117,6 +117,42 @@ paths:
           $ref: "#/responses/InternalError"
         502:
           $ref: '#/responses/BadGateway'
+  /population-types/{population-type}/area-types/{area-type}/areas/{area-id}:
+    get:
+      parameters:
+        - name: population-type
+          type: string
+          in: path
+          required: true
+        - name: area-type
+          type: string
+          in: path
+          required: true
+        - name: area-id
+          type: string
+          in: path
+          required: true
+        - $ref: '#/parameters/page_limit'
+        - $ref: '#/parameters/offset'
+      summary: "Get details for a specific area"
+      description: ""
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Information for area returned"
+          schema:
+            $ref: '#/definitions/GetAreaResponse'
+        401:
+          $ref: '#/responses/Unauthorised'
+        404:
+          description: "Area not found"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          $ref: "#/responses/InternalError"
+        502:
+          $ref: '#/responses/BadGateway'
   /population-types/{population-type}/area-types/{area-type}/parents:
     get:
       summary: "Get list of parents for given area type"
@@ -291,3 +327,12 @@ definitions:
         type: string
       total_count:
         type: integer
+  GetAreaResponse:
+    description: "The response body containing the information for an area"
+    properties:
+      area:
+        allOf:
+          - $ref: '#/definitions/AreaType'
+          - example:
+              id: "E12000001"
+              label: "North East"

@@ -18,3 +18,8 @@ type GetAreasRequest struct {
 type GetAreasResponse struct {
 	Areas []Area `json:"areas"`
 }
+
+// GetAreaResponse is the response object for GET /areas
+type GetAreaResponse struct {
+	Area Area `json:"area"`
+}
