@@ -43,7 +43,7 @@ Feature: Areas
 
     And I am authorised
 
-    And I GET "/population-types/Example/area-types/City/areas/Belfast"
+    And I GET "/population-types/Example/area-types/City/areas/2"
 
     Then the HTTP status code should be "200"
     Then I should receive the following JSON response:
