@@ -421,16 +421,7 @@ definitions:
           - $ref: '#/definitions/AreaType'
           - example:
               id: "E12000001"
-              label: "North East"
-  GetDimensionsResponse:
-    description: "The response body containing all available non-geography base variables for a given dataset"
-    properties:
-      area-type:
-        allOf:
-          - $ref: '#/definitions/Dimension'
-          - example:
-              id: "accommodation_type"
-              label: "Accommodation Type"   
+              label: "North East" 
   Dimension:
     description: "A list of dimensions"
     type: object
@@ -464,3 +455,4 @@ definitions:
             type: string
           total_count:
             type: integer
+            
