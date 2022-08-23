@@ -27,6 +27,9 @@ var _ service.CantabularClient = &CantabularClientMock{}
 // 			GetAreasFunc: func(contextMoqParam context.Context, getAreasRequest cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error) {
 // 				panic("mock out the GetAreas method")
 // 			},
+// 			GetDimensionsFunc: func(contextMoqParam context.Context, getDimensionsRequest cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error) {
+// 				panic("mock out the GetDimensions method")
+// 			},
 // 			GetGeographyDimensionsFunc: func(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
 // 				panic("mock out the GetGeographyDimensions method")
 // 			},
@@ -51,6 +54,9 @@ type CantabularClientMock struct {
 
 	// GetAreasFunc mocks the GetAreas method.
 	GetAreasFunc func(contextMoqParam context.Context, getAreasRequest cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error)
+
+	// GetDimensionsFunc mocks the GetDimensions method.
+	GetDimensionsFunc func(contextMoqParam context.Context, getDimensionsRequest cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error)
 
 	// GetGeographyDimensionsFunc mocks the GetGeographyDimensions method.
 	GetGeographyDimensionsFunc func(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error)
@@ -80,6 +86,13 @@ type CantabularClientMock struct {
 			// GetAreasRequest is the getAreasRequest argument value.
 			GetAreasRequest cantabular.GetAreasRequest
 		}
+		// GetDimensions holds details about calls to the GetDimensions method.
+		GetDimensions []struct {
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
+			// GetDimensionsRequest is the getDimensionsRequest argument value.
+			GetDimensionsRequest cantabular.GetDimensionsRequest
+		}
 		// GetGeographyDimensions holds details about calls to the GetGeographyDimensions method.
 		GetGeographyDimensions []struct {
 			// Ctx is the ctx argument value.
@@ -107,6 +120,7 @@ type CantabularClientMock struct {
 	}
 	lockChecker                sync.RWMutex
 	lockGetAreas               sync.RWMutex
+	lockGetDimensions          sync.RWMutex
 	lockGetGeographyDimensions sync.RWMutex
 	lockGetParents             sync.RWMutex
 	lockListDatasets           sync.RWMutex
@@ -180,6 +194,41 @@ func (mock *CantabularClientMock) GetAreasCalls() []struct {
 	mock.lockGetAreas.RLock()
 	calls = mock.calls.GetAreas
 	mock.lockGetAreas.RUnlock()
+	return calls
+}
+
+// GetDimensions calls GetDimensionsFunc.
+func (mock *CantabularClientMock) GetDimensions(contextMoqParam context.Context, getDimensionsRequest cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error) {
+	if mock.GetDimensionsFunc == nil {
+		panic("CantabularClientMock.GetDimensionsFunc: method is nil but CantabularClient.GetDimensions was just called")
+	}
+	callInfo := struct {
+		ContextMoqParam      context.Context
+		GetDimensionsRequest cantabular.GetDimensionsRequest
+	}{
+		ContextMoqParam:      contextMoqParam,
+		GetDimensionsRequest: getDimensionsRequest,
+	}
+	mock.lockGetDimensions.Lock()
+	mock.calls.GetDimensions = append(mock.calls.GetDimensions, callInfo)
+	mock.lockGetDimensions.Unlock()
+	return mock.GetDimensionsFunc(contextMoqParam, getDimensionsRequest)
+}
+
+// GetDimensionsCalls gets all the calls that were made to GetDimensions.
+// Check the length with:
+//     len(mockedCantabularClient.GetDimensionsCalls())
+func (mock *CantabularClientMock) GetDimensionsCalls() []struct {
+	ContextMoqParam      context.Context
+	GetDimensionsRequest cantabular.GetDimensionsRequest
+} {
+	var calls []struct {
+		ContextMoqParam      context.Context
+		GetDimensionsRequest cantabular.GetDimensionsRequest
+	}
+	mock.lockGetDimensions.RLock()
+	calls = mock.calls.GetDimensions
+	mock.lockGetDimensions.RUnlock()
 	return calls
 }
 

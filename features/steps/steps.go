@@ -15,6 +15,7 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^private endpoints are not enabled`, c.privateEndpointsAreNotEnabled)
 	ctx.Step(`^cantabular is unresponsive$`, c.cantabularIsUnresponsive)
 	ctx.Step(`^the following geography response is available from Cantabular:$`, c.theFollowingCantabularGeographyResponseIsAvailable)
+	ctx.Step(`^the following dimensions response is available from Cantabular:$`, c.theFollowingCantabularDimensionsResponseIsAvailable)
 	ctx.Step(`^I have the following population types in cantabular$`, c.iHaveTheFollowingPopulationTypesInCantabular)
 	ctx.Step(`^the following datasets based on "([^"]*)" are available$`, c.theFollowingDatasetsBasedOnAreAvailable)
 	ctx.Step(`^the dp-dataset-api is returning errors for datasets based on "([^"]*)"`, c.datasetClientReturnsErrors)
@@ -93,6 +94,18 @@ func (c *PopulationTypesComponent) theFollowingCantabularGeographyResponseIsAvai
 	}
 
 	c.fakeCantabular.GetGeographyDimensionsResponse = &resp
+	return nil
+}
+
+// theFollowingCantabularResponseIsAvailable generates a mocked response for Cantabular Server POST /graphql
+func (c *PopulationTypesComponent) theFollowingCantabularDimensionsResponseIsAvailable(body *godog.DocString) error {
+	var resp cantabular.GetDimensionsResponse
+
+	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
+		return fmt.Errorf("failed to unmarshal body: %w", err)
+	}
+
+	c.fakeCantabular.GetDimensionsResponse = &resp
 	return nil
 }
 
