@@ -16,5 +16,5 @@ type GetDimensionsRequest struct {
 // GetAreaTypesResponse is the response object for GET /dimensions
 type GetDimensionsResponse struct {
 	PaginationResponse
-	Dimensions []Dimension `json:"dimensions"`
+	Dimensions []Dimension `json:"items"`
 }

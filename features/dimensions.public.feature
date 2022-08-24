@@ -56,7 +56,7 @@ Feature: Dimensionas
         "offset": 0,
         "count":  2,
         "total_count": 2,
-        "dimensions": [
+        "items": [
             {
                 "id": "hh_size",
                 "label": "Household size (31 categories)",
