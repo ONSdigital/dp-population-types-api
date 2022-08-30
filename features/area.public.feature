@@ -45,7 +45,7 @@ Feature: Single Area
         }
         """
 
-        And I GET "/population-types/Example/area-types/City/areas/Liverpool"
+        And I GET "/population-types/Example/area-types/City/areas/1"
         Then I should receive the following JSON response:
           """
           {"area":
@@ -59,7 +59,7 @@ Feature: Single Area
         And the HTTP status code should be "200"
     Scenario: Area Not Found
         When the cantabular area response is bad request
-        And I GET "/population-types/NOTEXIST/area-types/City/areas/Liverpool"
+        And I GET "/population-types/NOTEXIST/area-types/City/areas/1"
         Then the HTTP status code should be "400"
         And I should receive the following JSON response:
         """
@@ -69,7 +69,7 @@ Feature: Single Area
         """
     Scenario: Variable Not Found
         When the cantabular area response is bad request
-        And I GET "/population-types/Example/area-types/NOTEXIST/areas/Liverpool"
+        And I GET "/population-types/Example/area-types/NOTEXIST/areas/1"
         Then the HTTP status code should be "400"
         And I should receive the following JSON response:
         """
@@ -90,7 +90,7 @@ Feature: Single Area
         """
     Scenario: Partials not matched
         When the cantabular area response is not found
-        And I GET "/population-types/Example/area-types/City/areas/Be"
+        And I GET "/population-types/Teaching-Dataset/area-types/Region/areas/E120"
         Then the HTTP status code should be "404"
         And I should receive the following JSON response:
         """

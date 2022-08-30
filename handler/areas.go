@@ -177,7 +177,7 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 	}
 	// Stop gap until cantabular returns a better solution
 	// this temporarily stops partial matches
-	if area.Label != cReq.Category {
+	if area.ID != cReq.Category {
 		h.respond.Error(
 			ctx,
 			w,
