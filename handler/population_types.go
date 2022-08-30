@@ -44,11 +44,13 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 
 	logData := log.Data{"datasets": ptypes}
 	log.Info(ctx, "population types found", logData)
+	lpt := len(ptypes)
 
 	// return all population types on publishing
 	if h.cfg.EnablePrivateEndpoints {
 		h.respond.JSON(ctx, w, http.StatusOK, contract.GetPopulationTypesResponse{
-			PopulationTypes: contract.NewPopulationTypes(ptypes),
+			PaginationResponse: contract.PaginationResponse{Limit: lpt, Count: lpt, TotalCount: lpt},
+			PopulationTypes:    contract.NewPopulationTypes(ptypes),
 		})
 		return
 	}
@@ -70,7 +72,8 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 		published = append(published, p)
 	}
 
-	if len(published) == 0 {
+	l := len(published)
+	if l == 0 {
 		h.respond.Error(
 			ctx,
 			w,
@@ -81,7 +84,8 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	}
 
 	resp := contract.GetPopulationTypesResponse{
-		PopulationTypes: contract.NewPopulationTypes(published),
+		PaginationResponse: contract.PaginationResponse{Limit: l, Count: l, TotalCount: l},
+		PopulationTypes:    contract.NewPopulationTypes(published),
 	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)

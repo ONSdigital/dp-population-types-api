@@ -34,6 +34,7 @@ func (r *GetAreasRequest) Valid() error {
 
 // GetAreasResponse is the response object for GET /areas
 type GetAreasResponse struct {
+	PaginationResponse
 	Areas []Area `json:"areas"`
 }
 
