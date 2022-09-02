@@ -21,16 +21,17 @@ type CantabularClient struct {
 	BadRequest                     bool
 	NotFound                       bool
 	GetGeographyDimensionsResponse *cantabular.GetGeographyDimensionsResponse
+	GetDimensionsResponse          *cantabular.GetDimensionsResponse
 	GetAreasResponse               *cantabular.GetAreasResponse
 	GetParentsResponse             *cantabular.GetParentsResponse
 	ListDatasetsResponse           []string
 }
 
-func (c *CantabularClient) Checker(ctx context.Context, state *healthcheck.CheckState) error {
+func (c *CantabularClient) Checker(_ context.Context, _ *healthcheck.CheckState) error {
 	return nil
 }
 
-func (c *CantabularClient) ListDatasets(ctx context.Context) ([]string, error) {
+func (c *CantabularClient) ListDatasets(_ context.Context) ([]string, error) {
 	if !c.Healthy {
 		return nil, errFailedToRespond
 	}
@@ -38,7 +39,7 @@ func (c *CantabularClient) ListDatasets(ctx context.Context) ([]string, error) {
 	return c.ListDatasetsResponse, nil
 }
 
-func (c *CantabularClient) GetGeographyDimensions(ctx context.Context, _ cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
+func (c *CantabularClient) GetGeographyDimensions(_ context.Context, _ cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
 	if !c.Healthy {
 		return nil, dperrors.New(
 			errors.New("error(s) returned by graphQL query"),
@@ -48,6 +49,18 @@ func (c *CantabularClient) GetGeographyDimensions(ctx context.Context, _ cantabu
 	}
 
 	return c.GetGeographyDimensionsResponse, nil
+}
+
+func (c *CantabularClient) GetDimensions(_ context.Context, _ cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error) {
+	if !c.Healthy {
+		return nil, dperrors.New(
+			errors.New("error(s) returned by graphQL query"),
+			http.StatusNotFound,
+			log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+		)
+	}
+
+	return c.GetDimensionsResponse, nil
 }
 
 func (c *CantabularClient) StatusCode(_ error) int {
@@ -62,7 +75,7 @@ func (c *CantabularClient) StatusCode(_ error) int {
 	return http.StatusNotFound
 }
 
-func (c *CantabularClient) GetAreas(ctx context.Context, _ cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error) {
+func (c *CantabularClient) GetAreas(_ context.Context, _ cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error) {
 	if !c.Healthy {
 		return nil, dperrors.New(
 			errors.New("failed to get areas"),

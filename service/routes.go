@@ -39,6 +39,14 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 	)
 	svc.Router.Get("/population-types", populationTypes.Get)
 
+	dimensions := handler.NewDimensions(
+		svc.Config,
+		svc.responder,
+		svc.cantabularClient,
+		svc.datasetAPIClient,
+	)
+	svc.Router.Get("/population-types/{population-type}/dimensions", dimensions.GetAll)
+
 	areaTypes := handler.NewAreaTypes(
 		svc.Config,
 		svc.responder,
@@ -56,7 +64,6 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 	)
 	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.GetAll)
 	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/areas/{area-id}", areas.Get)
-
 }
 
 func (svc *Service) privateEndpoints(ctx context.Context) {
@@ -81,6 +88,14 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	)
 	r.Get("/population-types", populationTypes.Get)
 
+	dimensions := handler.NewDimensions(
+		svc.Config,
+		svc.responder,
+		svc.cantabularClient,
+		svc.datasetAPIClient,
+	)
+	r.Get("/population-types/{population-type}/dimensions", dimensions.GetAll)
+
 	areaTypes := handler.NewAreaTypes(
 		svc.Config,
 		svc.responder,
@@ -98,5 +113,6 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	)
 	r.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.GetAll)
 	r.Get("/population-types/{population-type}/area-types/{area-type}/areas/{area-id}", areas.Get)
+
 	svc.Router.Mount("/", r)
 }
