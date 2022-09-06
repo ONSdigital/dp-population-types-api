@@ -117,11 +117,7 @@ func (h *Areas) GetAll(w http.ResponseWriter, r *http.Request) {
 func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	cReq := cantabular.GetAreasRequest{
-		PaginationParams: cantabular.PaginationParams{
-			Limit:  1,
-			Offset: 0,
-		},
+	cReq := cantabular.GetAreaRequest{
 		Dataset:  chi.URLParam(r, "population-type"),
 		Variable: chi.URLParam(r, "area-type"),
 		Category: chi.URLParam(r, "area-id"),
@@ -145,7 +141,7 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	res, err := h.ctblr.GetAreas(ctx, cReq)
+	res, err := h.ctblr.GetArea(ctx, cReq)
 	if err != nil {
 		h.respond.Error(
 			ctx,
@@ -163,7 +159,7 @@ func (h *Areas) Get(w http.ResponseWriter, r *http.Request) {
 	var area *contract.Area
 
 	for _, variable := range res.Dataset.Variables.Edges {
-		for _, category := range variable.Node.Categories.Search.Edges {
+		for _, category := range variable.Node.Categories.Edges {
 			area = &contract.Area{
 				ID:       category.Node.Code,
 				Label:    category.Node.Label,

@@ -14,16 +14,15 @@ Feature: Single Area
 
     Scenario: Getting area happy
 
-        When the following area query response is available from Cantabular:
+        When the following GetArea query response is available from Cantabular:
         """
         {
-        "dataset": {
-          "variables": {
-            "edges": [
-              {
-                "node": {
-                  "categories": {
-                    "search": {
+           "dataset": {
+            "variables": {
+              "edges": [
+                {
+                  "node": {
+                    "categories": {
                       "edges": [
                         {
                           "node": {
@@ -33,19 +32,17 @@ Feature: Single Area
                         }
                       ]
                     },
-                    "totalCount": 1
-                  },
-                  "label": "City",
-                  "name": "city"
+                    "label": "City",
+                    "name": "city"
+                  }
                 }
-              }
-            ]
+              ]
+            }
           }
-        }
         }
         """
 
-        And I GET "/population-types/Example/area-types/City/areas/1"
+        And I GET "/population-types/Example/area-types/city/areas/1"
         Then I should receive the following JSON response:
           """
           {"area":
@@ -59,7 +56,7 @@ Feature: Single Area
         And the HTTP status code should be "200"
     Scenario: Area Not Found
         When the cantabular area response is bad request
-        And I GET "/population-types/NOTEXIST/area-types/City/areas/1"
+        And I GET "/population-types/NOTEXIST/area-types/city/areas/1"
         Then the HTTP status code should be "400"
         And I should receive the following JSON response:
         """
@@ -80,7 +77,7 @@ Feature: Single Area
 
     Scenario: Code Not Found
         When the cantabular area response is not found
-        And I GET "/population-types/Example/area-types/City/areas/NOTEXIST"
+        And I GET "/population-types/Example/area-types/city/areas/NOTEXIST"
         Then the HTTP status code should be "404"
         And I should receive the following JSON response:
         """

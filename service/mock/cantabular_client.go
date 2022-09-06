@@ -24,6 +24,9 @@ var _ service.CantabularClient = &CantabularClientMock{}
 // 			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error {
 // 				panic("mock out the Checker method")
 // 			},
+// 			GetAreaFunc: func(contextMoqParam context.Context, getAreaRequest cantabular.GetAreaRequest) (*cantabular.GetAreaResponse, error) {
+// 				panic("mock out the GetArea method")
+// 			},
 // 			GetAreasFunc: func(contextMoqParam context.Context, getAreasRequest cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error) {
 // 				panic("mock out the GetAreas method")
 // 			},
@@ -55,6 +58,9 @@ type CantabularClientMock struct {
 	// CheckerFunc mocks the Checker method.
 	CheckerFunc func(ctx context.Context, state *healthcheck.CheckState) error
 
+	// GetAreaFunc mocks the GetArea method.
+	GetAreaFunc func(contextMoqParam context.Context, getAreaRequest cantabular.GetAreaRequest) (*cantabular.GetAreaResponse, error)
+
 	// GetAreasFunc mocks the GetAreas method.
 	GetAreasFunc func(contextMoqParam context.Context, getAreasRequest cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error)
 
@@ -84,6 +90,13 @@ type CantabularClientMock struct {
 			Ctx context.Context
 			// State is the state argument value.
 			State *healthcheck.CheckState
+		}
+		// GetArea holds details about calls to the GetArea method.
+		GetArea []struct {
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
+			// GetAreaRequest is the getAreaRequest argument value.
+			GetAreaRequest cantabular.GetAreaRequest
 		}
 		// GetAreas holds details about calls to the GetAreas method.
 		GetAreas []struct {
@@ -132,6 +145,7 @@ type CantabularClientMock struct {
 		}
 	}
 	lockChecker                sync.RWMutex
+	lockGetArea                sync.RWMutex
 	lockGetAreas               sync.RWMutex
 	lockGetCategorisations     sync.RWMutex
 	lockGetDimensions          sync.RWMutex
@@ -173,6 +187,41 @@ func (mock *CantabularClientMock) CheckerCalls() []struct {
 	mock.lockChecker.RLock()
 	calls = mock.calls.Checker
 	mock.lockChecker.RUnlock()
+	return calls
+}
+
+// GetArea calls GetAreaFunc.
+func (mock *CantabularClientMock) GetArea(contextMoqParam context.Context, getAreaRequest cantabular.GetAreaRequest) (*cantabular.GetAreaResponse, error) {
+	if mock.GetAreaFunc == nil {
+		panic("CantabularClientMock.GetAreaFunc: method is nil but CantabularClient.GetArea was just called")
+	}
+	callInfo := struct {
+		ContextMoqParam context.Context
+		GetAreaRequest  cantabular.GetAreaRequest
+	}{
+		ContextMoqParam: contextMoqParam,
+		GetAreaRequest:  getAreaRequest,
+	}
+	mock.lockGetArea.Lock()
+	mock.calls.GetArea = append(mock.calls.GetArea, callInfo)
+	mock.lockGetArea.Unlock()
+	return mock.GetAreaFunc(contextMoqParam, getAreaRequest)
+}
+
+// GetAreaCalls gets all the calls that were made to GetArea.
+// Check the length with:
+//     len(mockedCantabularClient.GetAreaCalls())
+func (mock *CantabularClientMock) GetAreaCalls() []struct {
+	ContextMoqParam context.Context
+	GetAreaRequest  cantabular.GetAreaRequest
+} {
+	var calls []struct {
+		ContextMoqParam context.Context
+		GetAreaRequest  cantabular.GetAreaRequest
+	}
+	mock.lockGetArea.RLock()
+	calls = mock.calls.GetArea
+	mock.lockGetArea.RUnlock()
 	return calls
 }
 
