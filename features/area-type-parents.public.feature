@@ -72,6 +72,8 @@ Background:
         Given the following parents response is available from Cantabular:
         """
         {
+            "count": 1,
+            "total_count": 1,
             "dataset": {
                 "variables": {
                     "edges": [
@@ -106,6 +108,10 @@ Background:
         Then I should receive the following JSON response:
         """
         {
+            "limit": 20,
+            "offset": 0,
+            "count": 1,
+            "total_count": 1,
             "area_types": [
                 {
                     "id": "country",
@@ -123,6 +129,8 @@ Background:
         Given the following parents response is available from Cantabular:
         """
         {
+            "count": 1,
+            "total_count": 1,
             "dataset": {
                 "variables": {
                     "edges": [
