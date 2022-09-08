@@ -7,9 +7,10 @@ Background:
     And the following categorisations response is available from Cantabular:
     """
     {
+        "count": 1,
+        "total_count": 1,
         "dataset": {
         "variables": {
-            "totalCount": 1,
             "search": {
                 "edges": [
                     {
@@ -58,7 +59,7 @@ Background:
             "items": [
                 {
                     "name": "name 2",
-                    "label": "label 2",
+                    "label": "label 2"
                 }
             ]
         }

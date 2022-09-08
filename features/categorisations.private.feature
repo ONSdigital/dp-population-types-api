@@ -13,32 +13,32 @@ Background:
         And the following categorisations response is available from Cantabular:
         """
         {
+            "count": 1,
+            "total_count": 1,
             "dataset": {
-			"variables": {
-				"totalCount": 1,
-				"search": {
-					"edges": [
-						{
-							"node": {
-								"categories": {
-									"edges": [
-										{
-											"node": {
-												"label": "label 1",
-												"code": "code 1"
-											}
-										}
-									]
-								},
-								"name": "name 2",
-								"label": "label 2"
-							}
-						}
-						
-					]
-				}
-			}
-		}
+                "variables": {  
+                "search": {
+                    "edges": [
+                    {
+                        "node": {
+                        "categories": {
+                            "edges": [
+                            {
+                                "node": {
+                                "label": "label 1",
+                                "code": "code 1"
+                                }
+                            }
+                            ]
+                        },
+                        "name": "name 2",
+                        "label": "label 2"
+                        }
+                    }
+                    ]
+                }
+                }
+            }
         }
         """
 
@@ -54,7 +54,7 @@ Background:
             "items": [
                 {
                     "name": "name 2",
-                    "label": "label 2",
+                    "label": "label 2"
                 }
             ]
         }

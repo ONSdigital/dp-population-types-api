@@ -153,7 +153,12 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	var resp contract.GetCategorisationsResponse
+	resp := contract.GetCategorisationsResponse{
+		PaginationResponse: contract.PaginationResponse{
+			Limit:  req.Limit,
+			Offset: req.Offset,
+		},
+	}
 
 	if res != nil {
 		resp.Count = res.Count

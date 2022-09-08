@@ -23,7 +23,7 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^cantabular server is healthy`, c.cantabularServerIsHealthy)
 	ctx.Step(`^the following area query response is available from Cantabular:$`, c.theFollowingCantabularAreaResponseIsAvailable)
 	ctx.Step(`^the following parents response is available from Cantabular:$`, c.theFollowingCantabularParentsResponseIsAvailable)
-	ctx.Step(`^tthe following categorisations response is available from Cantabular:$`, c.theFollowingCantabularCategorisationsResponseIsAvailable)
+	ctx.Step(`^the following categorisations response is available from Cantabular:$`, c.theFollowingCantabularCategorisationsResponseIsAvailable)
 
 	ctx.Step(`^the cantabular area response is not found`, c.cantabularIsNotFound)
 	ctx.Step(`^the cantabular area response is bad request`, c.cantabularIsBadRequest)

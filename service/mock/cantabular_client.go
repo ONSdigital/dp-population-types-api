@@ -27,6 +27,9 @@ var _ service.CantabularClient = &CantabularClientMock{}
 // 			GetAreasFunc: func(contextMoqParam context.Context, getAreasRequest cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error) {
 // 				panic("mock out the GetAreas method")
 // 			},
+// 			GetCategorisationsFunc: func(contextMoqParam context.Context, getCategorisationsRequest cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error) {
+// 				panic("mock out the GetCategorisations method")
+// 			},
 // 			GetDimensionsFunc: func(contextMoqParam context.Context, getDimensionsRequest cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error) {
 // 				panic("mock out the GetDimensions method")
 // 			},
@@ -54,6 +57,9 @@ type CantabularClientMock struct {
 
 	// GetAreasFunc mocks the GetAreas method.
 	GetAreasFunc func(contextMoqParam context.Context, getAreasRequest cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error)
+
+	// GetCategorisationsFunc mocks the GetCategorisations method.
+	GetCategorisationsFunc func(contextMoqParam context.Context, getCategorisationsRequest cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error)
 
 	// GetDimensionsFunc mocks the GetDimensions method.
 	GetDimensionsFunc func(contextMoqParam context.Context, getDimensionsRequest cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error)
@@ -85,6 +91,13 @@ type CantabularClientMock struct {
 			ContextMoqParam context.Context
 			// GetAreasRequest is the getAreasRequest argument value.
 			GetAreasRequest cantabular.GetAreasRequest
+		}
+		// GetCategorisations holds details about calls to the GetCategorisations method.
+		GetCategorisations []struct {
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
+			// GetCategorisationsRequest is the getCategorisationsRequest argument value.
+			GetCategorisationsRequest cantabular.GetCategorisationsRequest
 		}
 		// GetDimensions holds details about calls to the GetDimensions method.
 		GetDimensions []struct {
@@ -120,6 +133,7 @@ type CantabularClientMock struct {
 	}
 	lockChecker                sync.RWMutex
 	lockGetAreas               sync.RWMutex
+	lockGetCategorisations     sync.RWMutex
 	lockGetDimensions          sync.RWMutex
 	lockGetGeographyDimensions sync.RWMutex
 	lockGetParents             sync.RWMutex
@@ -194,6 +208,41 @@ func (mock *CantabularClientMock) GetAreasCalls() []struct {
 	mock.lockGetAreas.RLock()
 	calls = mock.calls.GetAreas
 	mock.lockGetAreas.RUnlock()
+	return calls
+}
+
+// GetCategorisations calls GetCategorisationsFunc.
+func (mock *CantabularClientMock) GetCategorisations(contextMoqParam context.Context, getCategorisationsRequest cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error) {
+	if mock.GetCategorisationsFunc == nil {
+		panic("CantabularClientMock.GetCategorisationsFunc: method is nil but CantabularClient.GetCategorisations was just called")
+	}
+	callInfo := struct {
+		ContextMoqParam           context.Context
+		GetCategorisationsRequest cantabular.GetCategorisationsRequest
+	}{
+		ContextMoqParam:           contextMoqParam,
+		GetCategorisationsRequest: getCategorisationsRequest,
+	}
+	mock.lockGetCategorisations.Lock()
+	mock.calls.GetCategorisations = append(mock.calls.GetCategorisations, callInfo)
+	mock.lockGetCategorisations.Unlock()
+	return mock.GetCategorisationsFunc(contextMoqParam, getCategorisationsRequest)
+}
+
+// GetCategorisationsCalls gets all the calls that were made to GetCategorisations.
+// Check the length with:
+//     len(mockedCantabularClient.GetCategorisationsCalls())
+func (mock *CantabularClientMock) GetCategorisationsCalls() []struct {
+	ContextMoqParam           context.Context
+	GetCategorisationsRequest cantabular.GetCategorisationsRequest
+} {
+	var calls []struct {
+		ContextMoqParam           context.Context
+		GetCategorisationsRequest cantabular.GetCategorisationsRequest
+	}
+	mock.lockGetCategorisations.RLock()
+	calls = mock.calls.GetCategorisations
+	mock.lockGetCategorisations.RUnlock()
 	return calls
 }
 
