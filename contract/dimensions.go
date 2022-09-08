@@ -27,10 +27,10 @@ type GetCategorisationsRequest struct {
 
 type GetCategorisationsResponse struct {
 	PaginationResponse
-	Items []Categories `json:"items"`
+	Items []Category `json:"items"`
 }
 
-type Categories struct {
+type Category struct {
 	Name  string `json:"name"`
 	Label string `json:"label"`
 }

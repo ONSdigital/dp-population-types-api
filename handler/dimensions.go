@@ -164,7 +164,7 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 		resp.Count = res.Count
 		resp.TotalCount = res.TotalCount
 		for _, edge := range res.Dataset.Variables.Search.Edges {
-			resp.Items = append(resp.Items, contract.Categories{
+			resp.Items = append(resp.Items, contract.Category{
 				Name:  edge.Node.Name,
 				Label: edge.Node.Label,
 			})
