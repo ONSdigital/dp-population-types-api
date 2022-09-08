@@ -4,13 +4,14 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/pkg/errors"
+
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/contract"
 	"github.com/ONSdigital/log.go/v2/log"
-	"github.com/go-chi/chi/v5"
-	"github.com/pkg/errors"
 )
 
 // AreaTypes handles requests sent to the /population-types/{population-type}/area-types
@@ -36,8 +37,23 @@ func NewAreaTypes(cfg *config.Config, r responder, c cantabularClient, d dataset
 func (h *AreaTypes) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
+	req := contract.GetAreaTypesRequest{
+		PopulationType: chi.URLParam(r, "population-type"),
+	}
+
+	if err := parseRequest(r, &req); err != nil {
+		h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
+			err: errors.Wrap(err, "invalid request"),
+		})
+		return
+	}
+
 	cReq := cantabular.GetGeographyDimensionsRequest{
-		Dataset: chi.URLParam(r, "population-type"),
+		Dataset: req.PopulationType,
+		PaginationParams: cantabular.PaginationParams{
+			Limit:  req.Limit,
+			Offset: req.Offset,
+		},
 	}
 
 	logData := log.Data{
@@ -66,9 +82,16 @@ func (h *AreaTypes) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var resp contract.GetAreaTypesResponse
+	resp := contract.GetAreaTypesResponse{
+		PaginationResponse: contract.PaginationResponse{
+			Limit:  cReq.Limit,
+			Offset: cReq.Offset,
+		},
+	}
 
 	if res != nil {
+		resp.Count = res.Count
+		resp.TotalCount = res.TotalCount
 		for _, edge := range res.Dataset.Variables.Edges {
 			resp.AreaTypes = append(resp.AreaTypes, contract.AreaType{
 				ID:         edge.Node.Name,
@@ -85,14 +108,31 @@ func (h *AreaTypes) Get(w http.ResponseWriter, r *http.Request) {
 func (h *AreaTypes) GetParents(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
+	req := contract.GetAreaTypeParentsRequest{
+		PopulationType: chi.URLParam(r, "population-type"),
+		AreaType:       chi.URLParam(r, "area-type"),
+	}
+
+	if err := parseRequest(r, &req); err != nil {
+		h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
+			err: errors.Wrap(err, "invalid request"),
+		})
+		return
+	}
+
 	cReq := cantabular.GetParentsRequest{
-		Dataset:  chi.URLParam(r, "population-type"),
-		Variable: chi.URLParam(r, "area-type"),
+		PaginationParams: cantabular.PaginationParams{
+			Limit:  req.Limit,
+			Offset: req.Offset,
+		},
+		Dataset:  req.PopulationType,
+		Variable: req.AreaType,
 	}
 
 	logData := log.Data{
-		"population_type": cReq.Dataset,
-		"area_type":       cReq.Variable,
+		"population_type":   cReq.Dataset,
+		"area_type":         cReq.Variable,
+		"pagination_params": cReq.PaginationParams,
 	}
 	// only return results for published population-types on web
 	if !h.cfg.EnablePrivateEndpoints {
@@ -116,7 +156,12 @@ func (h *AreaTypes) GetParents(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var resp contract.GetAreaTypeParentsResponse
+	resp := contract.GetAreaTypeParentsResponse{
+		PaginationResponse: contract.PaginationResponse{
+			Limit:  req.Limit,
+			Offset: req.Offset,
+		},
+	}
 
 	if l := len(res.Dataset.Variables.Edges); l != 1 {
 		logData["edges_expected_length"] = 1
@@ -129,6 +174,8 @@ func (h *AreaTypes) GetParents(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	resp.Count = res.Count
+	resp.TotalCount = res.TotalCount
 	for _, e := range res.Dataset.Variables.Edges[0].Node.IsSourceOf.Edges {
 		resp.AreaTypes = append(resp.AreaTypes, contract.AreaType{
 			ID:         e.Node.Name,

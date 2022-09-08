@@ -4,12 +4,13 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/contract"
 	"github.com/ONSdigital/log.go/v2/log"
-	"github.com/go-chi/chi/v5"
 
 	"github.com/pkg/errors"
 )
@@ -87,15 +88,24 @@ func (h *Areas) GetAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var resp contract.GetAreasResponse
+	resp := contract.GetAreasResponse{
+		PaginationResponse: contract.PaginationResponse{
+			Limit:  req.Limit,
+			Offset: req.Offset,
+		},
+	}
 
-	for _, variable := range res.Dataset.Variables.Edges {
-		for _, category := range variable.Node.Categories.Search.Edges {
-			resp.Areas = append(resp.Areas, contract.Area{
-				ID:       category.Node.Code,
-				Label:    category.Node.Label,
-				AreaType: variable.Node.Name,
-			})
+	if res != nil {
+		resp.Count = res.Count
+		resp.TotalCount = res.TotalCount
+		for _, variable := range res.Dataset.Variables.Edges {
+			for _, category := range variable.Node.Categories.Search.Edges {
+				resp.Areas = append(resp.Areas, contract.Area{
+					ID:       category.Node.Code,
+					Label:    category.Node.Label,
+					AreaType: variable.Node.Name,
+				})
+			}
 		}
 	}
 

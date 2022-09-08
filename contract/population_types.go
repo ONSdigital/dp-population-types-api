@@ -17,5 +17,6 @@ func NewPopulationTypes(names []string) PopulationTypes {
 }
 
 type GetPopulationTypesResponse struct {
+	PaginationResponse
 	PopulationTypes
 }
