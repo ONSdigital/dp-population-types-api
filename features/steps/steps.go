@@ -21,7 +21,8 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the dp-dataset-api is returning errors for datasets based on "([^"]*)"`, c.datasetClientReturnsErrors)
 	ctx.Step(`^cantabular api extension is healthy`, c.cantabularAPIExtIsHealthy)
 	ctx.Step(`^cantabular server is healthy`, c.cantabularServerIsHealthy)
-	ctx.Step(`^the following area query response is available from Cantabular:$`, c.theFollowingCantabularAreaResponseIsAvailable)
+	ctx.Step(`^the following GetArea query response is available from Cantabular:$`, c.theFollowingCantabularAreaResponseIsAvailable)
+	ctx.Step(`^the following area query response is available from Cantabular:$`, c.theFollowingCantabularAreasResponseIsAvailable)
 	ctx.Step(`^the following parents response is available from Cantabular:$`, c.theFollowingCantabularParentsResponseIsAvailable)
 	ctx.Step(`^the following categorisations response is available from Cantabular:$`, c.theFollowingCantabularCategorisationsResponseIsAvailable)
 
@@ -130,7 +131,7 @@ func (c *PopulationTypesComponent) cantabularServerIsHealthy() error {
 	return nil
 }
 
-func (c *PopulationTypesComponent) theFollowingCantabularAreaResponseIsAvailable(body *godog.DocString) error {
+func (c *PopulationTypesComponent) theFollowingCantabularAreasResponseIsAvailable(body *godog.DocString) error {
 	var resp cantabular.GetAreasResponse
 
 	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
@@ -138,6 +139,17 @@ func (c *PopulationTypesComponent) theFollowingCantabularAreaResponseIsAvailable
 	}
 
 	c.fakeCantabular.GetAreasResponse = &resp
+	return nil
+}
+
+func (c *PopulationTypesComponent) theFollowingCantabularAreaResponseIsAvailable(body *godog.DocString) error {
+	var resp cantabular.GetAreaResponse
+
+	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
+		return fmt.Errorf("failed to unmarshal body: %w", err)
+	}
+
+	c.fakeCantabular.GetAreaResponse = &resp
 	return nil
 }
 
