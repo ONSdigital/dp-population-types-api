@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"net/http"
 
 	"github.com/go-chi/chi/v5"

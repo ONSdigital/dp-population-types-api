@@ -24,6 +24,7 @@ type CantabularClient struct {
 	GetDimensionsResponse          *cantabular.GetDimensionsResponse
 	GetAreasResponse               *cantabular.GetAreasResponse
 	GetParentsResponse             *cantabular.GetParentsResponse
+	GetCategorisationsResponse     *cantabular.GetCategorisationsResponse
 	ListDatasetsResponse           []string
 }
 
@@ -115,4 +116,15 @@ func (c *CantabularClient) GetParents(_ context.Context, _ cantabular.GetParents
 		)
 	}
 	return c.GetParentsResponse, nil
+}
+
+func (c *CantabularClient) GetCategorisations(_ context.Context, _ cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error) {
+	if !c.Healthy {
+		return nil, dperrors.New(
+			errors.New("test error response"),
+			http.StatusNotFound,
+			nil,
+		)
+	}
+	return c.GetCategorisationsResponse, nil
 }
