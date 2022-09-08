@@ -41,7 +41,13 @@ Feature: Population types endpoint
 
     Then I should receive the following JSON response:
     """
-    {"items":[{"name": "dataset_1"}, {"name": "dataset_2"}]}
+    {
+        "limit": 2,
+        "count": 2,
+        "total_count": 2,
+        "offset": 0,
+        "items":[{"name": "dataset_1"}, {"name": "dataset_2"}]
+    }
     """
 
   Scenario: If the root population-types endpoint fails, it should return correct errors

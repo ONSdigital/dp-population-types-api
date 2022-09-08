@@ -6,7 +6,8 @@ Feature: Area Types
     And the following geography response is available from Cantabular:
     """
     {
-
+        "count": 2,
+        "total_count": 2,
         "dataset": {
           "variables": {
             "total_count": 2,
@@ -63,6 +64,10 @@ Feature: Area Types
     And I should receive the following JSON response:
     """
     {
+        "limit": 20,
+        "offset": 0,
+        "count": 2,
+        "total_count": 2,
         "area_types":[
           {
                 "id":"city",
