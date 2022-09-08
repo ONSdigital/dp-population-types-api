@@ -63,7 +63,7 @@ Background:
                 }
             ]
         }
-        """
+    """
 
   Scenario: Getting unpublished categorisations
     Given the following datasets based on "Example" are available
