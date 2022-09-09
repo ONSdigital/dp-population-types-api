@@ -37,7 +37,8 @@ func TestInit(t *testing.T) {
 		initialiserMock := buildInitialiserMockWithNilDependencies()
 
 		cantabularClientMock := &mock.CantabularClientMock{
-			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error { return nil },
+			CheckerFunc:       func(ctx context.Context, state *healthcheck.CheckState) error { return nil },
+			CheckerAPIExtFunc: func(ctx context.Context, state *healthcheck.CheckState) error { return nil },
 		}
 
 		datasetAPIClientMock := &mock.DatasetAPIClientMock{
@@ -102,7 +103,7 @@ func TestInit(t *testing.T) {
 
 			hcMock := &mock.HealthCheckerMock{
 				AddCheckFunc: func(name string, checker healthcheck.Checker) error {
-					if name == "Cantabular client" {
+					if name == "Cantabular Server" {
 						return errors.New("oops")
 					}
 					return nil
@@ -118,7 +119,7 @@ func TestInit(t *testing.T) {
 				err := svc.Init(ctx, &initialiserMock, &cfgWithCantabularHealthcheckEnabled, testBuildTime, testGitCommit, testVersion)
 				Convey("Then the cantabular healthcheck error should be included in the returned errors", func() {
 
-					So(strings.Contains(err.Error(), "cantabular client"), ShouldBeTrue)
+					So(strings.Contains(err.Error(), "cantabular server"), ShouldBeTrue)
 				})
 			})
 		})
@@ -136,14 +137,12 @@ func TestInit(t *testing.T) {
 			err := svc.Init(ctx, &initialiserMock, cfg, testBuildTime, testGitCommit, testVersion)
 
 			Convey("Then service Init succeeds", func() {
-
 				So(err, ShouldBeNil)
 			})
 
-			Convey("Then the cantabular healthcheck should not be added (as the flag is not set)", func() {
-
+			Convey("Then the dummy cantabular healthcheck should still be added, even if the flag is not set", func() {
 				cantabularCall := findCantabularClientCheck(hcMock)
-				So(cantabularCall, ShouldBeNil)
+				So(cantabularCall.Checker, ShouldNotBeNil)
 			})
 		})
 	})
@@ -155,7 +154,7 @@ func findCantabularClientCheck(hcMock *mock.HealthCheckerMock) *struct {
 } {
 	addCheckCalls := hcMock.AddCheckCalls()
 	for _, call := range addCheckCalls {
-		if call.Name == "Cantabular client" {
+		if call.Name == "Cantabular Server" || call.Name == "Cantabular Api Ext" {
 			return &call
 		}
 	}
@@ -178,12 +177,21 @@ func TestClose(t *testing.T) {
 			StopFunc:     func() { hcStopped = true },
 		}
 
+		cantabularClientMock := &mock.CantabularClientMock{
+			CheckerFunc:       func(ctx context.Context, state *healthcheck.CheckState) error { return nil },
+			CheckerAPIExtFunc: func(ctx context.Context, state *healthcheck.CheckState) error { return nil },
+		}
+
 		datasetAPIClientMock := &mock.DatasetAPIClientMock{
 			CheckerFunc: func(_ context.Context, _ *healthcheck.CheckState) error { return nil },
 		}
 
 		initialiserMock.GetHealthCheckFunc = func(_ *config.Config, _, _, _ string) (service.HealthChecker, error) {
 			return hcMock, nil
+		}
+
+		initialiserMock.GetCantabularClientFunc = func(cfg config.CantabularConfig) service.CantabularClient {
+			return cantabularClientMock
 		}
 
 		initialiserMock.GetDatasetAPIClientFunc = func(_ *config.Config) service.DatasetAPIClient {
