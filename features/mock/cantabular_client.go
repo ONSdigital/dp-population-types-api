@@ -33,6 +33,10 @@ func (c *CantabularClient) Checker(_ context.Context, _ *healthcheck.CheckState)
 	return nil
 }
 
+func (c *CantabularClient) CheckerAPIExt(_ context.Context, _ *healthcheck.CheckState) error {
+	return nil
+}
+
 func (c *CantabularClient) ListDatasets(_ context.Context) ([]string, error) {
 	if !c.Healthy {
 		return nil, errFailedToRespond
