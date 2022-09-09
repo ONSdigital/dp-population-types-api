@@ -24,6 +24,9 @@ var _ service.CantabularClient = &CantabularClientMock{}
 // 			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error {
 // 				panic("mock out the Checker method")
 // 			},
+// 			CheckerAPIExtFunc: func(ctx context.Context, state *healthcheck.CheckState) error {
+// 				panic("mock out the CheckerAPIExt method")
+// 			},
 // 			GetAreaFunc: func(contextMoqParam context.Context, getAreaRequest cantabular.GetAreaRequest) (*cantabular.GetAreaResponse, error) {
 // 				panic("mock out the GetArea method")
 // 			},
@@ -58,6 +61,9 @@ type CantabularClientMock struct {
 	// CheckerFunc mocks the Checker method.
 	CheckerFunc func(ctx context.Context, state *healthcheck.CheckState) error
 
+	// CheckerAPIExtFunc mocks the CheckerAPIExt method.
+	CheckerAPIExtFunc func(ctx context.Context, state *healthcheck.CheckState) error
+
 	// GetAreaFunc mocks the GetArea method.
 	GetAreaFunc func(contextMoqParam context.Context, getAreaRequest cantabular.GetAreaRequest) (*cantabular.GetAreaResponse, error)
 
@@ -86,6 +92,13 @@ type CantabularClientMock struct {
 	calls struct {
 		// Checker holds details about calls to the Checker method.
 		Checker []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// State is the state argument value.
+			State *healthcheck.CheckState
+		}
+		// CheckerAPIExt holds details about calls to the CheckerAPIExt method.
+		CheckerAPIExt []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
 			// State is the state argument value.
@@ -145,6 +158,7 @@ type CantabularClientMock struct {
 		}
 	}
 	lockChecker                sync.RWMutex
+	lockCheckerAPIExt          sync.RWMutex
 	lockGetArea                sync.RWMutex
 	lockGetAreas               sync.RWMutex
 	lockGetCategorisations     sync.RWMutex
@@ -187,6 +201,41 @@ func (mock *CantabularClientMock) CheckerCalls() []struct {
 	mock.lockChecker.RLock()
 	calls = mock.calls.Checker
 	mock.lockChecker.RUnlock()
+	return calls
+}
+
+// CheckerAPIExt calls CheckerAPIExtFunc.
+func (mock *CantabularClientMock) CheckerAPIExt(ctx context.Context, state *healthcheck.CheckState) error {
+	if mock.CheckerAPIExtFunc == nil {
+		panic("CantabularClientMock.CheckerAPIExtFunc: method is nil but CantabularClient.CheckerAPIExt was just called")
+	}
+	callInfo := struct {
+		Ctx   context.Context
+		State *healthcheck.CheckState
+	}{
+		Ctx:   ctx,
+		State: state,
+	}
+	mock.lockCheckerAPIExt.Lock()
+	mock.calls.CheckerAPIExt = append(mock.calls.CheckerAPIExt, callInfo)
+	mock.lockCheckerAPIExt.Unlock()
+	return mock.CheckerAPIExtFunc(ctx, state)
+}
+
+// CheckerAPIExtCalls gets all the calls that were made to CheckerAPIExt.
+// Check the length with:
+//     len(mockedCantabularClient.CheckerAPIExtCalls())
+func (mock *CantabularClientMock) CheckerAPIExtCalls() []struct {
+	Ctx   context.Context
+	State *healthcheck.CheckState
+} {
+	var calls []struct {
+		Ctx   context.Context
+		State *healthcheck.CheckState
+	}
+	mock.lockCheckerAPIExt.RLock()
+	calls = mock.calls.CheckerAPIExt
+	mock.lockCheckerAPIExt.RUnlock()
 	return calls
 }
 

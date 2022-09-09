@@ -114,25 +114,24 @@ func (svc *Service) Close(ctx context.Context) error {
 }
 
 func (svc *Service) registerCheckers(ctx context.Context) error {
-	if svc.cantabularClient != nil {
-		// TODO - when Cantabular server is deployed to Production, remove this placeholder and the flag,
-		// and always use the real Checker instead: svc.cantabularClient.Checker
-		cantabularChecker := svc.cantabularClient.Checker
+	cantabularSrvChecker := svc.cantabularClient.Checker
+	cantabularAPIExtChecker := svc.cantabularClient.CheckerAPIExt
 
-		if !svc.Config.CantabularHealthcheckEnabled {
-			cantabularChecker = func(ctx context.Context, state *healthcheck.CheckState) error {
-				return state.Update(healthcheck.StatusOK, "Cantabular healthcheck placeholder", http.StatusOK)
-			}
-		} else if svc.Config.CantabularHealthcheckEnabled {
-			if err := svc.HealthCheck.AddCheck("Cantabular client", svc.cantabularClient.Checker); err != nil {
-				return errors.Wrap(err, "error adding check for cantabular client")
-			}
-		} else {
-			log.Info(ctx, "Cantabular health check is disabled")
+	if !svc.Config.CantabularHealthcheckEnabled {
+		cantabularSrvChecker = func(ctx context.Context, state *healthcheck.CheckState) error {
+			return state.Update(healthcheck.StatusOK, "Cantabular Server healthcheck placeholder", http.StatusOK)
 		}
-		if err := svc.HealthCheck.AddCheck("Cantabular server", cantabularChecker); err != nil {
-			return errors.Wrap(err, "error adding check for Cantabular server: %w")
+		cantabularAPIExtChecker = func(ctx context.Context, state *healthcheck.CheckState) error {
+			return state.Update(healthcheck.StatusOK, "Cantabular API Ext healthcheck placeholder", http.StatusOK)
 		}
+	}
+
+	if err := svc.HealthCheck.AddCheck("Cantabular Server", cantabularSrvChecker); err != nil {
+		return errors.Wrap(err, "error adding check for cantabular server")
+	}
+
+	if err := svc.HealthCheck.AddCheck("Cantabular Api Ext", cantabularAPIExtChecker); err != nil {
+		return errors.Wrap(err, "error adding check for cantabular api ext")
 	}
 
 	if err := svc.HealthCheck.AddCheck("dataset api", svc.datasetAPIClient.Checker); err != nil {
