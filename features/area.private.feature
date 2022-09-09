@@ -7,7 +7,7 @@ Feature: Areas
 
     And cantabular api extension is healthy
 
-    When the following area query response is available from Cantabular:
+    When the following GetArea query response is available from Cantabular:
     """
     {
       "dataset": {
@@ -16,17 +16,14 @@ Feature: Areas
             {
               "node": {
                 "categories": {
-                  "search": {
-                    "edges": [
-                      {
-                        "node": {
-                          "code": "2",
-                          "label": "Belfast"
-                        }
+                  "edges": [
+                    {
+                      "node": {
+                        "code": "2",
+                        "label": "Belfast"
                       }
-                    ]
-                  },
-                  "totalCount": 1
+                    }
+                  ]
                 },
                 "label": "City",
                 "name": "city"
@@ -43,8 +40,7 @@ Feature: Areas
 
     And I am authorised
 
-    And I GET "/population-types/Example/area-types/City/areas/2"
-
+    And I GET "/population-types/Example/area-types/city/areas/2"
     Then the HTTP status code should be "200"
     Then I should receive the following JSON response:
     """
