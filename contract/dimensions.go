@@ -18,3 +18,19 @@ type GetDimensionsResponse struct {
 	PaginationResponse
 	Dimensions []Dimension `json:"items"`
 }
+
+type GetCategorisationsRequest struct {
+	QueryParams
+	PopulationType string
+	Variable       string
+}
+
+type GetCategorisationsResponse struct {
+	PaginationResponse
+	Items []Category `json:"items"`
+}
+
+type Category struct {
+	Name  string `json:"name"`
+	Label string `json:"label"`
+}
