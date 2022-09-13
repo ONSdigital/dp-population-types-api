@@ -82,3 +82,55 @@ Background:
         """
 
         And the HTTP status code should be "404"
+
+    Scenario: Getting parent area count successfully
+
+        Given I am identified as "user@ons.gov.uk"
+
+        And I am authorised
+
+        Given the following parents areas count response is available from Cantabular:
+        """
+        {
+             "Dimension": {
+                "count": 1,
+                "categories": [
+                    {
+                        "code": "E12000001",
+                        "label": "Hartlepool"
+                    }
+                ],
+                "variable": {
+                    "name":  "LADCD",
+                    "label": "Local Authority code"
+                }
+            }
+        }
+        """
+
+        When I GET "/population-types/Example/area-types/city/parents/LADCD/areas-count?areas=E12000001,E12000002"
+
+        Then I should receive the following JSON response:
+        """
+        1
+        """
+
+        And the HTTP status code should be "200"
+
+    Scenario:Getting parent area count but Cantabular returns an error
+        Given I am identified as "user@ons.gov.uk"
+
+        And I am authorised
+
+        And cantabular is unresponsive
+
+        When I GET "/population-types/Example/area-types/city/parents/LADCD/areas-count?areas=E12000001,E12000002"
+
+        Then I should receive the following JSON response:
+        """
+        {
+            "errors": ["failed to get parent areas count"]
+        }
+        """
+
+        And the HTTP status code should be "404"

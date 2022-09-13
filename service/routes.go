@@ -56,6 +56,7 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 	)
 	svc.Router.Get("/population-types/{population-type}/area-types", areaTypes.Get)
 	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/parents", areaTypes.GetParents)
+	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/parents/{parent-area-type}/areas-count", areaTypes.GetParentAreaCount)
 
 	areas := handler.NewAreas(
 		svc.Config,
@@ -106,6 +107,7 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	)
 	r.Get("/population-types/{population-type}/area-types", areaTypes.Get)
 	r.Get("/population-types/{population-type}/area-types/{area-type}/parents", areaTypes.GetParents)
+	r.Get("/population-types/{population-type}/area-types/{area-type}/parents/{parent-area-type}/areas-count", areaTypes.GetParentAreaCount)
 
 	areas := handler.NewAreas(
 		svc.Config,

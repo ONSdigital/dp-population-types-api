@@ -24,6 +24,7 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the following GetArea query response is available from Cantabular:$`, c.theFollowingCantabularAreaResponseIsAvailable)
 	ctx.Step(`^the following area query response is available from Cantabular:$`, c.theFollowingCantabularAreasResponseIsAvailable)
 	ctx.Step(`^the following parents response is available from Cantabular:$`, c.theFollowingCantabularParentsResponseIsAvailable)
+	ctx.Step(`^the following parents areas count response is available from Cantabular:$`, c.theFollowingCantabularParentAreaCountResponseIsAvailable)
 	ctx.Step(`^the following categorisations response is available from Cantabular:$`, c.theFollowingCantabularCategorisationsResponseIsAvailable)
 
 	ctx.Step(`^the cantabular area response is not found`, c.cantabularIsNotFound)
@@ -161,6 +162,16 @@ func (c *PopulationTypesComponent) theFollowingCantabularParentsResponseIsAvaila
 	}
 
 	c.fakeCantabular.GetParentsResponse = &resp
+	return nil
+}
+
+func (c *PopulationTypesComponent) theFollowingCantabularParentAreaCountResponseIsAvailable(body *godog.DocString) error {
+	var resp cantabular.GetParentAreaCountResult
+	resp.Dimension.Count = 1
+	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
+		return fmt.Errorf("failed to unmarshal body: %w", err)
+	}
+	c.fakeCantabular.GetParentAreaCountResult = &resp
 	return nil
 }
 
