@@ -92,6 +92,8 @@ github.com/ONSdigital/log.go/v2 v2.2.0 h1:Rkv6Gbfa3Jzy5AfPWkUDEnpFNhzYyaGQ6f7YUd
 github.com/ONSdigital/log.go/v2 v2.2.0/go.mod h1:i0eFlPDlF1fI4k0/SvXhQIkyQxs676EySpYPj3rQy+I=
 github.com/aws/aws-sdk-go v1.44.94 h1:hDqJSv03ZVvqT448gUE63JEIHKx++vKLoDkiZxbNmIk=
 github.com/aws/aws-sdk-go v1.44.94/go.mod h1:y4AeaBuwd2Lk+GepC1E9v0qOiTws0MIWAX4oIKwKHZo=
+github.com/aws/aws-sdk-go v1.44.96 h1:S9paaqnJ0AJ95t5AB+iK8RM6YNZN0W0Lek1gOVJsEr8=
+github.com/aws/aws-sdk-go v1.44.96/go.mod h1:y4AeaBuwd2Lk+GepC1E9v0qOiTws0MIWAX4oIKwKHZo=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/chromedp/cdproto v0.0.0-20220908234607-11c39c58d330 h1:MnPpJleRPl2SBJJfonTg4Ok6/GfWjbPASbmRE58ktu8=
 github.com/chromedp/cdproto v0.0.0-20220908234607-11c39c58d330/go.mod h1:5Y4sD/eXpwrChIuxhSr/G20n9CdbCmoerOHnuAf0Zr0=

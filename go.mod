@@ -30,7 +30,7 @@ require (
 	github.com/ONSdigital/dp-mongodb-in-memory v1.3.1 // indirect
 	github.com/ONSdigital/dp-rchttp v1.0.0 // indirect
 	github.com/ONSdigital/go-ns v0.0.0-20210916104633-ac1c1c52327e // indirect
-	github.com/aws/aws-sdk-go v1.44.94 // indirect
+	github.com/aws/aws-sdk-go v1.44.96 // indirect
 	github.com/chromedp/cdproto v0.0.0-20220908234607-11c39c58d330 // indirect
 	github.com/chromedp/chromedp v0.8.5 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
