@@ -46,6 +46,7 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 		svc.datasetAPIClient,
 	)
 	svc.Router.Get("/population-types/{population-type}/dimensions", dimensions.GetAll)
+	svc.Router.Get("/population-types/{population-type}/dimensions/{dimension}/categorisations", dimensions.GetCategorisations)
 
 	areaTypes := handler.NewAreaTypes(
 		svc.Config,
@@ -95,6 +96,7 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 		svc.datasetAPIClient,
 	)
 	r.Get("/population-types/{population-type}/dimensions", dimensions.GetAll)
+	r.Get("/population-types/{population-type}/dimensions/{dimension}/categorisations", dimensions.GetCategorisations)
 
 	areaTypes := handler.NewAreaTypes(
 		svc.Config,

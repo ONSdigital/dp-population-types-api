@@ -23,11 +23,17 @@ type CantabularClient struct {
 	GetGeographyDimensionsResponse *cantabular.GetGeographyDimensionsResponse
 	GetDimensionsResponse          *cantabular.GetDimensionsResponse
 	GetAreasResponse               *cantabular.GetAreasResponse
+	GetAreaResponse                *cantabular.GetAreaResponse
 	GetParentsResponse             *cantabular.GetParentsResponse
+	GetCategorisationsResponse     *cantabular.GetCategorisationsResponse
 	ListDatasetsResponse           []string
 }
 
 func (c *CantabularClient) Checker(_ context.Context, _ *healthcheck.CheckState) error {
+	return nil
+}
+
+func (c *CantabularClient) CheckerAPIExt(_ context.Context, _ *healthcheck.CheckState) error {
 	return nil
 }
 
@@ -106,6 +112,36 @@ func (c *CantabularClient) GetAreas(_ context.Context, _ cantabular.GetAreasRequ
 	return c.GetAreasResponse, nil
 }
 
+func (c *CantabularClient) GetArea(_ context.Context, _ cantabular.GetAreaRequest) (*cantabular.GetAreaResponse, error) {
+	if !c.Healthy {
+		return nil, dperrors.New(
+			errors.New("failed to get area"),
+			http.StatusNotFound,
+			log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+		)
+	}
+	if c.BadRequest {
+		return nil, dperrors.New(
+			errors.New("bad request"),
+			http.StatusBadRequest,
+			log.Data{"errors": map[string]string{"message": "400 Bad Request: dataset not loaded in this server"}},
+		)
+	}
+	if c.NotFound {
+		return nil, dperrors.New(
+			errors.New("not found"),
+			http.StatusNotFound,
+			log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+		)
+	}
+
+	if c.GetAreaResponse == nil {
+		return &cantabular.GetAreaResponse{}, nil
+	}
+
+	return c.GetAreaResponse, nil
+}
+
 func (c *CantabularClient) GetParents(_ context.Context, _ cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error) {
 	if !c.Healthy {
 		return nil, dperrors.New(
@@ -115,4 +151,15 @@ func (c *CantabularClient) GetParents(_ context.Context, _ cantabular.GetParents
 		)
 	}
 	return c.GetParentsResponse, nil
+}
+
+func (c *CantabularClient) GetCategorisations(_ context.Context, _ cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error) {
+	if !c.Healthy {
+		return nil, dperrors.New(
+			errors.New("test error response"),
+			http.StatusNotFound,
+			nil,
+		)
+	}
+	return c.GetCategorisationsResponse, nil
 }
