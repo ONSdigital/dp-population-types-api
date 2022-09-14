@@ -179,7 +179,7 @@ paths:
           description: "parent area types returned successfully"
           schema:
             $ref: '#/definitions/GetAreaTypesResponse'
-  /population-types/{population-type}/area-type/{area-type}/parents/{parent-area-type}/areas-count:
+  /population-types/{population-type}/area-types/{area-type}/parents/{parent-area-type}/areas-count:
     get:
       tags:
         - "Private"
