@@ -31,6 +31,12 @@ parameters:
     type: integer
     default: 0
     minimum: 0
+  areas:
+    name: areas
+    required: true
+    description: "A list of parent area codes, separated by commas"
+    in: query
+    type: string
 tags:
   - name: "Public"
   - name: "Private"
@@ -173,6 +179,33 @@ paths:
           description: "parent area types returned successfully"
           schema:
             $ref: '#/definitions/GetAreaTypesResponse'
+  /population-types/{population-type}/area-types/{area-type}/parents/{parent-area-type}/areas-count:
+    get:
+      tags:
+        - "Private"
+      summary: "Get a count of the areas within the selected parent areas"
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: population-type
+          type: string
+          in: path
+          required: true
+        - name: area-type
+          type: string
+          in: path
+          required: true
+        - name: parent-area-type
+          type: string
+          in: path
+          required: true
+        - $ref: '#/parameters/areas'
+      responses:
+        200:
+          description: "Count returned successfully"
+          schema:
+            type: integer
   /health:
     get:
       tags:

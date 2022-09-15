@@ -25,6 +25,7 @@ type CantabularClient struct {
 	GetAreasResponse               *cantabular.GetAreasResponse
 	GetAreaResponse                *cantabular.GetAreaResponse
 	GetParentsResponse             *cantabular.GetParentsResponse
+	GetParentAreaCountResult       *cantabular.GetParentAreaCountResult
 	GetCategorisationsResponse     *cantabular.GetCategorisationsResponse
 	ListDatasetsResponse           []string
 }
@@ -151,6 +152,17 @@ func (c *CantabularClient) GetParents(_ context.Context, _ cantabular.GetParents
 		)
 	}
 	return c.GetParentsResponse, nil
+}
+func (c *CantabularClient) GetParentAreaCount(_ context.Context, _ cantabular.GetParentAreaCountRequest) (*cantabular.GetParentAreaCountResult, error) {
+	if !c.Healthy {
+		return nil, dperrors.New(
+			errors.New("test error response"),
+			http.StatusNotFound,
+			nil,
+		)
+	}
+
+	return c.GetParentAreaCountResult, nil
 }
 
 func (c *CantabularClient) GetCategorisations(_ context.Context, _ cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error) {

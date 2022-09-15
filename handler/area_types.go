@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
@@ -185,6 +186,49 @@ func (h *AreaTypes) GetParents(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
+}
+
+// GetParentAreaCount is the handler for /population-types/{population-type}/area-types/{area-type}/parents
+func (h *AreaTypes) GetParentAreaCount(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	cReq := cantabular.GetParentAreaCountRequest{
+		Dataset:  chi.URLParam(r, "population-type"),
+		Variable: chi.URLParam(r, "area-type"),
+		Parent:   chi.URLParam(r, "parent-area-type"),
+		Codes:    strings.Split(r.URL.Query().Get("areas"), ","),
+	}
+
+	logData := log.Data{
+		"population_type":  cReq.Dataset,
+		"area_type":        cReq.Variable,
+		"parent_area_type": cReq.Parent,
+		"codes":            cReq.Codes,
+	}
+
+	// only return results for published population-types on web
+	if !h.cfg.EnablePrivateEndpoints {
+		if err := h.published(ctx, cReq.Dataset); err != nil {
+			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+				err:     errors.Wrap(err, "failed to check published state"),
+				message: "population type not found",
+				logData: logData,
+			})
+			return
+		}
+	}
+
+	res, err := h.cantabular.GetParentAreaCount(ctx, cReq)
+	if err != nil {
+		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), &Error{
+			err:     errors.Wrap(err, "failed to get parent areas count"),
+			message: "failed to get parent areas count",
+			logData: logData,
+		})
+		return
+	}
+
+	h.respond.JSON(ctx, w, http.StatusOK, res.Dimension.Count)
 }
 
 func (h *AreaTypes) published(ctx context.Context, populationType string) error {
