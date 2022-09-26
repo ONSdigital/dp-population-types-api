@@ -15,7 +15,7 @@ type GetAreaTypesRequest struct {
 // GetAreaTypesResponse is the response object for GET /area-types
 type GetAreaTypesResponse struct {
 	PaginationResponse
-	AreaTypes []AreaType `json:"area_types"`
+	AreaTypes []AreaType `json:"items"`
 }
 
 type GetAreaTypeParentsRequest struct {
@@ -26,5 +26,5 @@ type GetAreaTypeParentsRequest struct {
 
 type GetAreaTypeParentsResponse struct {
 	PaginationResponse
-	AreaTypes []AreaType `json:"area_types"`
+	AreaTypes []AreaType `json:"items"`
 }

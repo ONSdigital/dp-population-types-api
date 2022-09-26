@@ -68,7 +68,7 @@ Feature: Areas
         "offset": 0,
         "count": 3,
         "total_count": 3,
-        "areas": [
+        "items": [
           {
             "id": "0",
             "label": "London",
@@ -133,7 +133,7 @@ Feature: Areas
       "offset": 0,
       "count": 1,
       "total_count": 1,
-      "areas": [
+      "items": [
         {
           "id": "0",
           "label": "London",
@@ -228,7 +228,7 @@ Feature: Areas
       "offset": 0,
       "count": 5,
       "total_count": 5,
-      "areas": [
+      "items": [
         {
           "id": "E",
           "label": "England",
@@ -307,7 +307,7 @@ Feature: Areas
       "offset": 0,
       "count": 0,
       "total_count": 0,
-      "areas": null
+      "items": null
     }
     """
 

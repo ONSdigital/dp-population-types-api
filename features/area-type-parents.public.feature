@@ -112,7 +112,7 @@ Background:
             "offset": 0,
             "count": 1,
             "total_count": 1,
-            "area_types": [
+            "items": [
                 {
                     "id": "country",
                     "label": "Country",
@@ -237,4 +237,3 @@ Background:
         """
 
         And the HTTP status code should be "404"
-
