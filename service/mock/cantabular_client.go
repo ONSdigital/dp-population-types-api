@@ -33,6 +33,9 @@ var _ service.CantabularClient = &CantabularClientMock{}
 // 			GetAreasFunc: func(contextMoqParam context.Context, getAreasRequest cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error) {
 // 				panic("mock out the GetAreas method")
 // 			},
+// 			GetBaseVariableFunc: func(contextMoqParam context.Context, getBaseVariableRequest cantabular.GetBaseVariableRequest) (*cantabular.GetBaseVariableResponse, error) {
+// 				panic("mock out the GetBaseVariable method")
+// 			},
 // 			GetCategorisationsFunc: func(contextMoqParam context.Context, getCategorisationsRequest cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error) {
 // 				panic("mock out the GetCategorisations method")
 // 			},
@@ -72,6 +75,9 @@ type CantabularClientMock struct {
 
 	// GetAreasFunc mocks the GetAreas method.
 	GetAreasFunc func(contextMoqParam context.Context, getAreasRequest cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error)
+
+	// GetBaseVariableFunc mocks the GetBaseVariable method.
+	GetBaseVariableFunc func(contextMoqParam context.Context, getBaseVariableRequest cantabular.GetBaseVariableRequest) (*cantabular.GetBaseVariableResponse, error)
 
 	// GetCategorisationsFunc mocks the GetCategorisations method.
 	GetCategorisationsFunc func(contextMoqParam context.Context, getCategorisationsRequest cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error)
@@ -124,6 +130,13 @@ type CantabularClientMock struct {
 			// GetAreasRequest is the getAreasRequest argument value.
 			GetAreasRequest cantabular.GetAreasRequest
 		}
+		// GetBaseVariable holds details about calls to the GetBaseVariable method.
+		GetBaseVariable []struct {
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
+			// GetBaseVariableRequest is the getBaseVariableRequest argument value.
+			GetBaseVariableRequest cantabular.GetBaseVariableRequest
+		}
 		// GetCategorisations holds details about calls to the GetCategorisations method.
 		GetCategorisations []struct {
 			// ContextMoqParam is the contextMoqParam argument value.
@@ -174,6 +187,7 @@ type CantabularClientMock struct {
 	lockCheckerAPIExt          sync.RWMutex
 	lockGetArea                sync.RWMutex
 	lockGetAreas               sync.RWMutex
+	lockGetBaseVariable        sync.RWMutex
 	lockGetCategorisations     sync.RWMutex
 	lockGetDimensions          sync.RWMutex
 	lockGetGeographyDimensions sync.RWMutex
@@ -320,6 +334,41 @@ func (mock *CantabularClientMock) GetAreasCalls() []struct {
 	mock.lockGetAreas.RLock()
 	calls = mock.calls.GetAreas
 	mock.lockGetAreas.RUnlock()
+	return calls
+}
+
+// GetBaseVariable calls GetBaseVariableFunc.
+func (mock *CantabularClientMock) GetBaseVariable(contextMoqParam context.Context, getBaseVariableRequest cantabular.GetBaseVariableRequest) (*cantabular.GetBaseVariableResponse, error) {
+	if mock.GetBaseVariableFunc == nil {
+		panic("CantabularClientMock.GetBaseVariableFunc: method is nil but CantabularClient.GetBaseVariable was just called")
+	}
+	callInfo := struct {
+		ContextMoqParam        context.Context
+		GetBaseVariableRequest cantabular.GetBaseVariableRequest
+	}{
+		ContextMoqParam:        contextMoqParam,
+		GetBaseVariableRequest: getBaseVariableRequest,
+	}
+	mock.lockGetBaseVariable.Lock()
+	mock.calls.GetBaseVariable = append(mock.calls.GetBaseVariable, callInfo)
+	mock.lockGetBaseVariable.Unlock()
+	return mock.GetBaseVariableFunc(contextMoqParam, getBaseVariableRequest)
+}
+
+// GetBaseVariableCalls gets all the calls that were made to GetBaseVariable.
+// Check the length with:
+//     len(mockedCantabularClient.GetBaseVariableCalls())
+func (mock *CantabularClientMock) GetBaseVariableCalls() []struct {
+	ContextMoqParam        context.Context
+	GetBaseVariableRequest cantabular.GetBaseVariableRequest
+} {
+	var calls []struct {
+		ContextMoqParam        context.Context
+		GetBaseVariableRequest cantabular.GetBaseVariableRequest
+	}
+	mock.lockGetBaseVariable.RLock()
+	calls = mock.calls.GetBaseVariable
+	mock.lockGetBaseVariable.RUnlock()
 	return calls
 }
 

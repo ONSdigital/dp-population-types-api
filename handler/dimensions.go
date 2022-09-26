@@ -177,7 +177,7 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 func (h *Dimensions) GetBase(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	req := contract.GetBaseVariablesRequest{
+	req := contract.GetBaseVariableRequest{
 		PopulationType: chi.URLParam(r, "population-type"),
 		Variable:       chi.URLParam(r, "dimension"),
 	}
@@ -199,47 +199,32 @@ func (h *Dimensions) GetBase(w http.ResponseWriter, r *http.Request) {
 		if err := h.published(ctx, req.PopulationType); err != nil {
 			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
 				err:     errors.Wrap(err, "failed to check published state"),
-				message: "population type not found",
+				message: "base variable not found",
 				logData: logData,
 			})
 			return
 		}
 	}
-	cReq := cantabular.GetBaseVariablesRequest{
+	cReq := cantabular.GetBaseVariableRequest{
 		Dataset:  req.PopulationType,
 		Variable: req.Variable,
-		PaginationParams: cantabular.PaginationParams{
-			Limit:  req.QueryParams.Limit,
-			Offset: req.QueryParams.Offset,
-		},
 	}
 
-	res, err := h.cantabular.GetBaseVariables(ctx, cReq)
+	res, err := h.cantabular.GetBaseVariable(ctx, cReq)
 	if err != nil {
 		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), &Error{
-			err:     errors.Wrap(err, "failed to get categorisations"),
-			message: "failed to get categorisations",
+			err:     errors.Wrap(err, "failed to get base variable"),
+			message: "failed to get base variable",
 			logData: logData,
 		})
 		return
 	}
 
-	resp := contract.GetCategorisationsResponse{
-		PaginationResponse: contract.PaginationResponse{
-			Limit:  req.Limit,
-			Offset: req.Offset,
-		},
-	}
+	resp := contract.GetBaseVariableResponse{}
 
 	if res != nil {
-		resp.Count = res.Count
-		resp.TotalCount = res.TotalCount
-		for _, edge := range res.Dataset.Variables.Search.Edges {
-			resp.Items = append(resp.Items, contract.Category{
-				Name:  edge.Node.Name,
-				Label: edge.Node.Label,
-			})
-		}
+		resp.Name = res.Dataset.Variables.Edges[0].Node.MapFrom[0].Edges[0].Node.Name
+		resp.Label = res.Dataset.Variables.Edges[0].Node.MapFrom[0].Edges[0].Node.Label
 	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)

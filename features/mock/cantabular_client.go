@@ -20,6 +20,7 @@ type CantabularClient struct {
 	Healthy                        bool
 	BadRequest                     bool
 	NotFound                       bool
+	BadGateway                     bool
 	GetGeographyDimensionsResponse *cantabular.GetGeographyDimensionsResponse
 	GetDimensionsResponse          *cantabular.GetDimensionsResponse
 	GetAreasResponse               *cantabular.GetAreasResponse
@@ -27,6 +28,7 @@ type CantabularClient struct {
 	GetParentsResponse             *cantabular.GetParentsResponse
 	GetParentAreaCountResult       *cantabular.GetParentAreaCountResult
 	GetCategorisationsResponse     *cantabular.GetCategorisationsResponse
+	GetBaseVariableResponse        *cantabular.GetBaseVariableResponse
 	ListDatasetsResponse           []string
 }
 
@@ -71,6 +73,9 @@ func (c *CantabularClient) GetDimensions(_ context.Context, _ cantabular.GetDime
 }
 
 func (c *CantabularClient) StatusCode(_ error) int {
+	if c.BadGateway {
+		return http.StatusBadGateway
+	}
 	if c.BadRequest {
 		return http.StatusBadRequest
 	}
@@ -105,7 +110,6 @@ func (c *CantabularClient) GetAreas(_ context.Context, _ cantabular.GetAreasRequ
 		)
 	}
 
-	// like is this below an accurate representation of its behaviour?
 	if c.GetAreasResponse == nil {
 		return &cantabular.GetAreasResponse{}, nil
 	}
@@ -176,7 +180,7 @@ func (c *CantabularClient) GetCategorisations(_ context.Context, _ cantabular.Ge
 	return c.GetCategorisationsResponse, nil
 }
 
-func (c *CantabularClient) GetBaseVariables(_ context.Context, _ cantabular.GetBaseVariableRequest) (*cantabular.GetBaseVariableResponse, error) {
+func (c *CantabularClient) GetBaseVariable(_ context.Context, _ cantabular.GetBaseVariableRequest) (*cantabular.GetBaseVariableResponse, error) {
 	if !c.Healthy {
 		return nil, dperrors.New(
 			errors.New("test error response"),
@@ -184,5 +188,22 @@ func (c *CantabularClient) GetBaseVariables(_ context.Context, _ cantabular.GetB
 			nil,
 		)
 	}
-	return c.GetCategorisationsResponse, nil
+
+	if c.BadGateway {
+		return nil, dperrors.New(
+			errors.New("bad gateway"),
+			http.StatusBadGateway,
+			log.Data{"errors": map[string]string{"message": "variable at position 1 does not exist"}},
+		)
+	}
+
+	if c.NotFound {
+		return nil, dperrors.New(
+			errors.New("not found"),
+			http.StatusNotFound,
+			log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+		)
+	}
+
+	return c.GetBaseVariableResponse, nil
 }

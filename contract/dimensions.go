@@ -36,7 +36,11 @@ type Category struct {
 }
 
 type GetBaseVariableRequest struct {
+	PopulationType string
+	Variable       string
 }
 
 type GetBaseVariableResponse struct {
+	Name  string `json:"name"`
+	Label string `json:"label"`
 }
