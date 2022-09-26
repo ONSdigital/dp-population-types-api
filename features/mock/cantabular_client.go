@@ -175,3 +175,14 @@ func (c *CantabularClient) GetCategorisations(_ context.Context, _ cantabular.Ge
 	}
 	return c.GetCategorisationsResponse, nil
 }
+
+func (c *CantabularClient) GetBaseVariables(_ context.Context, _ cantabular.GetBaseVariableRequest) (*cantabular.GetBaseVariableResponse, error) {
+	if !c.Healthy {
+		return nil, dperrors.New(
+			errors.New("test error response"),
+			http.StatusNotFound,
+			nil,
+		)
+	}
+	return c.GetCategorisationsResponse, nil
+}

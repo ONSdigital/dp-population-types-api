@@ -50,6 +50,7 @@ type CantabularClient interface {
 	GetParents(context.Context, cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error)
 	GetParentAreaCount(ctx context.Context, req cantabular.GetParentAreaCountRequest) (*cantabular.GetParentAreaCountResult, error)
 	GetCategorisations(context.Context, cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error)
+	GetBaseVariables(context.Context, cantabular.GetBaseVariablesRequest) (*cantabular.GetBaseVariableResponse, error)
 	Checker(ctx context.Context, state *healthcheck.CheckState) error
 	CheckerAPIExt(ctx context.Context, state *healthcheck.CheckState) error
 	StatusCode(error) int

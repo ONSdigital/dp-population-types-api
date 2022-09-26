@@ -133,7 +133,6 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 	}
-
 	cReq := cantabular.GetCategorisationsRequest{
 		Dataset:  req.PopulationType,
 		Variable: req.Variable,
@@ -172,6 +171,79 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
+}
+
+//  GetBase returns the base variables for the
+func (h *Dimensions) GetBase(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	req := contract.GetBaseVariablesRequest{
+		PopulationType: chi.URLParam(r, "population-type"),
+		Variable:       chi.URLParam(r, "dimension"),
+	}
+
+	logData := log.Data{
+		"population_type": req.PopulationType,
+		"dimension":       req.Variable,
+	}
+
+	if err := parseRequest(r, &req); err != nil {
+		h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
+			err: errors.Wrap(err, "invalid request"),
+		})
+		return
+	}
+
+	// only return results for published population-types on web
+	if !h.cfg.EnablePrivateEndpoints {
+		if err := h.published(ctx, req.PopulationType); err != nil {
+			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+				err:     errors.Wrap(err, "failed to check published state"),
+				message: "population type not found",
+				logData: logData,
+			})
+			return
+		}
+	}
+	cReq := cantabular.GetBaseVariablesRequest{
+		Dataset:  req.PopulationType,
+		Variable: req.Variable,
+		PaginationParams: cantabular.PaginationParams{
+			Limit:  req.QueryParams.Limit,
+			Offset: req.QueryParams.Offset,
+		},
+	}
+
+	res, err := h.cantabular.GetBaseVariables(ctx, cReq)
+	if err != nil {
+		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), &Error{
+			err:     errors.Wrap(err, "failed to get categorisations"),
+			message: "failed to get categorisations",
+			logData: logData,
+		})
+		return
+	}
+
+	resp := contract.GetCategorisationsResponse{
+		PaginationResponse: contract.PaginationResponse{
+			Limit:  req.Limit,
+			Offset: req.Offset,
+		},
+	}
+
+	if res != nil {
+		resp.Count = res.Count
+		resp.TotalCount = res.TotalCount
+		for _, edge := range res.Dataset.Variables.Search.Edges {
+			resp.Items = append(resp.Items, contract.Category{
+				Name:  edge.Node.Name,
+				Label: edge.Node.Label,
+			})
+		}
+	}
+
+	h.respond.JSON(ctx, w, http.StatusOK, resp)
+
 }
 
 func (h *Dimensions) published(ctx context.Context, populationType string) error {

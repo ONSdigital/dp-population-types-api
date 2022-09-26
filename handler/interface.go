@@ -22,6 +22,7 @@ type cantabularClient interface {
 	GetParents(context.Context, cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error)
 	GetParentAreaCount(context.Context, cantabular.GetParentAreaCountRequest) (*cantabular.GetParentAreaCountResult, error)
 	GetCategorisations(context.Context, cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error)
+	GetBaseVariables(context.Context, cantabular.GetBaseVariablesRequest) (*cantabular.GetBaseVariableResponse, error)
 	StatusCode(error) int
 }
 
