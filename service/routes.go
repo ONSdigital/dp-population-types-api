@@ -48,7 +48,7 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 	svc.Router.Get("/population-types/{population-type}/dimensions", dimensions.GetAll)
 	svc.Router.Get("/population-types/{population-type}/dimensions/{dimension}/categorisations", dimensions.GetCategorisations)
 
-	svc.Router.Get("/population-types/{population-type}/dimensions/{dimension}/base", dimensions.GetBase)
+	svc.Router.Get("/population-types/{population-type}/dimensions/{dimension}/base", dimensions.GetBaseVariable)
 	areaTypes := handler.NewAreaTypes(
 		svc.Config,
 		svc.responder,
@@ -99,7 +99,7 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	)
 	r.Get("/population-types/{population-type}/dimensions", dimensions.GetAll)
 	r.Get("/population-types/{population-type}/dimensions/{dimension}/categorisations", dimensions.GetCategorisations)
-	r.Get("/population-types/{population-type}/dimensions/{dimension}/base", dimensions.GetBase)
+	r.Get("/population-types/{population-type}/dimensions/{dimension}/base", dimensions.GetBaseVariable)
 
 	areaTypes := handler.NewAreaTypes(
 		svc.Config,

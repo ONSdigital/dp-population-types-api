@@ -173,8 +173,8 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }
 
-//  GetBase returns the base variables for the
-func (h *Dimensions) GetBase(w http.ResponseWriter, r *http.Request) {
+//  GetBase returns the base variables for a given categorisation
+func (h *Dimensions) GetBaseVariable(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	req := contract.GetBaseVariableRequest{
@@ -223,6 +223,15 @@ func (h *Dimensions) GetBase(w http.ResponseWriter, r *http.Request) {
 	resp := contract.GetBaseVariableResponse{}
 
 	if res != nil {
+		if len(res.Dataset.Variables.Edges) == 0 ||
+			len(res.Dataset.Variables.Edges[0].Node.MapFrom) == 0 ||
+			len(res.Dataset.Variables.Edges[0].Node.MapFrom[0].Edges) == 0 {
+			h.respond.Error(ctx, w, http.StatusInternalServerError, &Error{
+				err:     errors.Wrap(err, "failed to get base variable"),
+				message: "cantabular returned unexpected empty list",
+				logData: logData,
+			})
+		}
 		resp.Name = res.Dataset.Variables.Edges[0].Node.MapFrom[0].Edges[0].Node.Name
 		resp.Label = res.Dataset.Variables.Edges[0].Node.MapFrom[0].Edges[0].Node.Label
 	}
