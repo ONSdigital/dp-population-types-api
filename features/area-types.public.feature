@@ -68,7 +68,7 @@ Feature: Area Types
         "offset": 0,
         "count": 2,
         "total_count": 2,
-        "area_types":[
+        "items":[
           {
                 "id":"city",
                 "label":"City",

@@ -69,7 +69,7 @@ Feature: Area Types
         "offset": 0,
         "count": 2,
         "total_count": 2,
-        "area_types":[
+        "items":[
           {
                 "id":"city",
                 "label":"City",
@@ -84,11 +84,11 @@ Feature: Area Types
     """
 
   Scenario: Getting Unpublished area-types
-   
+
     Given I am identified as "user@ons.gov.uk"
 
     And I am authorised
-    
+
     And I have the following population types in cantabular
     """
     ["dataset_1", "dataset_2"]
@@ -105,7 +105,7 @@ Feature: Area Types
         "offset": 0,
         "count": 2,
         "total_count": 2,
-        "area_types":[
+        "items":[
           {
                 "id":"city",
                 "label":"City",
