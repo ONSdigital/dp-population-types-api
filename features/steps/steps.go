@@ -26,9 +26,22 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the following parents response is available from Cantabular:$`, c.theFollowingCantabularParentsResponseIsAvailable)
 	ctx.Step(`^the following parents areas count response is available from Cantabular:$`, c.theFollowingCantabularParentAreaCountResponseIsAvailable)
 	ctx.Step(`^the following categorisations response is available from Cantabular:$`, c.theFollowingCantabularCategorisationsResponseIsAvailable)
-
 	ctx.Step(`^the cantabular area response is not found`, c.cantabularIsNotFound)
 	ctx.Step(`^the cantabular area response is bad request`, c.cantabularIsBadRequest)
+	ctx.Step(`^the cantabular response is bad gateway`, c.cantabularIsBadGateway)
+	ctx.Step(`^the following base variable response is available from Cantabular:$`, c.theFollowingBaseVariableResponseIsAvailableFromCantabular)
+
+}
+
+func (c *PopulationTypesComponent) theFollowingBaseVariableResponseIsAvailableFromCantabular(body *godog.DocString) error {
+	var response cantabular.GetBaseVariableResponse
+	if err := json.Unmarshal([]byte(body.Content), &response); err != nil {
+		return fmt.Errorf("failed to unmarshal population types: %w", err)
+	}
+	c.fakeCantabular.GetBaseVariableResponse = &response
+
+	return nil
+
 }
 
 func (c *PopulationTypesComponent) iHaveTheFollowingPopulationTypesInCantabular(body *godog.DocString) error {
@@ -78,6 +91,10 @@ func (c *PopulationTypesComponent) cantabularIsBadRequest() error {
 	return nil
 }
 
+func (c *PopulationTypesComponent) cantabularIsBadGateway() error {
+	c.fakeCantabular.BadGateway = true
+	return nil
+}
 func (c *PopulationTypesComponent) theFollowingDatasetsBasedOnAreAvailable(populationType string, body *godog.DocString) error {
 	url := "/datasets?offset=0&limit=1000&is_based_on=" + populationType
 	c.datasetAPI.NewHandler().
