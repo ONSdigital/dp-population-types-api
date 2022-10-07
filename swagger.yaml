@@ -10,27 +10,18 @@ basePath: "/v1"
 schemes:
   - http
 parameters:
-  page_limit:
+  limit:
     name: limit
-    description: >-
-      Limit the number of items that will be returned. Defaults to 20 and capped
-      at 500
+    description: "Maximum number of items that will be returned. A value of zero will return zero items. The default value is 20, and the maximum limit allowed is 1000"
     in: query
     required: false
     type: integer
-    default: 20
-    minimum: 0
-    maximum: 500
   offset:
     name: offset
-    description: >-
-      Starting index of the items array that will be returned. By default it is
-      zero, meaning that the returned items will start from the beginning.
+    description: "Starting index of the items array that will be returned. By default it is zero, meaning that the returned items will start from the beginning."
     in: query
     required: false
     type: integer
-    default: 0
-    minimum: 0
   areas:
     name: areas
     required: true
@@ -49,9 +40,9 @@ securityDefinitions:
 paths:
   /population-types:
     get:
-      tags:
-        - "Public"
-        - "Private"
+      parameters:
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'
       summary: "Get all population types relevant to Census"
       description: "Retrieves a list of cantabular population types for Census"
       security:
@@ -72,6 +63,8 @@ paths:
       produces:
         - "application/json"
       parameters:
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'
         - name: population-type
           type: string
           in: path
@@ -102,7 +95,7 @@ paths:
           type: string
           in: path
           required: true
-        - $ref: '#/parameters/page_limit'
+        - $ref: '#/parameters/limit'
         - $ref: '#/parameters/offset'
       summary: "Get categories/values for given area type"
       description: ""
@@ -112,7 +105,7 @@ paths:
         200:
           description: "Categories for area type returned"
           schema:
-            $ref: '#/definitions/GetAreaTypeResponse'
+            $ref: '#/definitions/GetAreaResponse'
         401:
           $ref: '#/responses/Unauthorised'
         404:
@@ -138,8 +131,6 @@ paths:
           type: string
           in: path
           required: true
-        - $ref: '#/parameters/page_limit'
-        - $ref: '#/parameters/offset'
       summary: "Get details for a specific area"
       description: ""
       produces:
@@ -148,7 +139,7 @@ paths:
         200:
           description: "Information for area returned"
           schema:
-            $ref: '#/definitions/GetAreaResponse'
+            $ref: '#/definitions/Area'
         401:
           $ref: '#/responses/Unauthorised'
         404:
@@ -174,6 +165,8 @@ paths:
           type: string
           in: path
           required: true
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'
       responses:
         200:
           description: "parent area types returned successfully"
@@ -321,6 +314,18 @@ definitions:
   PopulationTypes:
     type: object
     properties:
+      count:
+        description: "The number of population types returned"
+        type: integer
+      limit:
+        description: "The number of population types requested"
+        type: integer
+      offset:
+        description: "The first row of population types to retrieve, starting at 0. Use this parameter as a pagination mechanism along with the limit parameter"
+        type: integer
+      total_count:
+        description: "The total number of population types"
+        type: integer
       items:
         description: "An array of population types"
         type: array
@@ -329,7 +334,19 @@ definitions:
   GetAreaTypesResponse:
     description: "The response body containing all available area-types for a given dataset"
     properties:
-      area-types:
+      count:
+        description: "The number of area types returned"
+        type: integer
+      limit:
+        description: "The number of area types requested"
+        type: integer
+      offset:
+        description: "The first row of area types to retrieve, starting at 0. Use this parameter as a pagination mechanism along with the limit parameter"
+        type: integer
+      total_count:
+        description: "The total number of area types"
+        type: integer
+      items:
         type: array
         items:
           $ref: '#/definitions/AreaType'
@@ -352,6 +369,14 @@ definitions:
           - example:
               id: "electoral_wards"
               label: "Electoral Wards or Divisions"
+  Area:
+    properties:
+      id:
+        type: string
+      label:
+        type: string
+      area_type:
+        type: string
   AreaType:
     properties:
       id:
@@ -363,9 +388,23 @@ definitions:
   GetAreaResponse:
     description: "The response body containing the information for an area"
     properties:
-      area:
+      count:
+        description: "The number of areas returned"
+        type: integer
+      limit:
+        description: "The number of areas requested"
+        type: integer
+      offset:
+        description: "The first row of areas to retrieve, starting at 0. Use this parameter as a pagination mechanism along with the limit parameter"
+        type: integer
+      total_count:
+        description: "The total number of areas"
+        type: integer     
+      items:
         allOf:
-          - $ref: '#/definitions/AreaType'
+          - $ref: '#/definitions/Area'
           - example:
               id: "E12000001"
               label: "North East"
+              area_type: "ltla"
+
