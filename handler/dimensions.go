@@ -227,10 +227,11 @@ func (h *Dimensions) GetBaseVariable(w http.ResponseWriter, r *http.Request) {
 			len(res.Dataset.Variables.Edges[0].Node.MapFrom) == 0 ||
 			len(res.Dataset.Variables.Edges[0].Node.MapFrom[0].Edges) == 0 {
 			h.respond.Error(ctx, w, http.StatusInternalServerError, &Error{
-				err:     errors.Wrap(err, "failed to get base variable"),
-				message: "cantabular returned unexpected empty list",
+				err:     errors.Wrap(err, "cantabular returned unexpected empty list"),
+				message: "failed to get base variable",
 				logData: logData,
 			})
+			return
 		}
 		resp.Name = res.Dataset.Variables.Edges[0].Node.MapFrom[0].Edges[0].Node.Name
 		resp.Label = res.Dataset.Variables.Edges[0].Node.MapFrom[0].Edges[0].Node.Label
