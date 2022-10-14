@@ -96,6 +96,122 @@ paths:
           $ref: "#/responses/InternalError"
         502:
           $ref: '#/responses/BadGateway'
+  /population-types/{population-type}/dimensions:
+    get:
+      summary: "Get list of non-geography base variables for given dataset "
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: population-type
+          type: string
+          in: path
+          required: true
+      responses:
+        200:
+          description: "A json list containing non-geography base variables for a dataset"
+          schema:
+            $ref: '#/definitions/Dimension'
+        401:
+          $ref: '#/responses/Unauthorised'
+        404:
+          description: "Dataset not found"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          $ref: "#/responses/InternalError"
+        502:
+          $ref: '#/responses/BadGateway'
+  /population-types/{population-type}/dimensions/{dimension}/categorisations:
+    get:
+      summary: "Get list of categorisations for a base level variable"
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: population-type
+          type: string
+          in: path
+          required: true
+        - name: dimension
+          type: string
+          in: path
+          required: true
+      responses:
+        200:
+          description: "A json list containing categorisations for a base variable"
+          schema:
+            $ref: '#/definitions/Dimension'
+        401:
+          $ref: '#/responses/Unauthorised'
+        404:
+          description: "Dataset not found"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          $ref: "#/responses/InternalError"
+        502:
+          $ref: '#/responses/BadGateway'
+  /population-types/{population-type}/dimensions/{dimension}/base:
+    get:
+      summary: "Get the base variable for a categorisation"
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: population-type
+          type: string
+          in: path
+          required: true
+        - name: dimension
+          type: string
+          in: path
+          required: true
+      responses:
+        200:
+          description: "The base variable information"
+          schema:
+            $ref: '#/definitions/Base'
+        401:
+          $ref: '#/responses/Unauthorised'
+        404:
+          description: "Dataset not found"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          $ref: "#/responses/InternalError"
+        502:
+          $ref: '#/responses/BadGateway'
+  /population-types/{population-type}/dimensions/{dimension}/parents:
+    get:
+      summary: "Get the parent variables of a categorisation"
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: population-type
+          type: string
+          in: path
+          required: true
+        - name: dimension
+          type: string
+          in: path
+          required: true
+      responses:
+        200:
+          description: "The parent variables for a categorisation"
+          schema:
+            $ref: '#/definitions/Dimension'
+        401:
+          $ref: '#/responses/Unauthorised'
+        404:
+          description: "Dataset not found"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          $ref: "#/responses/InternalError"
+        502:
+          $ref: '#/responses/BadGateway'
   /population-types/{population-type}/area-types/{area-type}/areas:
     get:
       parameters:
@@ -326,14 +442,6 @@ definitions:
         description: "The name of the population type"
         type: string
         example: "Usual-Residents"
-  PopulationTypes:
-    type: object
-    properties:
-      items:
-        description: "An array of population types"
-        type: array
-        items:
-          $ref: "#/definitions/PopulationType"
   GetAreaTypesResponse:
     description: "The response body containing all available area-types for a given population-type"
     properties:
@@ -434,3 +542,46 @@ definitions:
       area-type:
         type: string
         example: "LADCD"
+  Dimension:
+    description: "A list of dimensions"
+    type: object
+    properties:
+      count:
+        description: "The number of dimensions returned"
+        readOnly: true
+        type: integer
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/DimensionResponse'
+      limit:
+        description: "The number of dimensions requested"
+        type: integer
+      offset:
+        description: "The first row of dimensions to retrieve, starting at 0. Use this parameter as a pagination mechanism along with the limit parameter"
+        type: integer
+      total_count:
+        description: "The total number of dimensions"
+        readOnly: true
+        type: integer
+  DimensionResponse:
+    description: "The response body containing the information for a dimension"
+    properties:
+      dimension:
+         properties:
+          id:
+            type: string
+          label:
+            type: string
+          total_count:
+            type: integer
+  Base:
+    description: "The response body containing the information for a base variable"
+    properties:
+      name:
+        type: string
+      label:
+        type: string
+    
+            
+
