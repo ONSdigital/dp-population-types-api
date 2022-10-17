@@ -1,11 +1,13 @@
 module github.com/ONSdigital/dp-population-types-api
 
-go 1.18
+go 1.19
 
 // to avoid the following vulnerabilities:
 //     - CVE-2022-29153 # pkg:golang/github.com/hashicorp/consul/api@v1.1.0
 //     - sonatype-2021-1401 # pkg:golang/github.com/miekg/dns@v1.0.14
 replace github.com/spf13/cobra => github.com/spf13/cobra v1.4.0
+
+replace golang.org/x/text => golang.org/x/text v0.3.8
 
 require (
 	github.com/ONSdigital/dp-api-clients-go/v2 v2.184.0
