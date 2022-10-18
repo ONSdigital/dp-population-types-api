@@ -111,7 +111,7 @@ paths:
         200:
           description: "A json list containing non-geography base variables for a dataset"
           schema:
-            $ref: '#/definitions/Dimension'
+            $ref: '#/definitions/GetDimensionResponse'
         401:
           $ref: '#/responses/Unauthorised'
         404:
@@ -141,7 +141,7 @@ paths:
         200:
           description: "A json list containing categorisations for a base variable"
           schema:
-            $ref: '#/definitions/Dimension'
+            $ref: '#/definitions/GetDimensionResponse'
         401:
           $ref: '#/responses/Unauthorised'
         404:
@@ -182,36 +182,6 @@ paths:
           $ref: "#/responses/InternalError"
         502:
           $ref: '#/responses/BadGateway'
-  /population-types/{population-type}/dimensions/{dimension}/parents:
-    get:
-      summary: "Get the parent variables of a categorisation"
-      description: ""
-      produces:
-        - "application/json"
-      parameters:
-        - name: population-type
-          type: string
-          in: path
-          required: true
-        - name: dimension
-          type: string
-          in: path
-          required: true
-      responses:
-        200:
-          description: "The parent variables for a categorisation"
-          schema:
-            $ref: '#/definitions/Dimension'
-        401:
-          $ref: '#/responses/Unauthorised'
-        404:
-          description: "Dataset not found"
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        500:
-          $ref: "#/responses/InternalError"
-        502:
-          $ref: '#/responses/BadGateway'
   /population-types/{population-type}/area-types/{area-type}/areas:
     get:
       parameters:
@@ -233,7 +203,7 @@ paths:
         200:
           description: "Categories for area type returned"
           schema:
-            $ref: '#/definitions/GetAreaResponse'
+            $ref: '#/definitions/GetAreasResponse'
         401:
           $ref: '#/responses/Unauthorised'
         404:
@@ -486,15 +456,6 @@ definitions:
         description: "The total number of population-types"
         readOnly: true
         type: integer
-  GetAreaTypeResponse:
-    description: "The response body containing all available area-types for a given dataset"
-    properties:
-      area-type:
-        allOf:
-          - $ref: '#/definitions/AreaType'
-          - example:
-              id: "electoral_wards"
-              label: "Electoral Wards or Divisions"
   AreaType:
     properties:
       id:
@@ -509,7 +470,7 @@ definitions:
       total_count:
         type: integer
         example: "2"
-  GetAreaResponse:
+  GetAreasResponse:
     description: "The response body containing the information for an area"
     properties:
       count:
@@ -542,7 +503,7 @@ definitions:
       area-type:
         type: string
         example: "LADCD"
-  Dimension:
+  GetDimensionResponse:
     description: "A list of dimensions"
     type: object
     properties:
@@ -553,7 +514,7 @@ definitions:
       items:
         type: array
         items:
-          $ref: '#/definitions/DimensionResponse'
+          $ref: '#/definitions/Dimension'
       limit:
         description: "The number of dimensions requested"
         type: integer
@@ -564,7 +525,7 @@ definitions:
         description: "The total number of dimensions"
         readOnly: true
         type: integer
-  DimensionResponse:
+  Dimension:
     description: "The response body containing the information for a dimension"
     properties:
       dimension:
