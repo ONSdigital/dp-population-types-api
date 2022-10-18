@@ -65,6 +65,7 @@ Feature: Single Area
         }
         """
     Scenario: Variable Not Found
+
         When the cantabular area response is bad request
         And I GET "/population-types/Example/area-types/NOTEXIST/areas/1"
         Then the HTTP status code should be "400"

@@ -133,7 +133,6 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 	}
-
 	cReq := cantabular.GetCategorisationsRequest{
 		Dataset:  req.PopulationType,
 		Variable: req.Variable,
@@ -172,6 +171,74 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
+}
+
+//  GetBase returns the base variables for a given categorisation
+func (h *Dimensions) GetBaseVariable(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	req := contract.GetBaseVariableRequest{
+		PopulationType: chi.URLParam(r, "population-type"),
+		Variable:       chi.URLParam(r, "dimension"),
+	}
+
+	logData := log.Data{
+		"population_type": req.PopulationType,
+		"dimension":       req.Variable,
+	}
+
+	if err := parseRequest(r, &req); err != nil {
+		h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
+			err: errors.Wrap(err, "invalid request"),
+		})
+		return
+	}
+
+	// only return results for published population-types on web
+	if !h.cfg.EnablePrivateEndpoints {
+		if err := h.published(ctx, req.PopulationType); err != nil {
+			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+				err:     errors.Wrap(err, "failed to check published state"),
+				message: "base variable not found",
+				logData: logData,
+			})
+			return
+		}
+	}
+	cReq := cantabular.GetBaseVariableRequest{
+		Dataset:  req.PopulationType,
+		Variable: req.Variable,
+	}
+
+	res, err := h.cantabular.GetBaseVariable(ctx, cReq)
+	if err != nil {
+		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), &Error{
+			err:     errors.Wrap(err, "failed to get base variable"),
+			message: "failed to get base variable",
+			logData: logData,
+		})
+		return
+	}
+
+	resp := contract.GetBaseVariableResponse{}
+
+	if res != nil {
+		if len(res.Dataset.Variables.Edges) == 0 ||
+			len(res.Dataset.Variables.Edges[0].Node.MapFrom) == 0 ||
+			len(res.Dataset.Variables.Edges[0].Node.MapFrom[0].Edges) == 0 {
+			h.respond.Error(ctx, w, http.StatusInternalServerError, &Error{
+				err:     errors.Wrap(err, "cantabular returned unexpected empty list"),
+				message: "failed to get base variable",
+				logData: logData,
+			})
+			return
+		}
+		resp.Name = res.Dataset.Variables.Edges[0].Node.MapFrom[0].Edges[0].Node.Name
+		resp.Label = res.Dataset.Variables.Edges[0].Node.MapFrom[0].Edges[0].Node.Label
+	}
+
+	h.respond.JSON(ctx, w, http.StatusOK, resp)
+
 }
 
 func (h *Dimensions) published(ctx context.Context, populationType string) error {
