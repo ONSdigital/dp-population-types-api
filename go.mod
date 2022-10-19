@@ -7,8 +7,6 @@ go 1.19
 //     - sonatype-2021-1401 # pkg:golang/github.com/miekg/dns@v1.0.14
 replace github.com/spf13/cobra => github.com/spf13/cobra v1.4.0
 
-replace golang.org/x/text => golang.org/x/text v0.3.8
-
 require (
 	github.com/ONSdigital/dp-api-clients-go/v2 v2.184.0
 	github.com/ONSdigital/dp-authorisation v0.2.0
@@ -75,6 +73,6 @@ require (
 	golang.org/x/net v0.0.0-20221002022538-bcab6841153b // indirect
 	golang.org/x/sync v0.0.0-20220929204114-8fcdb60fdcc0 // indirect
 	golang.org/x/sys v0.0.0-20220928140112-f11e5e49a4ec // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/text v0.3.8 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
