@@ -239,7 +239,7 @@ paths:
         200:
           description: "Information for area returned"
           schema:
-            $ref: '#/definitions/Area'
+            $ref: '#/definitions/GetAreaResponse'
         401:
           $ref: '#/responses/Unauthorised'
         404:
@@ -492,6 +492,11 @@ definitions:
         description: "The total number of areas"
         readOnly: true
         type: integer
+  GetAreaResponse:
+    description: "The response body containing the information for an area"
+    properties:
+      area:
+        $ref: '#/definitions/Area'
   Area:
     properties:
       id:
