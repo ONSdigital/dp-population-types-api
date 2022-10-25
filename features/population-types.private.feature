@@ -1,8 +1,8 @@
 Feature: Population types endpoint
   As an API user
-  
+
   I want to know all the population types for Census 2021
-  
+
   So that I can use them to query further data
 
   Background:
@@ -17,14 +17,14 @@ Feature: Population types endpoint
   """
   ["dataset_1", "dataset_2"]
   """
-  
+
   Scenario: The root population-types endpoint should return a list of population types
     When I GET "/population-types"
 
     Then I should receive the following JSON response:
     """
     {
-        "limit": 2,
+        "limit": 20,
         "count": 2,
         "total_count": 2,
         "offset": 0,
@@ -34,9 +34,9 @@ Feature: Population types endpoint
 
   Scenario: If the root population-types endpoint fails, it should return correct errors
     Given cantabular is unresponsive
-    
+
     When I GET "/population-types"
-    
+
     Then I should receive the following JSON response:
     """
     {"errors": ["failed to get population types"]}

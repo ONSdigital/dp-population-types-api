@@ -33,8 +33,13 @@ func NewPopulationTypes(cfg *config.Config, r responder, c cantabularClient, d d
 func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
-	limit := req.URL.Query().Get("limit")
-	offset := req.URL.Query().Get("offset")
+	r := contract.GetPopulationTypesRequest{}
+	if err := parseRequest(req, &r); err != nil {
+		h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
+			err: errors.Wrap(err, "invalid request"),
+		})
+		return
+	}
 
 	ptypes, err := h.cantabular.ListDatasets(ctx)
 	if err != nil {
@@ -49,13 +54,13 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	log.Info(ctx, "population types found", logData)
 	lpt := len(ptypes)
 
-	paginated, limitInt, offsetInt := manualPagination(limit, offset, ptypes)
+	paginated := r.Paginate(ptypes)
 
 	// return all population types on publishing
 	if h.cfg.EnablePrivateEndpoints {
 		h.respond.JSON(ctx, w, http.StatusOK, contract.GetPopulationTypesResponse{
-			PaginationResponse: contract.PaginationResponse{Limit: limitInt, Offset: offsetInt, Count: len(paginated.Items), TotalCount: lpt},
-			PopulationTypes:    paginated,
+			PaginationResponse: contract.PaginationResponse{Limit: r.Limit, Offset: r.Offset, Count: len(paginated.Items), TotalCount: lpt},
+			PopulationTypes:    *paginated,
 		})
 		return
 	}
@@ -77,7 +82,8 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 		published = append(published, p)
 	}
 
-	paginated, limitInt, offsetInt = manualPagination(limit, offset, published)
+	paginated = r.Paginate(ptypes)
+
 	l := len(published)
 	if l == 0 {
 		h.respond.Error(
@@ -90,8 +96,8 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	}
 
 	resp := contract.GetPopulationTypesResponse{
-		PaginationResponse: contract.PaginationResponse{Limit: limitInt, Count: len(paginated.Items), TotalCount: l, Offset: offsetInt},
-		PopulationTypes:    paginated,
+		PaginationResponse: contract.PaginationResponse{Limit: r.Limit, Count: len(paginated.Items), TotalCount: l, Offset: r.Offset},
+		PopulationTypes:    *paginated,
 	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
