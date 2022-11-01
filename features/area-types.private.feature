@@ -73,10 +73,12 @@ Feature: Area Types
           {
                 "id":"city",
                 "label":"City",
+                "description": "",
                 "total_count": 3
           },{
                 "id":"country",
                 "label":"Country",
+                "description": "",
                 "total_count": 2
           }
         ]
@@ -109,10 +111,12 @@ Feature: Area Types
           {
                 "id":"city",
                 "label":"City",
+                "description": "",
                 "total_count": 3
           },{
                 "id":"country",
                 "label":"Country",
+                "description": "",
                 "total_count": 2
           }
         ]

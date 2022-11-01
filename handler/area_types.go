@@ -95,8 +95,10 @@ func (h *AreaTypes) Get(w http.ResponseWriter, r *http.Request) {
 		resp.TotalCount = res.TotalCount
 		for _, edge := range res.Dataset.Variables.Edges {
 			resp.AreaTypes = append(resp.AreaTypes, contract.AreaType{
-				ID:         edge.Node.Name,
-				Label:      edge.Node.Label,
+				ID:          edge.Node.Name,
+				Label:       edge.Node.Label,
+				Description: edge.Node.Description,
+
 				TotalCount: edge.Node.Categories.TotalCount,
 			})
 		}

@@ -57,6 +57,7 @@ Background:
                 {
                     "id": "country",
                     "label": "Country",
+                    "description": "",
                     "total_count": 2
                 }
             ]
