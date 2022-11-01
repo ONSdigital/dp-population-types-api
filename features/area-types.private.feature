@@ -15,6 +15,7 @@ Feature: Area Types
                 "node": {
                   "label": "City",
                    "name":  "city",
+                   "description":  "test",
                    "categories": {
                      "totalCount": 3
                   }
@@ -24,6 +25,7 @@ Feature: Area Types
                 "node": {
                   "name": "country",
                   "label": "Country",
+                   "description":  "test",
                   "categories": {
                     "totalCount": 2
                    },
@@ -34,6 +36,7 @@ Feature: Area Types
                            "node":{
                              "name": "city",
                              "label": "City",
+                             "description":  "test",
                              "filterOnly": "false"
                            }
                          }
@@ -73,12 +76,12 @@ Feature: Area Types
           {
                 "id":"city",
                 "label":"City",
-                "description": "",
+                "description": "test",
                 "total_count": 3
           },{
                 "id":"country",
                 "label":"Country",
-                "description": "",
+                "description": "test",
                 "total_count": 2
           }
         ]
@@ -111,12 +114,12 @@ Feature: Area Types
           {
                 "id":"city",
                 "label":"City",
-                "description": "",
+                "description": "test",
                 "total_count": 3
           },{
                 "id":"country",
                 "label":"Country",
-                "description": "",
+                "description": "test",
                 "total_count": 2
           }
         ]

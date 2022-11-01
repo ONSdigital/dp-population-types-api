@@ -81,12 +81,14 @@ Background:
                             "node": {
                                 "name":  "city",
                                 "label": "City",
+                                "description":  "test",
                                 "isSourceOf": {
                                     "edges": [
                                         {
                                             "node": {
                                                 "name":  "country",
                                                 "label": "Country",
+                                                "description":  "test",
                                                 "categories": {
                                                     "totalCount": 2
                                                 }
@@ -139,12 +141,14 @@ Background:
                             "node": {
                                 "name":  "city",
                                 "label": "City",
+                                "description":  "test",
                                 "isSourceOf": {
                                     "edges": [
                                         {
                                             "node": {
                                                 "name":  "country",
                                                 "label": "Country",
+                                                "description":  "test",
                                                 "categories": {
                                                     "totalCount": 2
                                                 }
