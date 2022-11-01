@@ -1,6 +1,6 @@
 module github.com/ONSdigital/dp-population-types-api
 
-go 1.18
+go 1.19
 
 // to avoid the following vulnerabilities:
 //     - CVE-2022-29153 # pkg:golang/github.com/hashicorp/consul/api@v1.1.0

@@ -98,8 +98,7 @@ func (h *AreaTypes) Get(w http.ResponseWriter, r *http.Request) {
 				ID:          edge.Node.Name,
 				Label:       edge.Node.Label,
 				Description: edge.Node.Description,
-
-				TotalCount: edge.Node.Categories.TotalCount,
+				TotalCount:  edge.Node.Categories.TotalCount,
 			})
 		}
 	}
