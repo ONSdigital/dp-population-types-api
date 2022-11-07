@@ -82,7 +82,7 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 		published = append(published, p)
 	}
 
-	paginated = r.Paginate(ptypes)
+	paginated = r.Paginate(published)
 
 	l := len(published)
 	if l == 0 {
