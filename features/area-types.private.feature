@@ -58,7 +58,7 @@ Feature: Area Types
     ["dataset_1", "dataset_2"]
     """
 
-    When I GET "/population-types/dataset_1/area-types"
+    When I GET "/population-types/dataset_1/area-types?offset=0&limit=20"
 
     Then the HTTP status code should be "200"
 
@@ -94,7 +94,7 @@ Feature: Area Types
     ["dataset_1", "dataset_2"]
     """
 
-    When I GET "/population-types/dataset_1/area-types"
+    When I GET "/population-types/dataset_1/area-types?offset=0&limit=20"
 
     Then the HTTP status code should be "200"
 

@@ -116,6 +116,31 @@ func (c *CantabularClient) GetAreas(_ context.Context, _ cantabular.GetAreasRequ
 
 	return c.GetAreasResponse, nil
 }
+func (c *CantabularClient) GetAreasTotalCount(_ context.Context, _ cantabular.GetAreasRequest) (int, error) {
+	if !c.Healthy {
+		return 0, dperrors.New(
+			errors.New("failed to get areas"),
+			http.StatusNotFound,
+			log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+		)
+	}
+	if c.BadRequest {
+		return 0, dperrors.New(
+			errors.New("bad request"),
+			http.StatusBadRequest,
+			log.Data{"errors": map[string]string{"message": "400 Bad Request: dataset not loaded in this server"}},
+		)
+	}
+	if c.NotFound {
+		return 0, dperrors.New(
+			errors.New("not found"),
+			http.StatusNotFound,
+			log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+		)
+	}
+
+	return c.GetAreasResponse.PaginationResponse.TotalCount, nil
+}
 
 func (c *CantabularClient) GetArea(_ context.Context, _ cantabular.GetAreaRequest) (*cantabular.GetAreaResponse, error) {
 	if !c.Healthy {

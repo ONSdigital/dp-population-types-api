@@ -94,10 +94,36 @@ func (h *Areas) GetAll(w http.ResponseWriter, r *http.Request) {
 			Offset: req.Offset,
 		},
 	}
+	//Cantabular ignores the search criteria to return the total count
+	//To fix the total count when search i.e 'category' is passed in
+	//make a call to GetAreas without the limit and offset to get the full result back
+	//and the cout of nodes will be the actual total count for the passes seach filter
+	var totalCount int
+	if cReq.Category != "" {
+		totalCount, err = h.ctblr.GetAreasTotalCount(ctx, cReq)
+		if err != nil {
+			h.respond.Error(
+				ctx,
+				w,
+				h.ctblr.StatusCode(err),
+				&Error{
+					err:     errors.Wrap(err, "failed to get areas"),
+					message: "failed to get areas",
+					logData: logData,
+				},
+			)
+			return
+		}
+	}
 
 	if res != nil {
 		resp.Count = res.Count
-		resp.TotalCount = res.TotalCount
+		if cReq.Category != "" {
+			resp.TotalCount = totalCount
+		} else {
+			resp.TotalCount = res.TotalCount
+		}
+
 		for _, variable := range res.Dataset.Variables.Edges {
 			for _, category := range variable.Node.Categories.Search.Edges {
 				resp.Areas = append(resp.Areas, contract.Area{

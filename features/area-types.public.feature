@@ -57,7 +57,7 @@ Feature: Area Types
     }
     """
 
-    When I GET "/population-types/Example/area-types"
+    When I GET "/population-types/Example/area-types?offset=0&limit=20"
 
     Then the HTTP status code should be "200"
 

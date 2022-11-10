@@ -59,7 +59,7 @@ Feature: Areas
     }
     """
 
-    And I GET "/population-types/Example/area-types/City/areas"
+    And I GET "/population-types/Example/area-types/City/areas?offset=0&limit=20"
 
     Then I should receive the following JSON response:
       """
@@ -124,7 +124,7 @@ Feature: Areas
     }
     """
 
-    And I GET "/population-types/Example/area-types/City/areas?q=London"
+    And I GET "/population-types/Example/area-types/City/areas?offset=0&limit=20&q=London"
 
     Then I should receive the following JSON response:
     """
@@ -219,7 +219,7 @@ Feature: Areas
 
     """
 
-    And I GET "/population-types/Example/area-types/City/areas"
+    And I GET "/population-types/Example/area-types/City/areas?offset=0&limit=20"
 
     Then I should receive the following JSON response:
     """
@@ -298,7 +298,7 @@ Feature: Areas
     }
     """
 
-    And I GET "/population-types/Example/area-types/City/areas?q=rio"
+    And I GET "/population-types/Example/area-types/City/areas?offset=0&limit=20&q=rio"
 
     Then I should receive the following JSON response:
     """

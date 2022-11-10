@@ -54,7 +54,7 @@ Feature: Dimensionas
     }
     """
 
-    When I GET "/population-types/Example/dimensions"
+    When I GET "/population-types/Example/dimensions?offset=0&limit=20"
 
     Then the HTTP status code should be "200"
 
@@ -97,7 +97,7 @@ Feature: Dimensionas
     }
     """
 
-    When I GET "/population-types/Example/dimensions"
+    When I GET "/population-types/Example/dimensions?offset=0&limit=20"
 
     Then the HTTP status code should be "200"
 

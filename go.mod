@@ -7,6 +7,8 @@ go 1.19
 //     - sonatype-2021-1401 # pkg:golang/github.com/miekg/dns@v1.0.14
 replace github.com/spf13/cobra => github.com/spf13/cobra v1.4.0
 
+replace github.com/ONSdigital/dp-api-clients-go => /home/jitendar/ons/dp-api-clients-go
+
 require (
 	github.com/ONSdigital/dp-api-clients-go/v2 v2.193.0
 	github.com/ONSdigital/dp-authorisation v0.2.0
@@ -24,9 +26,9 @@ require (
 	github.com/smartystreets/goconvey v1.7.2
 )
 
-require github.com/ONSdigital/dp-api-clients-go v1.43.0 // indirect
 
 require (
+	github.com/ONSdigital/dp-api-clients-go v1.43.0 // indirect
 	github.com/ONSdigital/dp-mongodb-in-memory v1.3.1 // indirect
 	github.com/ONSdigital/dp-rchttp v1.0.0 // indirect
 	github.com/ONSdigital/go-ns v0.0.0-20210916104633-ac1c1c52327e // indirect
