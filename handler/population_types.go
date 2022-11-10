@@ -33,6 +33,14 @@ func NewPopulationTypes(cfg *config.Config, r responder, c cantabularClient, d d
 func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
+	r := contract.GetPopulationTypesRequest{}
+	if err := parseRequest(req, &r); err != nil {
+		h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
+			err: errors.Wrap(err, "invalid request"),
+		})
+		return
+	}
+
 	ptypes, err := h.cantabular.ListDatasets(ctx)
 	if err != nil {
 		h.respond.Error(ctx, w, dperrors.StatusCode(err), &Error{
@@ -46,11 +54,13 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	log.Info(ctx, "population types found", logData)
 	lpt := len(ptypes)
 
+	paginated := r.Paginate(ptypes)
+
 	// return all population types on publishing
 	if h.cfg.EnablePrivateEndpoints {
 		h.respond.JSON(ctx, w, http.StatusOK, contract.GetPopulationTypesResponse{
-			PaginationResponse: contract.PaginationResponse{Limit: lpt, Count: lpt, TotalCount: lpt},
-			PopulationTypes:    contract.NewPopulationTypes(ptypes),
+			PaginationResponse: contract.PaginationResponse{Limit: r.Limit, Offset: r.Offset, Count: len(paginated.Items), TotalCount: lpt},
+			PopulationTypes:    *paginated,
 		})
 		return
 	}
@@ -72,6 +82,8 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 		published = append(published, p)
 	}
 
+	paginated = r.Paginate(published)
+
 	l := len(published)
 	if l == 0 {
 		h.respond.Error(
@@ -84,8 +96,8 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	}
 
 	resp := contract.GetPopulationTypesResponse{
-		PaginationResponse: contract.PaginationResponse{Limit: l, Count: l, TotalCount: l},
-		PopulationTypes:    contract.NewPopulationTypes(published),
+		PaginationResponse: contract.PaginationResponse{Limit: r.Limit, Count: len(paginated.Items), TotalCount: l, Offset: r.Offset},
+		PopulationTypes:    *paginated,
 	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
