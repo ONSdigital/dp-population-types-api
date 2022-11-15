@@ -18,7 +18,7 @@ func TestManualPagination(t *testing.T) {
 			offset, limit := 0, 20
 			r := contract.GetPopulationTypesRequest{
 				QueryParams: contract.QueryParams{
-					Limit:  limit,
+					Limit:  &limit,
 					Offset: offset,
 				},
 			}
@@ -32,7 +32,7 @@ func TestManualPagination(t *testing.T) {
 			offset, limit := 100, 100
 			r := contract.GetPopulationTypesRequest{
 				QueryParams: contract.QueryParams{
-					Limit:  limit,
+					Limit:  &limit,
 					Offset: offset,
 				},
 			}

@@ -19,7 +19,7 @@ Feature: Population types endpoint
   """
 
   Scenario: The root population-types endpoint should return a list of population types
-    When I GET "/population-types?limit=20"
+    When I GET "/population-types"
 
     Then I should receive the following JSON response:
     """

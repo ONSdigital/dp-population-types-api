@@ -105,7 +105,7 @@ Background:
         }
         """
 
-        When I GET "/population-types/Example/area-types/city/parents?offset=0&limit=20"
+        When I GET "/population-types/Example/area-types/city/parents"
 
         Then I should receive the following JSON response:
         """

@@ -21,14 +21,14 @@ func NewPopulationTypes(names []string) PopulationTypes {
 }
 
 func (r *GetPopulationTypesRequest) Paginate(types []string) *PopulationTypes {
-	endInt := r.Offset + r.Limit
+	endInt := r.Offset + *r.Limit
 
 	if r.Offset > len(types) {
 		r.Offset = 0
 	}
 
-	if r.Limit == 0 {
-		r.Limit = 20
+	if r.Limit == nil {
+		r.Limit = &defaultLimit
 	}
 
 	if endInt > len(types) {

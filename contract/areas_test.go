@@ -9,10 +9,12 @@ import (
 )
 
 func TestGetAreasRequestValid(t *testing.T) {
+	var limit20 = 20
+	var negativeLimit = -2
 	Convey("Given a valid GetAreasRequest object", t, func() {
 		req := contract.GetAreasRequest{
 			QueryParams: contract.QueryParams{
-				Limit:  20,
+				Limit:  &limit20,
 				Offset: 0,
 			},
 			Category: "hello",
@@ -27,7 +29,7 @@ func TestGetAreasRequestValid(t *testing.T) {
 	Convey("Given an invalid value for limit is given", t, func() {
 		req := contract.GetAreasRequest{
 			QueryParams: contract.QueryParams{
-				Limit:  -20,
+				Limit:  &negativeLimit,
 				Offset: 0,
 			},
 			Category: "hello",
@@ -42,7 +44,7 @@ func TestGetAreasRequestValid(t *testing.T) {
 	Convey("Given an invalid value for offset is given", t, func() {
 		req := contract.GetAreasRequest{
 			QueryParams: contract.QueryParams{
-				Limit:  20,
+				Limit:  &limit20,
 				Offset: -10,
 			},
 			Category: "hello",
@@ -57,7 +59,7 @@ func TestGetAreasRequestValid(t *testing.T) {
 	Convey("Given an URL encoded value is given for Category", t, func() {
 		req := contract.GetAreasRequest{
 			QueryParams: contract.QueryParams{
-				Limit:  20,
+				Limit:  &limit20,
 				Offset: 0,
 			},
 			Category: "hello%20there",
@@ -76,7 +78,7 @@ func TestGetAreasRequestValid(t *testing.T) {
 	Convey("Given an incorecctly encoded URL value is given for Category", t, func() {
 		req := contract.GetAreasRequest{
 			QueryParams: contract.QueryParams{
-				Limit:  20,
+				Limit:  &limit20,
 				Offset: 0,
 			},
 			Category: "North%&@w20East",

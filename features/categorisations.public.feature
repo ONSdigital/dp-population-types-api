@@ -45,7 +45,7 @@ Background:
     }
     """
 
-    When I GET "/population-types/Example/dimensions/hh_size/categorisations?offset=0&limit=20"
+    When I GET "/population-types/Example/dimensions/hh_size/categorisations"
 
     Then the HTTP status code should be "200"
 
@@ -73,7 +73,7 @@ Background:
     }
     """
 
-    When I GET "/population-types/Example/dimensions/hh_size/categorisations?offset=0&limit=20"
+    When I GET "/population-types/Example/dimensions/hh_size/categorisations"
 
     Then I should receive the following JSON response:
     """

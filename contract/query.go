@@ -2,17 +2,19 @@ package contract
 
 import "github.com/pkg/errors"
 
-const (
-	defaultLimit = 20
-)
+var defaultLimit = 20
 
 type QueryParams struct {
-	Limit  int `schema:"limit"`
-	Offset int `schema:"offset"`
+	Limit  *int `schema:"limit, omitempty"`
+	Offset int  `schema:"offset"`
 }
 
 func (q *QueryParams) Valid() error {
-	if q.Limit < 0 {
+	if q.Limit == nil {
+		q.Limit = &defaultLimit
+	}
+
+	if *q.Limit < 0 {
 		return errors.New("'limit' parameter must not be less than 0")
 	}
 

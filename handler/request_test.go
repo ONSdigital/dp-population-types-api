@@ -9,7 +9,7 @@ import (
 )
 
 func TestParseRequest(t *testing.T) {
-
+	limit := 10
 	Convey("Given a query param that is not in data structure", t, func() {
 		req, err := http.NewRequest("GET", "http://localhost/areas?offset=4&limit=10&X=test", nil)
 		So(err, ShouldBeNil)
@@ -18,7 +18,7 @@ func TestParseRequest(t *testing.T) {
 		So(err, ShouldNotBeNil)
 		So(ar, ShouldResemble, contract.GetAreasRequest{
 			QueryParams: contract.QueryParams{
-				Limit:  10,
+				Limit:  &limit,
 				Offset: 4,
 			},
 			Category: "", //only populates if available
