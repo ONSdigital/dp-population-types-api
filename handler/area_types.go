@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"net/http"
+	"sort"
 	"strings"
 
 	"github.com/go-chi/chi/v5"
@@ -101,6 +102,9 @@ func (h *AreaTypes) Get(w http.ResponseWriter, r *http.Request) {
 				TotalCount:  edge.Node.Categories.TotalCount,
 			})
 		}
+		sort.Slice(resp.AreaTypes, func(i, j int) bool {
+			return resp.AreaTypes[i].TotalCount < resp.AreaTypes[j].TotalCount
+		})
 	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)

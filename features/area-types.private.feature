@@ -74,15 +74,16 @@ Feature: Area Types
         "total_count": 2,
         "items":[
           {
-                "id":"city",
-                "label":"City",
-                "description": "test",
-                "total_count": 3
-          },{
                 "id":"country",
                 "label":"Country",
                 "description": "test",
                 "total_count": 2
+          },
+          {
+                "id":"city",
+                "label":"City",
+                "description": "test",
+                "total_count": 3
           }
         ]
     }
@@ -112,15 +113,16 @@ Feature: Area Types
         "total_count": 2,
         "items":[
           {
-                "id":"city",
-                "label":"City",
-                "description": "test",
-                "total_count": 3
-          },{
                 "id":"country",
                 "label":"Country",
                 "description": "test",
                 "total_count": 2
+          },
+          {
+                "id":"city",
+                "label":"City",
+                "description": "test",
+                "total_count": 3
           }
         ]
     }

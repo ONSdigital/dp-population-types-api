@@ -14,11 +14,21 @@ Feature: Area Types
               "edges": [
                 {
                   "node": {
+                    "label": "Region",
+                    "name":  "region",
+                    "description":  "test",
+                    "categories": {
+                      "totalCount": 348
+                    }
+                  }
+                },
+                {
+                  "node": {
                     "label": "City",
                     "name":  "city",
                     "description":  "test",
                     "categories": {
-                      "totalCount": 3
+                      "totalCount": 2
                     }
                   }
                 },
@@ -28,7 +38,7 @@ Feature: Area Types
                     "label": "Country",
                     "description": "test",
                     "categories": {
-                      "totalCount": 2
+                      "totalCount": 3
                     },
                     "mapFrom":[
                       {
@@ -76,13 +86,19 @@ Feature: Area Types
                 "id":"city",
                 "label":"City",
                 "description": "test",
-                "total_count": 3
+                "total_count": 2
           },
           {
                 "id":"country",
                 "label":"Country",
                 "description": "test",
-                "total_count": 2
+                "total_count": 3
+          },
+          {
+                "id":"region",
+                "label":"Region",
+                "description": "test",
+                "total_count": 348
           }
         ]
     }
