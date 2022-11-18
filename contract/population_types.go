@@ -28,7 +28,7 @@ func (r *GetPopulationTypesRequest) Paginate(types []string) *PopulationTypes {
 	}
 
 	if r.Limit == 0 {
-		r.Limit = 20
+		r.Limit = defaultLimit
 	}
 
 	if endInt > len(types) {
