@@ -91,9 +91,10 @@ func (h *Dimensions) GetAll(w http.ResponseWriter, r *http.Request) {
 		resp.TotalCount = res.TotalCount
 		for _, edge := range res.Dataset.Variables.Search.Edges {
 			resp.Dimensions = append(resp.Dimensions, contract.Dimension{
-				ID:         edge.Node.Name,
-				Label:      edge.Node.Label,
-				TotalCount: edge.Node.Categories.TotalCount,
+				ID:          edge.Node.Name,
+				Label:       edge.Node.Label,
+				Description: edge.Node.Description,
+				TotalCount:  edge.Node.Categories.TotalCount,
 			})
 		}
 	}
@@ -173,7 +174,7 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }
 
-//  GetBase returns the base variables for a given categorisation
+// GetBase returns the base variables for a given categorisation
 func (h *Dimensions) GetBaseVariable(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 

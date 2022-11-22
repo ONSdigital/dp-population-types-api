@@ -2,9 +2,10 @@ package contract
 
 // Dimension is an area-type model with ID and Label
 type Dimension struct {
-	ID         string `json:"id"`
-	Label      string `json:"label"`
-	TotalCount int    `json:"total_count"`
+	ID          string `json:"id"`
+	Label       string `json:"label"`
+	Description string `json:"description"`
+	TotalCount  int    `json:"total_count"`
 }
 
 type GetDimensionsRequest struct {

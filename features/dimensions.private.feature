@@ -16,6 +16,7 @@ Feature: Dimensionas
                             "node": {
                                 "label": "Household size (31 categories)",
                                 "name":  "hh_size",
+                                "description": "description",
                                 "categories": {
                                     "totalCount": 31
                                 }
@@ -25,6 +26,7 @@ Feature: Dimensionas
                             "node": {
                                 "name": "hh_tenure",
                                 "label": "Tenure of household (11 categories)",
+                                "description": "description",
                                 "categories": {
                                     "totalCount": 11
                                 }
@@ -69,11 +71,13 @@ Feature: Dimensionas
             {
                 "id": "hh_size",
                 "label": "Household size (31 categories)",
+                "description": "description",
                 "total_count": 31
             },
             {
                 "id": "hh_tenure",
                 "label": "Tenure of household (11 categories)",
+                "description": "description",
                 "total_count": 11
             }
         ]
@@ -112,11 +116,13 @@ Feature: Dimensionas
             {
                 "id": "hh_size",
                 "label": "Household size (31 categories)",
+                "description": "description",
                 "total_count": 31
             },
             {
                 "id": "hh_tenure",
                 "label": "Tenure of household (11 categories)",
+                "description": "description",
                 "total_count": 11
             }
         ]
