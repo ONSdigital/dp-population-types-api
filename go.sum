@@ -46,6 +46,8 @@ github.com/ONSdigital/dp-api-clients-go v1.43.0 h1:0982P/YxnYXvba1RhEcFmwF3xywC4
 github.com/ONSdigital/dp-api-clients-go v1.43.0/go.mod h1:V5MfINik+o3OAF985UXUoMjXIfrZe3JKYa5AhZn5jts=
 github.com/ONSdigital/dp-api-clients-go/v2 v2.198.0 h1:5PXFehOKLj497UXP9KTb3It5VWOGQSBDrZoR5ZI63nc=
 github.com/ONSdigital/dp-api-clients-go/v2 v2.198.0/go.mod h1:JhWrjETosIKYjbLoa3d19QJlKv7dx+/+x09qg355Rxg=
+github.com/ONSdigital/dp-api-clients-go/v2 v2.199.0 h1:OZ2AMM29VQj4jKCFHa2vb+o2wZKguyVYwJ3Wq3Bock4=
+github.com/ONSdigital/dp-api-clients-go/v2 v2.199.0/go.mod h1:JhWrjETosIKYjbLoa3d19QJlKv7dx+/+x09qg355Rxg=
 github.com/ONSdigital/dp-authorisation v0.2.0 h1:QVjTUSR3c1swZwP7lMbvnBsh4Je9oc54eGzgwPOvHOc=
 github.com/ONSdigital/dp-authorisation v0.2.0/go.mod h1:Tg3BiohT3+bRv4vr4aid/1Rf+S3eXLUI8oHbOLFqFpQ=
 github.com/ONSdigital/dp-component-test v0.8.0 h1:bXl+doGHCyL7cFqSZz3fBqFhhrQxqc6IG7VKuhqKwN4=
