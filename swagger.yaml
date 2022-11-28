@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  title: "dp-population-types-api"
+  title: "Explore information relating to Census 2021"
   description: "Exposes representation of the population types resources which support selection of datasets exposed elsewhere"
   version: 1.0.0
   license:
@@ -54,9 +54,8 @@ paths:
       - $ref: '#/parameters/offset'
       tags:
         - "Public"
-        - "Private"
       summary: "Get all population types relevant to Census"
-      description: "Retrieves a list of cantabular population types for Census"
+      description: "Retrieves a list of population types for Census"
       security:
         - InternalAPIKey: []
       responses:
@@ -70,7 +69,7 @@ paths:
           $ref: "#/responses/InternalError"
   /population-types/{population-type}/area-types:
     get:
-      summary: "Get list of area types for given dataset "
+      summary: "Get list of area types for given population type "
       description: ""
       produces:
         - "application/json"
@@ -99,6 +98,8 @@ paths:
   /population-types/{population-type}/dimensions:
     get:
       summary: "Get list of non-geography base variables for given dataset "
+      tags:
+        - "Private"
       description: ""
       produces:
         - "application/json"
@@ -125,6 +126,8 @@ paths:
   /population-types/{population-type}/dimensions/{dimension}/categorisations:
     get:
       summary: "Get list of categorisations for a base level variable"
+      tags:
+        - "Private"
       description: ""
       produces:
         - "application/json"
@@ -155,6 +158,8 @@ paths:
   /population-types/{population-type}/dimensions/{dimension}/base:
     get:
       summary: "Get the base variable for a categorisation"
+      tags:
+        - "Private"
       description: ""
       produces:
         - "application/json"
