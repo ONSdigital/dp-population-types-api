@@ -198,10 +198,11 @@ func (h *AreaTypes) GetParentAreaCount(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	cReq := cantabular.GetParentAreaCountRequest{
-		Dataset:  chi.URLParam(r, "population-type"),
-		Variable: chi.URLParam(r, "area-type"),
-		Parent:   chi.URLParam(r, "parent-area-type"),
-		Codes:    strings.Split(r.URL.Query().Get("areas"), ","),
+		Dataset:   chi.URLParam(r, "population-type"),
+		Variable:  chi.URLParam(r, "area-type"),
+		Parent:    chi.URLParam(r, "parent-area-type"),
+		SVariable: r.URL.Query().Get("svar"),
+		Codes:     strings.Split(r.URL.Query().Get("areas"), ","),
 	}
 
 	logData := log.Data{
