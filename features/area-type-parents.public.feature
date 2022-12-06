@@ -227,6 +227,13 @@ Background:
         1
         """
 
+        When I GET "/population-types/Example/area-types/city/parents/LADCD/areas-count?areas=E12000001,E12000002&svar=hh_tenure_9a"
+
+        Then I should receive the following JSON response:
+        """
+        1
+        """
+
         And the HTTP status code should be "200"
 
     Scenario:Getting parent area count but Cantabular returns an error

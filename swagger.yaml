@@ -299,6 +299,10 @@ paths:
           in: path
           required: true
         - $ref: '#/parameters/areas'
+        - name: svar
+          type: string
+          in: query
+          description: "optional supplementary variable, required for getting counts from pre-built Cantabular tables"
       responses:
         200:
           description: "Count returned successfully"
