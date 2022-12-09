@@ -1,5 +1,11 @@
 package contract
 
+import (
+	"net/url"
+
+	"github.com/pkg/errors"
+)
+
 // Dimension is an area-type model with ID and Label
 type Dimension struct {
 	ID          string `json:"id"`
@@ -24,6 +30,19 @@ type GetCategorisationsRequest struct {
 	QueryParams
 	PopulationType string
 	Variable       string
+}
+
+func (r *GetDimensionsRequest) Valid() error {
+	var err error
+	if r.SearchText, err = url.QueryUnescape(r.SearchText); err != nil {
+		return errors.New("invalid query string")
+	}
+
+	if err := r.QueryParams.Valid(); err != nil {
+		return errors.Wrap(err, "invalid query pameters")
+	}
+
+	return nil
 }
 
 type GetCategorisationsResponse struct {
