@@ -25,4 +25,18 @@ func TestParseRequest(t *testing.T) {
 		})
 	})
 
+	Convey("Given a dimensions request with search query param", t, func() {
+		req, err := http.NewRequest("GET", "http://localhost/population-types/dummy_data_households/dimensions?limit=1000&offset=0&q=household%2Bdeprivation", nil)
+		So(err, ShouldBeNil)
+		var ar contract.GetDimensionsRequest
+		err = parseRequest(req, &ar)
+		So(err, ShouldBeNil)
+		So(ar, ShouldResemble, contract.GetDimensionsRequest{
+			QueryParams: contract.QueryParams{
+				Limit:  1000,
+				Offset: 0,
+			},
+			SearchText: "household deprivation", //only populates if available
+		})
+	})
 }
