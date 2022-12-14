@@ -95,6 +95,38 @@ paths:
           $ref: "#/responses/InternalError"
         502:
           $ref: '#/responses/BadGateway'
+  /population-types/{population-type}/datasets/{dataset-id}/area-types:
+    get:
+      summary: "Get list of area types for a dataset."
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - $ref: '#/parameters/page_limit'
+        - $ref: '#/parameters/offset'
+        - name: population-type
+          type: string
+          in: path
+          required: true
+        - name: dataset-id
+          type: string
+          in: path
+          required: true
+      responses:
+        200:
+          description: "area types returned successfully"
+          schema:
+            $ref: '#/definitions/GetAreaTypesResponse'
+        401:
+          $ref: '#/responses/Unauthorised'
+        404:
+          description: "Dataset not found"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          $ref: "#/responses/InternalError"
+        502:
+          $ref: '#/responses/BadGateway'
   /population-types/{population-type}/dimensions:
     get:
       summary: "Get list of non-geography base variables for given dataset "
