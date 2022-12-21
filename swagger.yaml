@@ -144,7 +144,7 @@ paths:
         200:
           description: "A json list containing categorisations for a base variable"
           schema:
-            $ref: '#/definitions/GetDimensionResponse'
+            $ref: '#/definitions/GetCategorisationResponse'
         401:
           $ref: '#/responses/Unauthorised'
         404:
@@ -539,6 +539,28 @@ definitions:
         description: "The total number of dimensions"
         readOnly: true
         type: integer
+  GetCategorisationResponse:
+    description: "A list of categorisations"
+    type: object
+    properties:
+      count:
+        description: "The number of categorisations returned"
+        readOnly: true
+        type: integer
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Categorisation'
+      limit:
+        description: "The number of categorisations requested"
+        type: integer
+      offset:
+        description: "The first row of categorisations to retrieve, starting at 0. Use this parameter as a pagination mechanism along with the limit parameter"
+        type: integer
+      total_count:
+        description: "The total number of categorisations"
+        readOnly: true
+        type: integer
   Dimension:
     description: "The response body containing the information for a dimension"
     properties:
@@ -550,10 +572,32 @@ definitions:
             type: string
           total_count:
             type: integer
+  Categorisation:
+    description: "The response body containing the information for a categorisation"
+    properties:
+      categorisation:
+         properties:
+          id:
+            type: string
+          label:
+            type: string
+          categories:
+            type: array
+            items:
+              $ref: '#/definitions/Category'
+          total_count:
+            type: integer
   Base:
     description: "The response body containing the information for a base variable"
     properties:
       name:
+        type: string
+      label:
+        type: string
+  Category:
+    description: "The response body containing the information for a category"
+    properties:
+      code:
         type: string
       label:
         type: string
