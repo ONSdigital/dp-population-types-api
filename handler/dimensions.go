@@ -163,11 +163,33 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 	if res != nil {
 		resp.Count = res.Count
 		resp.TotalCount = res.TotalCount
-		for _, edge := range res.Dataset.Variables.Search.Edges {
-			resp.Items = append(resp.Items, contract.Category{
-				Name:  edge.Node.Name,
-				Label: edge.Node.Label,
-			})
+		for _, edge := range res.Dataset.Variables.Edges {
+			// Check if the mapFrom array is populated, if so it is not the base variable and the results will be here
+			if len(edge.Node.MapFrom) > 0 {
+				for _, mapFrom := range edge.Node.MapFrom {
+
+					for _, mapEdge := range mapFrom.Edges {
+						resp.TotalCount = mapEdge.Node.IsSourceOf.TotalCount
+						for _, isSourceOf := range mapEdge.Node.IsSourceOf.Edges {
+
+							resp.Items = append(resp.Items, contract.Category{
+								Name:  isSourceOf.Node.Name,
+								Label: isSourceOf.Node.Label,
+							})
+						}
+					}
+				}
+			} else {
+				// This is the base variable that is queried so the categorisations will be in the IsSourceOfArray
+				resp.TotalCount = edge.Node.IsSourceOf.TotalCount
+				for _, sourceOf := range edge.Node.IsSourceOf.Edges {
+					resp.Items = append(resp.Items, contract.Category{
+						Name:  sourceOf.Node.Name,
+						Label: sourceOf.Node.Label,
+					})
+				}
+			}
+
 		}
 	}
 

@@ -7,33 +7,32 @@ Background:
     And the following categorisations response is available from Cantabular:
     """
     {
-        "count": 1,
-        "total_count": 1,
-        "dataset": {
-        "variables": {
-            "search": {
-                "edges": [
+            "count": 0,
+            "total_count": 0,
+            "dataset": {
+                "variables": {  
+                    "edges": [
                     {
                         "node": {
-                            "categories": {
-                                "edges": [
-                                    {
-                                        "node": {
-                                            "label": "label 1",
-                                            "code": "code 1"
-                                        }
-                                    }
-                                ]
-                            },
-                            "name": "name 2",
-                            "label": "label 2"
+                        "isSourceOf": {
+                            "totalCount": 1,
+                            "edges": [
+                            {
+                                "node": {
+                                "label": "label 2",
+                                "name": "name 2"
+                                }
+                            }
+                            ]
+                        },
+                        
+                        "mapFrom": []
                         }
                     }
-                    
-                ]
+                    ]
+                }
+                
             }
-        }
-    }
     }
     """
 
@@ -54,7 +53,7 @@ Background:
         {
             "limit": 20,
 	        "offset": 0,
-	        "count": 1,
+	        "count": 0,
 	        "total_count": 1,
             "items": [
                 {
