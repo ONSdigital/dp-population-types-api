@@ -25,6 +25,16 @@ Background:
                             "edges": [
                             {
                                 "node": {
+                                "categories": {
+                                   "edges": [
+                                      {
+                                         "node": {
+                                           "code": "1",
+                                           "label": "category 1"
+                                          }
+                                       }
+                                    ]
+                                    },
                                 "label": "label 1",
                                 "name": "code 1"
                                 }
@@ -53,8 +63,12 @@ Background:
 	        "total_count": 1,
             "items": [
                 {
-                    "name": "code 1",
-                    "label": "label 1"
+                    "id": "code 1",
+                    "label": "label 1",
+                    "categories": [{
+                         "code": "1",
+                         "label": "category 1"
+                    }]
                 }
             ]
         }

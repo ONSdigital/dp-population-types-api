@@ -51,7 +51,13 @@ type GetCategorisationsResponse struct {
 }
 
 type Category struct {
-	Name  string `json:"name"`
+	Id         string              `json:"id"`
+	Label      string              `json:"label"`
+	Categories []DimensionCategory `json:"categories"`
+}
+
+type DimensionCategory struct {
+	Code  string `json:"code"`
 	Label string `json:"label"`
 }
 

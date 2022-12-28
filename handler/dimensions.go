@@ -172,9 +172,18 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 						resp.TotalCount = mapEdge.Node.IsSourceOf.TotalCount
 						for _, isSourceOf := range mapEdge.Node.IsSourceOf.Edges {
 
+							cats := []contract.DimensionCategory{}
+							for _, categories := range isSourceOf.Node.Categories.Edges {
+								cats = append(cats, contract.DimensionCategory{
+									Code:  categories.Node.Code,
+									Label: categories.Node.Label,
+								})
+							}
+
 							resp.Items = append(resp.Items, contract.Category{
-								Name:  isSourceOf.Node.Name,
-								Label: isSourceOf.Node.Label,
+								Id:         isSourceOf.Node.Name,
+								Label:      isSourceOf.Node.Label,
+								Categories: cats,
 							})
 						}
 					}
@@ -183,9 +192,19 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 				// This is the base variable that is queried so the categorisations will be in the IsSourceOfArray
 				resp.TotalCount = edge.Node.IsSourceOf.TotalCount
 				for _, sourceOf := range edge.Node.IsSourceOf.Edges {
+
+					cats := []contract.DimensionCategory{}
+					for _, categories := range sourceOf.Node.Categories.Edges {
+						cats = append(cats, contract.DimensionCategory{
+							Code:  categories.Node.Code,
+							Label: categories.Node.Label,
+						})
+					}
+
 					resp.Items = append(resp.Items, contract.Category{
-						Name:  sourceOf.Node.Name,
-						Label: sourceOf.Node.Label,
+						Id:         sourceOf.Node.Name,
+						Label:      sourceOf.Node.Label,
+						Categories: cats,
 					})
 				}
 			}
