@@ -70,7 +70,7 @@ Background:
                     "id": "name 2",
                     "label": "label 2",
                     "categories": [{
-                         "code": "2",
+                         "id": "2",
                          "label": "category 2"
                     }]
                 }

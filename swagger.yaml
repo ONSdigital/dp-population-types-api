@@ -597,7 +597,7 @@ definitions:
   Category:
     description: "The response body containing the information for a category"
     properties:
-      code:
+      id:
         type: string
       label:
         type: string

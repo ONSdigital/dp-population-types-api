@@ -57,7 +57,7 @@ type Category struct {
 }
 
 type DimensionCategory struct {
-	Code  string `json:"code"`
+	ID    string `json:"id"`
 	Label string `json:"label"`
 }
 

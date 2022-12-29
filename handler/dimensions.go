@@ -175,7 +175,7 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 							cats := []contract.DimensionCategory{}
 							for _, categories := range isSourceOf.Node.Categories.Edges {
 								cats = append(cats, contract.DimensionCategory{
-									Code:  categories.Node.Code,
+									ID:    categories.Node.Code,
 									Label: categories.Node.Label,
 								})
 							}
@@ -196,7 +196,7 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 					cats := []contract.DimensionCategory{}
 					for _, categories := range sourceOf.Node.Categories.Edges {
 						cats = append(cats, contract.DimensionCategory{
-							Code:  categories.Node.Code,
+							ID:    categories.Node.Code,
 							Label: categories.Node.Label,
 						})
 					}

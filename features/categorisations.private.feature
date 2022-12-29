@@ -66,7 +66,7 @@ Background:
                     "id": "code 1",
                     "label": "label 1",
                     "categories": [{
-                         "code": "1",
+                         "id": "1",
                          "label": "category 1"
                     }]
                 }
