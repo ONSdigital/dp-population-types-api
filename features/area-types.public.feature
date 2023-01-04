@@ -19,7 +19,12 @@ Feature: Area Types
                     "description":  "test",
                     "categories": {
                       "totalCount": 348
-                    }
+                    },
+                    "meta": {
+                    "ONS_Variable": {
+                      "Geography_Hierarchy_Order": "200"
+                     }
+                   }
                   }
                 },
                 {
@@ -29,7 +34,12 @@ Feature: Area Types
                     "description":  "test",
                     "categories": {
                       "totalCount": 2
-                    }
+                    },
+                    "meta": {
+                    "ONS_Variable": {
+                      "Geography_Hierarchy_Order": "300"
+                     }
+                   }
                   }
                 },
                 {
@@ -52,7 +62,12 @@ Feature: Area Types
                           }
                         ]
                       }
-                    ]
+                    ],
+                  "meta": {
+                    "ONS_Variable": {
+                      "Geography_Hierarchy_Order": "100"
+                     }
+                   }
                   }
                 }
               ]
@@ -86,19 +101,22 @@ Feature: Area Types
                 "id":"city",
                 "label":"City",
                 "description": "test",
-                "total_count": 2
-          },
-          {
-                "id":"country",
-                "label":"Country",
-                "description": "test",
-                "total_count": 3
+                "total_count": 2,
+                "geography_hierarchy_order": 300
           },
           {
                 "id":"region",
                 "label":"Region",
                 "description": "test",
-                "total_count": 348
+                "total_count": 348,
+                "geography_hierarchy_order": 200
+          },
+          {
+                "id":"country",
+                "label":"Country",
+                "description": "test",
+                "total_count": 3,
+                "geography_hierarchy_order": 100
           }
         ]
     }

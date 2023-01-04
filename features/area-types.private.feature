@@ -18,7 +18,12 @@ Feature: Area Types
                    "description":  "test",
                    "categories": {
                      "totalCount": 3
-                  }
+                  },
+                  "meta": {
+                    "ONS_Variable": {
+                      "Geography_Hierarchy_Order": "100"
+                     }
+                   }
                 }
               },
               {
@@ -42,7 +47,12 @@ Feature: Area Types
                          }
                        ]
                      }
-                   ]
+                   ],
+                   "meta": {
+                     "ONS_Variable": {
+                       "Geography_Hierarchy_Order": "200"
+                     }
+                   }
                  }
                }
              ]
@@ -77,13 +87,15 @@ Feature: Area Types
                 "id":"country",
                 "label":"Country",
                 "description": "test",
-                "total_count": 2
+                "total_count": 2,
+                "geography_hierarchy_order": 200
           },
           {
                 "id":"city",
                 "label":"City",
                 "description": "test",
-                "total_count": 3
+                "total_count": 3,
+                "geography_hierarchy_order": 100
           }
         ]
     }
@@ -116,13 +128,15 @@ Feature: Area Types
                 "id":"country",
                 "label":"Country",
                 "description": "test",
-                "total_count": 2
+                "total_count": 2,
+                "geography_hierarchy_order": 200
           },
           {
                 "id":"city",
                 "label":"City",
                 "description": "test",
-                "total_count": 3
+                "total_count": 3,
+                "geography_hierarchy_order": 100
           }
         ]
     }

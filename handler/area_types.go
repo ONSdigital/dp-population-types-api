@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/go-chi/chi/v5"
@@ -94,16 +95,30 @@ func (h *AreaTypes) Get(w http.ResponseWriter, r *http.Request) {
 	if res != nil {
 		resp.Count = res.Count
 		resp.TotalCount = res.TotalCount
+
 		for _, edge := range res.Dataset.Variables.Edges {
+
+			i := 0
+			if len(edge.Node.Meta.ONSVariable.GeographyHierarchyOrder) > 0 {
+				i, err = strconv.Atoi(edge.Node.Meta.ONSVariable.GeographyHierarchyOrder)
+				if err != nil {
+					h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
+						err: errors.Wrap(err, "unable to cast geography order field to int"),
+					})
+					return
+				}
+			}
+
 			resp.AreaTypes = append(resp.AreaTypes, contract.AreaType{
-				ID:          edge.Node.Name,
-				Label:       edge.Node.Label,
-				Description: edge.Node.Description,
-				TotalCount:  edge.Node.Categories.TotalCount,
+				ID:                      edge.Node.Name,
+				Label:                   edge.Node.Label,
+				Description:             edge.Node.Description,
+				TotalCount:              edge.Node.Categories.TotalCount,
+				GeographyHierarchyOrder: i,
 			})
 		}
 		sort.Slice(resp.AreaTypes, func(i, j int) bool {
-			return resp.AreaTypes[i].TotalCount < resp.AreaTypes[j].TotalCount
+			return resp.AreaTypes[i].GeographyHierarchyOrder > resp.AreaTypes[j].GeographyHierarchyOrder
 		})
 	}
 
@@ -183,12 +198,29 @@ func (h *AreaTypes) GetParents(w http.ResponseWriter, r *http.Request) {
 	resp.Count = res.Count
 	resp.TotalCount = res.TotalCount
 	for _, e := range res.Dataset.Variables.Edges[0].Node.IsSourceOf.Edges {
+
+		i := 0
+		if len(e.Node.Meta.ONSVariable.GeographyHierarchyOrder) > 0 {
+			i, err = strconv.Atoi(e.Node.Meta.ONSVariable.GeographyHierarchyOrder)
+			if err != nil {
+				h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
+					err: errors.Wrap(err, "unable to cast geography order field to int"),
+				})
+				return
+			}
+		}
+
 		resp.AreaTypes = append(resp.AreaTypes, contract.AreaType{
-			ID:         e.Node.Name,
-			Label:      e.Node.Label,
-			TotalCount: e.Node.Categories.TotalCount,
+			ID:                      e.Node.Name,
+			Label:                   e.Node.Label,
+			TotalCount:              e.Node.Categories.TotalCount,
+			GeographyHierarchyOrder: i,
 		})
 	}
+
+	sort.Slice(resp.AreaTypes, func(i, j int) bool {
+		return resp.AreaTypes[i].GeographyHierarchyOrder > resp.AreaTypes[j].GeographyHierarchyOrder
+	})
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }

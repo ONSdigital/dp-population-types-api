@@ -30,7 +30,12 @@ Background:
                                                 "label": "Country",
                                                 "categories": {
                                                     "totalCount": 2
-                                                }
+                                                },
+                                                 "meta": {
+                                                   "ONS_Variable": {
+                                                      "Geography_Hierarchy_Order": "100"
+                                                    }
+                                                 }
                                             }
                                         }
                                     ],
@@ -58,7 +63,8 @@ Background:
                     "id": "country",
                     "label": "Country",
                     "description": "",
-                    "total_count": 2
+                    "total_count": 2,
+                    "geography_hierarchy_order": 100
                 }
             ]
         }

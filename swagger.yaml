@@ -476,6 +476,9 @@ definitions:
       description:
         type: string
         example: "National code definition for Census 2021"
+      geography_hierarchy_order:
+        type: integer
+        example: "1200"
       total_count:
         type: integer
         example: "2"
