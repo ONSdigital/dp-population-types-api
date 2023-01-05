@@ -97,28 +97,29 @@ func (h *AreaTypes) Get(w http.ResponseWriter, r *http.Request) {
 		resp.TotalCount = res.TotalCount
 
 		for _, edge := range res.Dataset.Variables.Edges {
-
 			i := 0
 			if len(edge.Node.Meta.ONSVariable.GeographyHierarchyOrder) > 0 {
 				i, err = strconv.Atoi(edge.Node.Meta.ONSVariable.GeographyHierarchyOrder)
 				if err != nil {
-					h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
-						err: errors.Wrap(err, "unable to cast geography order field to int"),
+					h.respond.Error(ctx, w, http.StatusInternalServerError, &Error{
+						err:     errors.Wrap(err, "failed to get geography dimensions"),
+						message: "failed to convert geography order",
+						logData: logData,
 					})
 					return
 				}
 			}
 
 			resp.AreaTypes = append(resp.AreaTypes, contract.AreaType{
-				ID:                      edge.Node.Name,
-				Label:                   edge.Node.Label,
-				Description:             edge.Node.Description,
-				TotalCount:              edge.Node.Categories.TotalCount,
-				GeographyHierarchyOrder: i,
+				ID:             edge.Node.Name,
+				Label:          edge.Node.Label,
+				Description:    edge.Node.Description,
+				TotalCount:     edge.Node.Categories.TotalCount,
+				HierarchyOrder: i,
 			})
 		}
 		sort.Slice(resp.AreaTypes, func(i, j int) bool {
-			return resp.AreaTypes[i].GeographyHierarchyOrder > resp.AreaTypes[j].GeographyHierarchyOrder
+			return resp.AreaTypes[i].HierarchyOrder > resp.AreaTypes[j].HierarchyOrder
 		})
 	}
 
@@ -198,28 +199,29 @@ func (h *AreaTypes) GetParents(w http.ResponseWriter, r *http.Request) {
 	resp.Count = res.Count
 	resp.TotalCount = res.TotalCount
 	for _, e := range res.Dataset.Variables.Edges[0].Node.IsSourceOf.Edges {
-
 		i := 0
 		if len(e.Node.Meta.ONSVariable.GeographyHierarchyOrder) > 0 {
 			i, err = strconv.Atoi(e.Node.Meta.ONSVariable.GeographyHierarchyOrder)
 			if err != nil {
-				h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
-					err: errors.Wrap(err, "unable to cast geography order field to int"),
+				h.respond.Error(ctx, w, http.StatusInternalServerError, &Error{
+					err:     errors.Wrap(err, "failed to get geography dimensions"),
+					message: "failed to convert geography order",
+					logData: logData,
 				})
 				return
 			}
 		}
 
 		resp.AreaTypes = append(resp.AreaTypes, contract.AreaType{
-			ID:                      e.Node.Name,
-			Label:                   e.Node.Label,
-			TotalCount:              e.Node.Categories.TotalCount,
-			GeographyHierarchyOrder: i,
+			ID:             e.Node.Name,
+			Label:          e.Node.Label,
+			TotalCount:     e.Node.Categories.TotalCount,
+			HierarchyOrder: i,
 		})
 	}
 
 	sort.Slice(resp.AreaTypes, func(i, j int) bool {
-		return resp.AreaTypes[i].GeographyHierarchyOrder > resp.AreaTypes[j].GeographyHierarchyOrder
+		return resp.AreaTypes[i].HierarchyOrder > resp.AreaTypes[j].HierarchyOrder
 	})
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)

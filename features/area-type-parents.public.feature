@@ -125,7 +125,7 @@ Background:
                     "label": "Country",
                     "description": "",
                     "total_count": 2,
-                    "geography_hierarchy_order": 100
+                    "hierarchy_order": 100
                 }
             ]
         }

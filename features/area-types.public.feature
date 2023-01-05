@@ -102,21 +102,21 @@ Feature: Area Types
                 "label":"City",
                 "description": "test",
                 "total_count": 2,
-                "geography_hierarchy_order": 300
+                "hierarchy_order": 300
           },
           {
                 "id":"region",
                 "label":"Region",
                 "description": "test",
                 "total_count": 348,
-                "geography_hierarchy_order": 200
+                "hierarchy_order": 200
           },
           {
                 "id":"country",
                 "label":"Country",
                 "description": "test",
                 "total_count": 3,
-                "geography_hierarchy_order": 100
+                "hierarchy_order": 100
           }
         ]
     }

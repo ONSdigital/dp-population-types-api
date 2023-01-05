@@ -88,14 +88,14 @@ Feature: Area Types
                 "label":"Country",
                 "description": "test",
                 "total_count": 2,
-                "geography_hierarchy_order": 200
+                "hierarchy_order": 200
           },
           {
                 "id":"city",
                 "label":"City",
                 "description": "test",
                 "total_count": 3,
-                "geography_hierarchy_order": 100
+                "hierarchy_order": 100
           }
         ]
     }
@@ -129,14 +129,14 @@ Feature: Area Types
                 "label":"Country",
                 "description": "test",
                 "total_count": 2,
-                "geography_hierarchy_order": 200
+                "hierarchy_order": 200
           },
           {
                 "id":"city",
                 "label":"City",
                 "description": "test",
                 "total_count": 3,
-                "geography_hierarchy_order": 100
+                "hierarchy_order": 100
           }
         ]
     }
