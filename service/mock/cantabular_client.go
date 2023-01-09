@@ -5,10 +5,11 @@ package mock
 
 import (
 	"context"
+	"sync"
+
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/service"
-	"sync"
 )
 
 // Ensure, that CantabularClientMock does implement service.CantabularClient.
@@ -42,11 +43,11 @@ var _ service.CantabularClient = &CantabularClientMock{}
 //			GetCategorisationsFunc: func(contextMoqParam context.Context, getCategorisationsRequest cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error) {
 //				panic("mock out the GetCategorisations method")
 //			},
+//			GetDimensionCategoriesFunc: func(contextMoqParam context.Context, getDimensionCategoriesRequest cantabular.GetDimensionCategoriesRequest) (*cantabular.GetDimensionCategoriesResponse, error) {
+//				panic("mock out the GetDimensionCategories method")
+//			},
 //			GetDimensionsFunc: func(contextMoqParam context.Context, getDimensionsRequest cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error) {
 //				panic("mock out the GetDimensions method")
-//			},
-//			GetDimensionsDescriptionFunc: func(contextMoqParam context.Context, getDimensionsDescriptionRequest cantabular.GetDimensionsDescriptionRequest) (*cantabular.GetDimensionsResponse, error) {
-//				panic("mock out the GetDimensionsDescription method")
 //			},
 //			GetGeographyDimensionsFunc: func(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
 //				panic("mock out the GetGeographyDimensions method")
@@ -57,7 +58,7 @@ var _ service.CantabularClient = &CantabularClientMock{}
 //			GetParentsFunc: func(contextMoqParam context.Context, getParentsRequest cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error) {
 //				panic("mock out the GetParents method")
 //			},
-//			ListDatasetsFunc: func(ctx context.Context) ([]string, error) {
+//			ListDatasetsFunc: func(contextMoqParam context.Context) (*cantabular.ListDatasetsResponse, error) {
 //				panic("mock out the ListDatasets method")
 //			},
 //			StatusCodeFunc: func(err error) int {
@@ -90,6 +91,9 @@ type CantabularClientMock struct {
 
 	// GetCategorisationsFunc mocks the GetCategorisations method.
 	GetCategorisationsFunc func(contextMoqParam context.Context, getCategorisationsRequest cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error)
+
+	// GetDimensionCategoriesFunc mocks the GetDimensionCategories method.
+	GetDimensionCategoriesFunc func(contextMoqParam context.Context, getDimensionCategoriesRequest cantabular.GetDimensionCategoriesRequest) (*cantabular.GetDimensionCategoriesResponse, error)
 
 	// GetDimensionsFunc mocks the GetDimensions method.
 	GetDimensionsFunc func(contextMoqParam context.Context, getDimensionsRequest cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error)
@@ -163,6 +167,13 @@ type CantabularClientMock struct {
 			// GetCategorisationsRequest is the getCategorisationsRequest argument value.
 			GetCategorisationsRequest cantabular.GetCategorisationsRequest
 		}
+		// GetDimensionCategories holds details about calls to the GetDimensionCategories method.
+		GetDimensionCategories []struct {
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
+			// GetDimensionCategoriesRequest is the getDimensionCategoriesRequest argument value.
+			GetDimensionCategoriesRequest cantabular.GetDimensionCategoriesRequest
+		}
 		// GetDimensions holds details about calls to the GetDimensions method.
 		GetDimensions []struct {
 			// ContextMoqParam is the contextMoqParam argument value.
@@ -209,20 +220,20 @@ type CantabularClientMock struct {
 			Err error
 		}
 	}
-	lockChecker                  sync.RWMutex
-	lockCheckerAPIExt            sync.RWMutex
-	lockGetArea                  sync.RWMutex
-	lockGetAreas                 sync.RWMutex
-	lockGetAreasTotalCount       sync.RWMutex
-	lockGetBaseVariable          sync.RWMutex
-	lockGetCategorisations       sync.RWMutex
-	lockGetDimensions            sync.RWMutex
-	lockGetDimensionsDescription sync.RWMutex
-	lockGetGeographyDimensions   sync.RWMutex
-	lockGetParentAreaCount       sync.RWMutex
-	lockGetParents               sync.RWMutex
-	lockListDatasets             sync.RWMutex
-	lockStatusCode               sync.RWMutex
+	lockChecker                sync.RWMutex
+	lockCheckerAPIExt          sync.RWMutex
+	lockGetArea                sync.RWMutex
+	lockGetAreas               sync.RWMutex
+	lockGetAreasTotalCount     sync.RWMutex
+	lockGetBaseVariable        sync.RWMutex
+	lockGetCategorisations     sync.RWMutex
+	lockGetDimensionCategories sync.RWMutex
+	lockGetDimensions          sync.RWMutex
+	lockGetGeographyDimensions sync.RWMutex
+	lockGetParentAreaCount     sync.RWMutex
+	lockGetParents             sync.RWMutex
+	lockListDatasets           sync.RWMutex
+	lockStatusCode             sync.RWMutex
 }
 
 // Checker calls CheckerFunc.
@@ -474,6 +485,42 @@ func (mock *CantabularClientMock) GetCategorisationsCalls() []struct {
 	mock.lockGetCategorisations.RLock()
 	calls = mock.calls.GetCategorisations
 	mock.lockGetCategorisations.RUnlock()
+	return calls
+}
+
+// GetDimensionCategories calls GetDimensionCategoriesFunc.
+func (mock *CantabularClientMock) GetDimensionCategories(contextMoqParam context.Context, getDimensionCategoriesRequest cantabular.GetDimensionCategoriesRequest) (*cantabular.GetDimensionCategoriesResponse, error) {
+	if mock.GetDimensionCategoriesFunc == nil {
+		panic("CantabularClientMock.GetDimensionCategoriesFunc: method is nil but CantabularClient.GetDimensionCategories was just called")
+	}
+	callInfo := struct {
+		ContextMoqParam               context.Context
+		GetDimensionCategoriesRequest cantabular.GetDimensionCategoriesRequest
+	}{
+		ContextMoqParam:               contextMoqParam,
+		GetDimensionCategoriesRequest: getDimensionCategoriesRequest,
+	}
+	mock.lockGetDimensionCategories.Lock()
+	mock.calls.GetDimensionCategories = append(mock.calls.GetDimensionCategories, callInfo)
+	mock.lockGetDimensionCategories.Unlock()
+	return mock.GetDimensionCategoriesFunc(contextMoqParam, getDimensionCategoriesRequest)
+}
+
+// GetDimensionCategoriesCalls gets all the calls that were made to GetDimensionCategories.
+// Check the length with:
+//
+//	len(mockedCantabularClient.GetDimensionCategoriesCalls())
+func (mock *CantabularClientMock) GetDimensionCategoriesCalls() []struct {
+	ContextMoqParam               context.Context
+	GetDimensionCategoriesRequest cantabular.GetDimensionCategoriesRequest
+} {
+	var calls []struct {
+		ContextMoqParam               context.Context
+		GetDimensionCategoriesRequest cantabular.GetDimensionCategoriesRequest
+	}
+	mock.lockGetDimensionCategories.RLock()
+	calls = mock.calls.GetDimensionCategories
+	mock.lockGetDimensionCategories.RUnlock()
 	return calls
 }
 

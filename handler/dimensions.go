@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
@@ -28,6 +29,82 @@ func NewDimensions(cfg *config.Config, r responder, c cantabularClient, d datase
 		cantabular: c,
 		datasets:   d,
 	}
+}
+
+// GetDimensionCategories is the handler for GET/population-types/{population-type}/dimension-categories?dims=xxx
+func (h *Dimensions) GetDimensionCategories(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	req := contract.GetDimensionCategoriesRequest{
+		PopulationType: chi.URLParam(r, "population-type"),
+		Variables:      r.URL.Query().Get("dims"),
+	}
+
+	logData := log.Data{
+		"request": req,
+	}
+
+	if err := parseRequest(r, &req); err != nil {
+		h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
+			err: errors.Wrap(err, "failed to get dimension categories"),
+		})
+		return
+	}
+
+	// parse the variables here for now
+	dimensions := strings.Split(req.Variables, ",")
+
+	cReq := cantabular.GetDimensionCategoriesRequest{
+		Dataset:   req.PopulationType,
+		Variables: dimensions,
+		PaginationParams: cantabular.PaginationParams{
+			Limit:  req.QueryParams.Limit,
+			Offset: req.QueryParams.Offset,
+		},
+	}
+
+	res, err := h.cantabular.GetDimensionCategories(ctx, cReq)
+	if err != nil {
+		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), &Error{
+			err:     errors.Wrap(err, "failed to get dimension categories"),
+			message: "failed to get dimension categories",
+			logData: logData,
+		})
+		return
+	}
+
+	resp := contract.GetDimensionCategoriesResponse{
+		PaginationResponse: contract.PaginationResponse{
+			Limit:  req.Limit,
+			Offset: req.Offset,
+		},
+	}
+
+	if res != nil {
+		dimensionCategories := make([]contract.Category, 0)
+		for _, edge := range res.Dataset.Variables.Edges {
+			dimensionCategory := &contract.Category{
+				Id:         edge.Node.Name,
+				Label:      edge.Node.Label,
+				Categories: []contract.DimensionCategory{},
+			}
+
+			for _, category := range edge.Node.Categories.Edges {
+				dimensionCategory.Categories = append(dimensionCategory.Categories, contract.DimensionCategory{
+					ID:    category.Node.Code,
+					Label: category.Node.Label,
+				})
+			}
+			dimensionCategories = append(dimensionCategories, *dimensionCategory)
+		}
+		resp.Categories = dimensionCategories
+
+	}
+
+	resp.TotalCount = len(resp.Categories)
+	resp.Count = len(resp.Categories)
+	h.respond.JSON(ctx, w, http.StatusOK, resp)
+
 }
 
 // GetAll is the handler for GET /population-types/{population-type}/dimensions

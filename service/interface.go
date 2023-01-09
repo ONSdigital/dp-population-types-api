@@ -45,6 +45,7 @@ type CantabularClient interface {
 	ListDatasets(context.Context) (*cantabular.ListDatasetsResponse, error)
 	GetDimensions(context.Context, cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error)
 	GetDimensionsDescription(context.Context, cantabular.GetDimensionsDescriptionRequest) (*cantabular.GetDimensionsResponse, error)
+	GetDimensionCategories(context.Context, cantabular.GetDimensionCategoriesRequest) (*cantabular.GetDimensionCategoriesResponse, error)
 	GetGeographyDimensions(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error)
 	GetAreas(context.Context, cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error)
 	GetAreasTotalCount(context.Context, cantabular.GetAreasRequest) (int, error)

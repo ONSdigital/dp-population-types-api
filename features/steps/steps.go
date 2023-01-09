@@ -31,6 +31,17 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the cantabular area response is bad request`, c.cantabularIsBadRequest)
 	ctx.Step(`^the cantabular response is bad gateway`, c.cantabularIsBadGateway)
 	ctx.Step(`^the following base variable response is available from Cantabular:$`, c.theFollowingBaseVariableResponseIsAvailableFromCantabular)
+	ctx.Step(`^the following dimension categories response is available from Cantabular:$`, c.theFollowingDimensionCategoryResponseIsAvailableFromCantabular)
+
+}
+
+func (c *PopulationTypesComponent) theFollowingDimensionCategoryResponseIsAvailableFromCantabular(body *godog.DocString) error {
+	var response cantabular.GetDimensionCategoriesResponse
+	if err := json.Unmarshal([]byte(body.Content), &response); err != nil {
+		return fmt.Errorf("failed to unmarshal population types: %w", err)
+	}
+	c.fakeCantabular.GetDimensionCategoriesRespnse = &response
+	return nil
 
 }
 
