@@ -37,6 +37,12 @@ parameters:
     description: "A list of parent area codes, separated by commas"
     in: query
     type: string
+  dims:
+    name: dims
+    required: false
+    description: "A comma separated list of dimensions to retrieve information for."
+    in: query
+    type: string
 tags:
   - name: "Public"
   - name: "Private"
@@ -113,6 +119,35 @@ paths:
           description: "A json list containing non-geography base variables for a dataset"
           schema:
             $ref: '#/definitions/GetDimensionResponse'
+        401:
+          $ref: '#/responses/Unauthorised'
+        404:
+          description: "Dataset not found"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          $ref: "#/responses/InternalError"
+        502:
+          $ref: '#/responses/BadGateway'
+  /population-types/{population-type}/dimension-categories:
+    get:
+      summary: "Get list of categories for dimensions"
+      tags:
+        - "Private"
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: population-type
+          type: string
+          in: path
+          required: true
+        - $ref: '#/parameters/dims'
+      responses:
+        200:
+          description: "A json list containing categories for dimensions"
+          schema:
+            $ref: '#/definitions/GetDimensionCategoriesResponse'
         401:
           $ref: '#/responses/Unauthorised'
         404:
@@ -564,6 +599,28 @@ definitions:
         description: "The total number of categorisations"
         readOnly: true
         type: integer
+  GetDimensionCategoriesResponse:
+    description: "A list of dimensions with categories"
+    type: object
+    properties:
+      count:
+        description: "The number of dimensions returned"
+        readOnly: true
+        type: integer
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/DimensionCategory'
+      limit:
+        description: "The number of dimensions requested"
+        type: integer
+      offset:
+        description: "The first row of dimensions to retrieve, starting at 0. Use this parameter as a pagination mechanism along with the limit parameter"
+        type: integer
+      total_count:
+        description: "The total number of dimensions"
+        readOnly: true
+        type: integer
   Dimension:
     description: "The response body containing the information for a dimension"
     properties:
@@ -579,6 +636,21 @@ definitions:
     description: "The response body containing the information for a categorisation"
     properties:
       categorisation:
+         properties:
+          id:
+            type: string
+          label:
+            type: string
+          categories:
+            type: array
+            items:
+              $ref: '#/definitions/Category'
+          total_count:
+            type: integer
+  DimensionCategory:
+    description: "The response body containing the information for a dimension category"
+    properties:
+      dimension:
          properties:
           id:
             type: string
