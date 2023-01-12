@@ -1,4 +1,4 @@
-package handler
+package contract_test
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestManualPagination(t *testing.T) {
+func TestGetPopulationTypesResponsePaginate(t *testing.T) {
 
 	testInput := []contract.PopulationType{
 		{
@@ -36,7 +36,9 @@ func TestManualPagination(t *testing.T) {
 			}
 			r.Paginate()
 
-			So(len(r.Items), ShouldEqual, 4)
+			expected := 4
+			So(len(r.Items), ShouldEqual, expected)
+			So(r.Count, ShouldEqual, expected)
 		})
 
 		Convey("When unreasonable parameters are given for offset and limit", func() {
@@ -50,8 +52,9 @@ func TestManualPagination(t *testing.T) {
 			}
 			r.Paginate()
 
-			So(len(r.Items), ShouldEqual, 4)
-
+			expected := 4
+			So(len(r.Items), ShouldEqual, expected)
+			So(r.Count, ShouldEqual, expected)
 		})
 	})
 }
