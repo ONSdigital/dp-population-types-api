@@ -17,19 +17,20 @@ var (
 )
 
 type CantabularClient struct {
-	Healthy                        bool
-	BadRequest                     bool
-	NotFound                       bool
-	BadGateway                     bool
-	GetGeographyDimensionsResponse *cantabular.GetGeographyDimensionsResponse
-	GetDimensionsResponse          *cantabular.GetDimensionsResponse
-	GetAreasResponse               *cantabular.GetAreasResponse
-	GetAreaResponse                *cantabular.GetAreaResponse
-	GetParentsResponse             *cantabular.GetParentsResponse
-	GetParentAreaCountResult       *cantabular.GetParentAreaCountResult
-	GetCategorisationsResponse     *cantabular.GetCategorisationsResponse
-	GetBaseVariableResponse        *cantabular.GetBaseVariableResponse
-	ListDatasetsResponse           *cantabular.ListDatasetsResponse
+	Healthy                          bool
+	BadRequest                       bool
+	NotFound                         bool
+	BadGateway                       bool
+	GetGeographyDimensionsResponse   *cantabular.GetGeographyDimensionsResponse
+	GetDimensionsResponse            *cantabular.GetDimensionsResponse
+	GetDimensionsDescriptionResponse *cantabular.GetDimensionsResponse
+	GetAreasResponse                 *cantabular.GetAreasResponse
+	GetAreaResponse                  *cantabular.GetAreaResponse
+	GetParentsResponse               *cantabular.GetParentsResponse
+	GetParentAreaCountResult         *cantabular.GetParentAreaCountResult
+	GetCategorisationsResponse       *cantabular.GetCategorisationsResponse
+	GetBaseVariableResponse          *cantabular.GetBaseVariableResponse
+	ListDatasetsResponse             *cantabular.ListDatasetsResponse
 }
 
 func (c *CantabularClient) Checker(_ context.Context, _ *healthcheck.CheckState) error {
@@ -81,7 +82,7 @@ func (c *CantabularClient) GetDimensionsDescription(_ context.Context, _ cantabu
 		)
 	}
 
-	return c.GetDimensionsResponse, nil
+	return c.GetDimensionsDescriptionResponse, nil
 }
 
 func (c *CantabularClient) StatusCode(_ error) int {

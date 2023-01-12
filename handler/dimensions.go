@@ -102,7 +102,7 @@ func (h *Dimensions) GetAll(w http.ResponseWriter, r *http.Request) {
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }
 
-// GetDescription is the handler for GET /population-types/{population-type}/dimensions/description
+// GetDescription is the handler for GET /population-types/{population-type}/dimensions-description
 func (h *Dimensions) GetDescription(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 

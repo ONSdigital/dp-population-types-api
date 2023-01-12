@@ -16,6 +16,7 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^cantabular is unresponsive$`, c.cantabularIsUnresponsive)
 	ctx.Step(`^the following geography response is available from Cantabular:$`, c.theFollowingCantabularGeographyResponseIsAvailable)
 	ctx.Step(`^the following dimensions response is available from Cantabular:$`, c.theFollowingCantabularDimensionsResponseIsAvailable)
+	ctx.Step(`^the following dimensions description response is available from Cantabular:$`, c.theFollowingCantabularDimensionsDescriptionResponseIsAvailable)
 	ctx.Step(`^I have the following population types in cantabular$`, c.iHaveTheFollowingPopulationTypesInCantabular)
 	ctx.Step(`^the following datasets based on "([^"]*)" are available$`, c.theFollowingDatasetsBasedOnAreAvailable)
 	ctx.Step(`^the dp-dataset-api is returning errors for datasets based on "([^"]*)"`, c.datasetClientReturnsErrors)
@@ -126,6 +127,17 @@ func (c *PopulationTypesComponent) theFollowingCantabularDimensionsResponseIsAva
 	}
 
 	c.fakeCantabular.GetDimensionsResponse = &resp
+	return nil
+}
+
+func (c *PopulationTypesComponent) theFollowingCantabularDimensionsDescriptionResponseIsAvailable(body *godog.DocString) error {
+	var resp cantabular.GetDimensionsResponse
+
+	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
+		return fmt.Errorf("failed to unmarshal body: %w", err)
+	}
+
+	c.fakeCantabular.GetDimensionsDescriptionResponse = &resp
 	return nil
 }
 
