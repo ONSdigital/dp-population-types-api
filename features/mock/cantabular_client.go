@@ -29,7 +29,7 @@ type CantabularClient struct {
 	GetParentAreaCountResult       *cantabular.GetParentAreaCountResult
 	GetCategorisationsResponse     *cantabular.GetCategorisationsResponse
 	GetBaseVariableResponse        *cantabular.GetBaseVariableResponse
-	ListDatasetsResponse           []string
+	ListDatasetsResponse           *cantabular.ListDatasetsResponse
 }
 
 func (c *CantabularClient) Checker(_ context.Context, _ *healthcheck.CheckState) error {
@@ -40,7 +40,7 @@ func (c *CantabularClient) CheckerAPIExt(_ context.Context, _ *healthcheck.Check
 	return nil
 }
 
-func (c *CantabularClient) ListDatasets(_ context.Context) ([]string, error) {
+func (c *CantabularClient) ListDatasets(_ context.Context) (*cantabular.ListDatasetsResponse, error) {
 	if !c.Healthy {
 		return nil, errFailedToRespond
 	}

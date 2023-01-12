@@ -68,7 +68,18 @@ Feature: Area Types
 
     And I have the following population types in cantabular
     """
-    ["dataset_1", "dataset_2"]
+    {
+      "datasets":[
+        {
+          "name": "dataset_1",
+          "label": "dataset 1"
+        },
+        {
+          "name": "dataset_2",
+          "label": "dataset 2"
+        }
+      ]
+    }
     """
 
     When I GET "/population-types/dataset_1/area-types"
@@ -109,7 +120,18 @@ Feature: Area Types
 
     And I have the following population types in cantabular
     """
-    ["dataset_1", "dataset_2"]
+    {
+      "datasets":[
+        {
+          "name": "dataset_1",
+          "label": "dataset 1"
+        },
+        {
+          "name": "dataset_2",
+          "label": "dataset 2"
+        }
+      ]
+    }
     """
 
     When I GET "/population-types/dataset_1/area-types"

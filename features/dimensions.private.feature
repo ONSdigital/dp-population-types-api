@@ -46,7 +46,18 @@ Feature: Dimensionas
 
     And I have the following population types in cantabular
     """
-    ["Example", "Example2"]
+    {
+      "datasets":[
+        {
+          "name": "dataset_1",
+          "label": "dataset 1"
+        },
+        {
+          "name": "dataset_2",
+          "label": "dataset 2"
+        }
+      ]
+    }
     """
 
     And the following datasets based on "Example" are available
@@ -91,7 +102,18 @@ Feature: Dimensionas
     
     And I have the following population types in cantabular
     """
-    ["Example", "Example2"]
+    {
+      "datasets":[
+        {
+          "name": "Example1",
+          "label": "Example 1"
+        },
+        {
+          "name": "Example2",
+          "label": "Example 2"
+        }
+      ]
+    }
     """
 
     Given the following datasets based on "Example" are available

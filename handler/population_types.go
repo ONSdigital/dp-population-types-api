@@ -54,20 +54,29 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	log.Info(ctx, "population types found", logData)
 	lpt := len(ptypes.Datasets)
 
-	paginated := r.Paginate(ptypes)
-
 	// return all population types on publishing
 	if h.cfg.EnablePrivateEndpoints {
-		h.respond.JSON(ctx, w, http.StatusOK, contract.GetPopulationTypesResponse{
-			PaginationResponse: contract.PaginationResponse{Limit: r.Limit, Offset: r.Offset, Count: len(paginated.Items), TotalCount: lpt},
-			PopulationTypes:    *paginated,
-		})
+		resp := contract.GetPopulationTypesResponse{
+			PaginationResponse: contract.PaginationResponse{
+				Limit:      r.Limit,
+				Offset:     r.Offset,
+				TotalCount: lpt,
+			},
+		}
+		for _, pt := range ptypes.Datasets {
+			resp.Items = append(resp.Items, contract.PopulationType{
+				Name:  pt.Name,
+				Label: pt.Label,
+			})
+		}
+		resp.Paginate()
+		h.respond.JSON(ctx, w, http.StatusOK, resp)
 		return
 	}
 
-	var published []string
-	for _, p := range ptypes {
-		if err := h.published(ctx, p); err != nil {
+	var published []contract.PopulationType
+	for _, pt := range ptypes.Datasets {
+		if err := h.published(ctx, pt.Name); err != nil {
 			if dperrors.StatusCode(err) == http.StatusNotFound {
 				continue
 			}
@@ -79,10 +88,11 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		published = append(published, p)
+		published = append(published, contract.PopulationType{
+			Name:  pt.Name,
+			Label: pt.Label,
+		})
 	}
-
-	paginated = r.Paginate(published)
 
 	l := len(published)
 	if l == 0 {
@@ -96,9 +106,14 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	}
 
 	resp := contract.GetPopulationTypesResponse{
-		PaginationResponse: contract.PaginationResponse{Limit: r.Limit, Count: len(paginated.Items), TotalCount: l, Offset: r.Offset},
-		PopulationTypes:    *paginated,
+		PaginationResponse: contract.PaginationResponse{
+			Limit:      r.Limit,
+			TotalCount: l,
+			Offset:     r.Offset,
+		},
+		Items: published,
 	}
+	resp.Paginate()
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }

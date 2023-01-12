@@ -45,12 +45,12 @@ func (c *PopulationTypesComponent) theFollowingBaseVariableResponseIsAvailableFr
 }
 
 func (c *PopulationTypesComponent) iHaveTheFollowingPopulationTypesInCantabular(body *godog.DocString) error {
-	var populationTypes []string
+	var populationTypes cantabular.ListDatasetsResponse
 	if err := json.Unmarshal([]byte(body.Content), &populationTypes); err != nil {
 		return fmt.Errorf("failed to unmarshal population types: %w", err)
 	}
 
-	c.fakeCantabular.ListDatasetsResponse = populationTypes
+	c.fakeCantabular.ListDatasetsResponse = &populationTypes
 	return nil
 }
 

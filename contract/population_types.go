@@ -1,29 +1,23 @@
 package contract
 
 type PopulationType struct {
-	Name string `json:"name"`
-}
-
-type PopulationTypes struct {
-	Items []PopulationType `json:"items"`
+	Name  string `json:"name"`
+	Label string `json:"label"`
 }
 
 type GetPopulationTypesRequest struct {
 	QueryParams
 }
 
-func NewPopulationTypes(names []string) PopulationTypes {
-	items := make([]PopulationType, len(names))
-	for i, name := range names {
-		items[i] = PopulationType{name}
-	}
-	return PopulationTypes{Items: items}
+type GetPopulationTypesResponse struct {
+	PaginationResponse
+	Items []PopulationType `json:"items"`
 }
 
-func (r *GetPopulationTypesRequest) Paginate(types []string) *PopulationTypes {
+func (r *GetPopulationTypesResponse) Paginate() {
 	endInt := r.Offset + r.Limit
 
-	if r.Offset > len(types) {
+	if r.Offset > len(r.Items) {
 		r.Offset = 0
 	}
 
@@ -31,18 +25,10 @@ func (r *GetPopulationTypesRequest) Paginate(types []string) *PopulationTypes {
 		r.Limit = defaultLimit
 	}
 
-	if endInt > len(types) {
-		endInt = len(types)
+	if endInt > len(r.Items) {
+		endInt = len(r.Items)
 	}
 
-	subset := types[r.Offset:endInt]
-
-	response := NewPopulationTypes(subset)
-
-	return &response
-}
-
-type GetPopulationTypesResponse struct {
-	PaginationResponse
-	PopulationTypes
+	r.Items = r.Items[r.Offset:endInt]
+	r.Count = len(r.Items)
 }
