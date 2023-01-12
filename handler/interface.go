@@ -14,7 +14,7 @@ type responder interface {
 	Error(context.Context, http.ResponseWriter, int, error)
 }
 type cantabularClient interface {
-	ListDatasets(context.Context) ([]string, error)
+	ListDatasets(context.Context) (*cantabular.ListDatasetsResponse, error)
 	GetGeographyDimensions(context.Context, cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error)
 	GetDimensions(context.Context, cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error)
 	GetAreas(context.Context, cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error)

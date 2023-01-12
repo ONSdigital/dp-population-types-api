@@ -54,7 +54,7 @@ var _ service.CantabularClient = &CantabularClientMock{}
 // 			GetParentsFunc: func(contextMoqParam context.Context, getParentsRequest cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error) {
 // 				panic("mock out the GetParents method")
 // 			},
-// 			ListDatasetsFunc: func(ctx context.Context) ([]string, error) {
+// 			ListDatasetsFunc: func(contextMoqParam context.Context) (*cantabular.ListDatasetsResponse, error) {
 // 				panic("mock out the ListDatasets method")
 // 			},
 // 			StatusCodeFunc: func(err error) int {
@@ -101,7 +101,7 @@ type CantabularClientMock struct {
 	GetParentsFunc func(contextMoqParam context.Context, getParentsRequest cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error)
 
 	// ListDatasetsFunc mocks the ListDatasets method.
-	ListDatasetsFunc func(ctx context.Context) ([]string, error)
+	ListDatasetsFunc func(contextMoqParam context.Context) (*cantabular.ListDatasetsResponse, error)
 
 	// StatusCodeFunc mocks the StatusCode method.
 	StatusCodeFunc func(err error) int
@@ -187,8 +187,8 @@ type CantabularClientMock struct {
 		}
 		// ListDatasets holds details about calls to the ListDatasets method.
 		ListDatasets []struct {
-			// Ctx is the ctx argument value.
-			Ctx context.Context
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
 		}
 		// StatusCode holds details about calls to the StatusCode method.
 		StatusCode []struct {
@@ -597,29 +597,29 @@ func (mock *CantabularClientMock) GetParentsCalls() []struct {
 }
 
 // ListDatasets calls ListDatasetsFunc.
-func (mock *CantabularClientMock) ListDatasets(ctx context.Context) ([]string, error) {
+func (mock *CantabularClientMock) ListDatasets(contextMoqParam context.Context) (*cantabular.ListDatasetsResponse, error) {
 	if mock.ListDatasetsFunc == nil {
 		panic("CantabularClientMock.ListDatasetsFunc: method is nil but CantabularClient.ListDatasets was just called")
 	}
 	callInfo := struct {
-		Ctx context.Context
+		ContextMoqParam context.Context
 	}{
-		Ctx: ctx,
+		ContextMoqParam: contextMoqParam,
 	}
 	mock.lockListDatasets.Lock()
 	mock.calls.ListDatasets = append(mock.calls.ListDatasets, callInfo)
 	mock.lockListDatasets.Unlock()
-	return mock.ListDatasetsFunc(ctx)
+	return mock.ListDatasetsFunc(contextMoqParam)
 }
 
 // ListDatasetsCalls gets all the calls that were made to ListDatasets.
 // Check the length with:
 //     len(mockedCantabularClient.ListDatasetsCalls())
 func (mock *CantabularClientMock) ListDatasetsCalls() []struct {
-	Ctx context.Context
+	ContextMoqParam context.Context
 } {
 	var calls []struct {
-		Ctx context.Context
+		ContextMoqParam context.Context
 	}
 	mock.lockListDatasets.RLock()
 	calls = mock.calls.ListDatasets

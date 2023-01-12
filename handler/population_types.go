@@ -52,7 +52,7 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 
 	logData := log.Data{"datasets": ptypes}
 	log.Info(ctx, "population types found", logData)
-	lpt := len(ptypes)
+	lpt := len(ptypes.Datasets)
 
 	paginated := r.Paginate(ptypes)
 
