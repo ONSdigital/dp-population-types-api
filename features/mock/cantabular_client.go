@@ -72,6 +72,18 @@ func (c *CantabularClient) GetDimensions(_ context.Context, _ cantabular.GetDime
 	return c.GetDimensionsResponse, nil
 }
 
+func (c *CantabularClient) GetDimensionsDescription(_ context.Context, _ cantabular.GetDimensionsDescriptionRequest) (*cantabular.GetDimensionsResponse, error) {
+	if !c.Healthy {
+		return nil, dperrors.New(
+			errors.New("error(s) returned by graphQL query"),
+			http.StatusNotFound,
+			log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+		)
+	}
+
+	return c.GetDimensionsResponse, nil
+}
+
 func (c *CantabularClient) StatusCode(_ error) int {
 	if c.BadGateway {
 		return http.StatusBadGateway

@@ -102,6 +102,74 @@ func (h *Dimensions) GetAll(w http.ResponseWriter, r *http.Request) {
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }
 
+// GetDescription is the handler for GET /population-types/{population-type}/dimensions/description
+func (h *Dimensions) GetDescription(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	req := contract.GetDimensionsDescriptionRequest{
+		PopulationType: chi.URLParam(r, "population-type"),
+	}
+	if err := parseRequest(r, &req); err != nil {
+		h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
+			err: errors.Wrap(err, "invalid request"),
+		})
+		return
+	}
+
+	logData := log.Data{
+		"request": req,
+	}
+
+	// only return results for published population-types on web
+	if !h.cfg.EnablePrivateEndpoints {
+		if err := h.published(ctx, req.PopulationType); err != nil {
+			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+				err:     errors.Wrap(err, "failed to check published state"),
+				message: "population type not found",
+				logData: logData,
+			})
+			return
+		}
+	}
+
+	cReq := cantabular.GetDimensionsDescriptionRequest{
+		Dataset:        req.PopulationType,
+		DimensionNames: req.DimensionNames,
+	}
+
+	res, err := h.cantabular.GetDimensionsDescription(ctx, cReq)
+	if err != nil {
+		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), &Error{
+			err:     errors.Wrap(err, "failed to get dimensions"),
+			message: "failed to get dimensions",
+			logData: logData,
+		})
+		return
+	}
+
+	resp := contract.GetDimensionsResponse{
+		PaginationResponse: contract.PaginationResponse{
+			Limit:  req.Limit,
+			Offset: req.Offset,
+		},
+	}
+
+	if res != nil {
+		resp.Count = res.Count
+		resp.TotalCount = res.TotalCount
+		for _, edge := range res.Dataset.Variables.Edges {
+			resp.Dimensions = append(resp.Dimensions, contract.Dimension{
+				ID:          edge.Node.Name,
+				Label:       edge.Node.Label,
+				Description: edge.Node.Description,
+				TotalCount:  edge.Node.Categories.TotalCount,
+			})
+		}
+	}
+
+	h.respond.JSON(ctx, w, http.StatusOK, resp)
+}
+
 // GetCategorisations is the handler for GET /population-types/{population-type}/dimensions/{dimension}/categoristations
 func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
