@@ -104,7 +104,6 @@ func (h *Dimensions) GetDimensionCategories(w http.ResponseWriter, r *http.Reque
 	resp.TotalCount = len(resp.Categories)
 	resp.Count = len(resp.Categories)
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
-
 }
 
 // GetAll is the handler for GET /population-types/{population-type}/dimensions

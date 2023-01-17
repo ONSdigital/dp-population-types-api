@@ -5,11 +5,10 @@ package mock
 
 import (
 	"context"
-	"sync"
-
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/service"
+	"sync"
 )
 
 // Ensure, that CantabularClientMock does implement service.CantabularClient.
@@ -18,58 +17,61 @@ var _ service.CantabularClient = &CantabularClientMock{}
 
 // CantabularClientMock is a mock implementation of service.CantabularClient.
 //
-//	func TestSomethingThatUsesCantabularClient(t *testing.T) {
+// 	func TestSomethingThatUsesCantabularClient(t *testing.T) {
 //
-//		// make and configure a mocked service.CantabularClient
-//		mockedCantabularClient := &CantabularClientMock{
-//			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error {
-//				panic("mock out the Checker method")
-//			},
-//			CheckerAPIExtFunc: func(ctx context.Context, state *healthcheck.CheckState) error {
-//				panic("mock out the CheckerAPIExt method")
-//			},
-//			GetAreaFunc: func(contextMoqParam context.Context, getAreaRequest cantabular.GetAreaRequest) (*cantabular.GetAreaResponse, error) {
-//				panic("mock out the GetArea method")
-//			},
-//			GetAreasFunc: func(contextMoqParam context.Context, getAreasRequest cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error) {
-//				panic("mock out the GetAreas method")
-//			},
-//			GetAreasTotalCountFunc: func(contextMoqParam context.Context, getAreasRequest cantabular.GetAreasRequest) (int, error) {
-//				panic("mock out the GetAreasTotalCount method")
-//			},
-//			GetBaseVariableFunc: func(contextMoqParam context.Context, getBaseVariableRequest cantabular.GetBaseVariableRequest) (*cantabular.GetBaseVariableResponse, error) {
-//				panic("mock out the GetBaseVariable method")
-//			},
-//			GetCategorisationsFunc: func(contextMoqParam context.Context, getCategorisationsRequest cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error) {
-//				panic("mock out the GetCategorisations method")
-//			},
-//			GetDimensionCategoriesFunc: func(contextMoqParam context.Context, getDimensionCategoriesRequest cantabular.GetDimensionCategoriesRequest) (*cantabular.GetDimensionCategoriesResponse, error) {
-//				panic("mock out the GetDimensionCategories method")
-//			},
-//			GetDimensionsFunc: func(contextMoqParam context.Context, getDimensionsRequest cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error) {
-//				panic("mock out the GetDimensions method")
-//			},
-//			GetGeographyDimensionsFunc: func(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
-//				panic("mock out the GetGeographyDimensions method")
-//			},
-//			GetParentAreaCountFunc: func(ctx context.Context, req cantabular.GetParentAreaCountRequest) (*cantabular.GetParentAreaCountResult, error) {
-//				panic("mock out the GetParentAreaCount method")
-//			},
-//			GetParentsFunc: func(contextMoqParam context.Context, getParentsRequest cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error) {
-//				panic("mock out the GetParents method")
-//			},
-//			ListDatasetsFunc: func(contextMoqParam context.Context) (*cantabular.ListDatasetsResponse, error) {
-//				panic("mock out the ListDatasets method")
-//			},
-//			StatusCodeFunc: func(err error) int {
-//				panic("mock out the StatusCode method")
-//			},
-//		}
+// 		// make and configure a mocked service.CantabularClient
+// 		mockedCantabularClient := &CantabularClientMock{
+// 			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error {
+// 				panic("mock out the Checker method")
+// 			},
+// 			CheckerAPIExtFunc: func(ctx context.Context, state *healthcheck.CheckState) error {
+// 				panic("mock out the CheckerAPIExt method")
+// 			},
+// 			GetAreaFunc: func(contextMoqParam context.Context, getAreaRequest cantabular.GetAreaRequest) (*cantabular.GetAreaResponse, error) {
+// 				panic("mock out the GetArea method")
+// 			},
+// 			GetAreasFunc: func(contextMoqParam context.Context, getAreasRequest cantabular.GetAreasRequest) (*cantabular.GetAreasResponse, error) {
+// 				panic("mock out the GetAreas method")
+// 			},
+// 			GetAreasTotalCountFunc: func(contextMoqParam context.Context, getAreasRequest cantabular.GetAreasRequest) (int, error) {
+// 				panic("mock out the GetAreasTotalCount method")
+// 			},
+// 			GetBaseVariableFunc: func(contextMoqParam context.Context, getBaseVariableRequest cantabular.GetBaseVariableRequest) (*cantabular.GetBaseVariableResponse, error) {
+// 				panic("mock out the GetBaseVariable method")
+// 			},
+// 			GetCategorisationsFunc: func(contextMoqParam context.Context, getCategorisationsRequest cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error) {
+// 				panic("mock out the GetCategorisations method")
+// 			},
+// 			GetDimensionCategoriesFunc: func(contextMoqParam context.Context, getDimensionCategoriesRequest cantabular.GetDimensionCategoriesRequest) (*cantabular.GetDimensionCategoriesResponse, error) {
+// 				panic("mock out the GetDimensionCategories method")
+// 			},
+// 			GetDimensionsFunc: func(contextMoqParam context.Context, getDimensionsRequest cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error) {
+// 				panic("mock out the GetDimensions method")
+// 			},
+// 			GetDimensionsDescriptionFunc: func(contextMoqParam context.Context, getDimensionsDescriptionRequest cantabular.GetDimensionsDescriptionRequest) (*cantabular.GetDimensionsResponse, error) {
+// 				panic("mock out the GetDimensionsDescription method")
+// 			},
+// 			GetGeographyDimensionsFunc: func(ctx context.Context, req cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
+// 				panic("mock out the GetGeographyDimensions method")
+// 			},
+// 			GetParentAreaCountFunc: func(ctx context.Context, req cantabular.GetParentAreaCountRequest) (*cantabular.GetParentAreaCountResult, error) {
+// 				panic("mock out the GetParentAreaCount method")
+// 			},
+// 			GetParentsFunc: func(contextMoqParam context.Context, getParentsRequest cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error) {
+// 				panic("mock out the GetParents method")
+// 			},
+// 			ListDatasetsFunc: func(contextMoqParam context.Context) (*cantabular.ListDatasetsResponse, error) {
+// 				panic("mock out the ListDatasets method")
+// 			},
+// 			StatusCodeFunc: func(err error) int {
+// 				panic("mock out the StatusCode method")
+// 			},
+// 		}
 //
-//		// use mockedCantabularClient in code that requires service.CantabularClient
-//		// and then make assertions.
+// 		// use mockedCantabularClient in code that requires service.CantabularClient
+// 		// and then make assertions.
 //
-//	}
+// 	}
 type CantabularClientMock struct {
 	// CheckerFunc mocks the Checker method.
 	CheckerFunc func(ctx context.Context, state *healthcheck.CheckState) error
@@ -220,20 +222,21 @@ type CantabularClientMock struct {
 			Err error
 		}
 	}
-	lockChecker                sync.RWMutex
-	lockCheckerAPIExt          sync.RWMutex
-	lockGetArea                sync.RWMutex
-	lockGetAreas               sync.RWMutex
-	lockGetAreasTotalCount     sync.RWMutex
-	lockGetBaseVariable        sync.RWMutex
-	lockGetCategorisations     sync.RWMutex
-	lockGetDimensionCategories sync.RWMutex
-	lockGetDimensions          sync.RWMutex
-	lockGetGeographyDimensions sync.RWMutex
-	lockGetParentAreaCount     sync.RWMutex
-	lockGetParents             sync.RWMutex
-	lockListDatasets           sync.RWMutex
-	lockStatusCode             sync.RWMutex
+	lockChecker                  sync.RWMutex
+	lockCheckerAPIExt            sync.RWMutex
+	lockGetArea                  sync.RWMutex
+	lockGetAreas                 sync.RWMutex
+	lockGetAreasTotalCount       sync.RWMutex
+	lockGetBaseVariable          sync.RWMutex
+	lockGetCategorisations       sync.RWMutex
+	lockGetDimensionCategories   sync.RWMutex
+	lockGetDimensions            sync.RWMutex
+	lockGetDimensionsDescription sync.RWMutex
+	lockGetGeographyDimensions   sync.RWMutex
+	lockGetParentAreaCount       sync.RWMutex
+	lockGetParents               sync.RWMutex
+	lockListDatasets             sync.RWMutex
+	lockStatusCode               sync.RWMutex
 }
 
 // Checker calls CheckerFunc.
@@ -256,8 +259,7 @@ func (mock *CantabularClientMock) Checker(ctx context.Context, state *healthchec
 
 // CheckerCalls gets all the calls that were made to Checker.
 // Check the length with:
-//
-//	len(mockedCantabularClient.CheckerCalls())
+//     len(mockedCantabularClient.CheckerCalls())
 func (mock *CantabularClientMock) CheckerCalls() []struct {
 	Ctx   context.Context
 	State *healthcheck.CheckState
@@ -292,8 +294,7 @@ func (mock *CantabularClientMock) CheckerAPIExt(ctx context.Context, state *heal
 
 // CheckerAPIExtCalls gets all the calls that were made to CheckerAPIExt.
 // Check the length with:
-//
-//	len(mockedCantabularClient.CheckerAPIExtCalls())
+//     len(mockedCantabularClient.CheckerAPIExtCalls())
 func (mock *CantabularClientMock) CheckerAPIExtCalls() []struct {
 	Ctx   context.Context
 	State *healthcheck.CheckState
@@ -328,8 +329,7 @@ func (mock *CantabularClientMock) GetArea(contextMoqParam context.Context, getAr
 
 // GetAreaCalls gets all the calls that were made to GetArea.
 // Check the length with:
-//
-//	len(mockedCantabularClient.GetAreaCalls())
+//     len(mockedCantabularClient.GetAreaCalls())
 func (mock *CantabularClientMock) GetAreaCalls() []struct {
 	ContextMoqParam context.Context
 	GetAreaRequest  cantabular.GetAreaRequest
@@ -364,8 +364,7 @@ func (mock *CantabularClientMock) GetAreas(contextMoqParam context.Context, getA
 
 // GetAreasCalls gets all the calls that were made to GetAreas.
 // Check the length with:
-//
-//	len(mockedCantabularClient.GetAreasCalls())
+//     len(mockedCantabularClient.GetAreasCalls())
 func (mock *CantabularClientMock) GetAreasCalls() []struct {
 	ContextMoqParam context.Context
 	GetAreasRequest cantabular.GetAreasRequest
@@ -400,8 +399,7 @@ func (mock *CantabularClientMock) GetAreasTotalCount(contextMoqParam context.Con
 
 // GetAreasTotalCountCalls gets all the calls that were made to GetAreasTotalCount.
 // Check the length with:
-//
-//	len(mockedCantabularClient.GetAreasTotalCountCalls())
+//     len(mockedCantabularClient.GetAreasTotalCountCalls())
 func (mock *CantabularClientMock) GetAreasTotalCountCalls() []struct {
 	ContextMoqParam context.Context
 	GetAreasRequest cantabular.GetAreasRequest
@@ -436,8 +434,7 @@ func (mock *CantabularClientMock) GetBaseVariable(contextMoqParam context.Contex
 
 // GetBaseVariableCalls gets all the calls that were made to GetBaseVariable.
 // Check the length with:
-//
-//	len(mockedCantabularClient.GetBaseVariableCalls())
+//     len(mockedCantabularClient.GetBaseVariableCalls())
 func (mock *CantabularClientMock) GetBaseVariableCalls() []struct {
 	ContextMoqParam        context.Context
 	GetBaseVariableRequest cantabular.GetBaseVariableRequest
@@ -472,8 +469,7 @@ func (mock *CantabularClientMock) GetCategorisations(contextMoqParam context.Con
 
 // GetCategorisationsCalls gets all the calls that were made to GetCategorisations.
 // Check the length with:
-//
-//	len(mockedCantabularClient.GetCategorisationsCalls())
+//     len(mockedCantabularClient.GetCategorisationsCalls())
 func (mock *CantabularClientMock) GetCategorisationsCalls() []struct {
 	ContextMoqParam           context.Context
 	GetCategorisationsRequest cantabular.GetCategorisationsRequest
@@ -508,8 +504,7 @@ func (mock *CantabularClientMock) GetDimensionCategories(contextMoqParam context
 
 // GetDimensionCategoriesCalls gets all the calls that were made to GetDimensionCategories.
 // Check the length with:
-//
-//	len(mockedCantabularClient.GetDimensionCategoriesCalls())
+//     len(mockedCantabularClient.GetDimensionCategoriesCalls())
 func (mock *CantabularClientMock) GetDimensionCategoriesCalls() []struct {
 	ContextMoqParam               context.Context
 	GetDimensionCategoriesRequest cantabular.GetDimensionCategoriesRequest
@@ -544,8 +539,7 @@ func (mock *CantabularClientMock) GetDimensions(contextMoqParam context.Context,
 
 // GetDimensionsCalls gets all the calls that were made to GetDimensions.
 // Check the length with:
-//
-//	len(mockedCantabularClient.GetDimensionsCalls())
+//     len(mockedCantabularClient.GetDimensionsCalls())
 func (mock *CantabularClientMock) GetDimensionsCalls() []struct {
 	ContextMoqParam      context.Context
 	GetDimensionsRequest cantabular.GetDimensionsRequest
@@ -580,8 +574,7 @@ func (mock *CantabularClientMock) GetDimensionsDescription(contextMoqParam conte
 
 // GetDimensionsDescriptionCalls gets all the calls that were made to GetDimensionsDescription.
 // Check the length with:
-//
-//	len(mockedCantabularClient.GetDimensionsDescriptionCalls())
+//     len(mockedCantabularClient.GetDimensionsDescriptionCalls())
 func (mock *CantabularClientMock) GetDimensionsDescriptionCalls() []struct {
 	ContextMoqParam                 context.Context
 	GetDimensionsDescriptionRequest cantabular.GetDimensionsDescriptionRequest
@@ -616,8 +609,7 @@ func (mock *CantabularClientMock) GetGeographyDimensions(ctx context.Context, re
 
 // GetGeographyDimensionsCalls gets all the calls that were made to GetGeographyDimensions.
 // Check the length with:
-//
-//	len(mockedCantabularClient.GetGeographyDimensionsCalls())
+//     len(mockedCantabularClient.GetGeographyDimensionsCalls())
 func (mock *CantabularClientMock) GetGeographyDimensionsCalls() []struct {
 	Ctx context.Context
 	Req cantabular.GetGeographyDimensionsRequest
@@ -652,8 +644,7 @@ func (mock *CantabularClientMock) GetParentAreaCount(ctx context.Context, req ca
 
 // GetParentAreaCountCalls gets all the calls that were made to GetParentAreaCount.
 // Check the length with:
-//
-//	len(mockedCantabularClient.GetParentAreaCountCalls())
+//     len(mockedCantabularClient.GetParentAreaCountCalls())
 func (mock *CantabularClientMock) GetParentAreaCountCalls() []struct {
 	Ctx context.Context
 	Req cantabular.GetParentAreaCountRequest
@@ -688,8 +679,7 @@ func (mock *CantabularClientMock) GetParents(contextMoqParam context.Context, ge
 
 // GetParentsCalls gets all the calls that were made to GetParents.
 // Check the length with:
-//
-//	len(mockedCantabularClient.GetParentsCalls())
+//     len(mockedCantabularClient.GetParentsCalls())
 func (mock *CantabularClientMock) GetParentsCalls() []struct {
 	ContextMoqParam   context.Context
 	GetParentsRequest cantabular.GetParentsRequest
@@ -722,8 +712,7 @@ func (mock *CantabularClientMock) ListDatasets(contextMoqParam context.Context) 
 
 // ListDatasetsCalls gets all the calls that were made to ListDatasets.
 // Check the length with:
-//
-//	len(mockedCantabularClient.ListDatasetsCalls())
+//     len(mockedCantabularClient.ListDatasetsCalls())
 func (mock *CantabularClientMock) ListDatasetsCalls() []struct {
 	ContextMoqParam context.Context
 } {
@@ -754,8 +743,7 @@ func (mock *CantabularClientMock) StatusCode(err error) int {
 
 // StatusCodeCalls gets all the calls that were made to StatusCode.
 // Check the length with:
-//
-//	len(mockedCantabularClient.StatusCodeCalls())
+//     len(mockedCantabularClient.StatusCodeCalls())
 func (mock *CantabularClientMock) StatusCodeCalls() []struct {
 	Err error
 } {

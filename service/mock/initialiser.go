@@ -16,31 +16,31 @@ var _ service.Initialiser = &InitialiserMock{}
 
 // InitialiserMock is a mock implementation of service.Initialiser.
 //
-//	func TestSomethingThatUsesInitialiser(t *testing.T) {
+// 	func TestSomethingThatUsesInitialiser(t *testing.T) {
 //
-//		// make and configure a mocked service.Initialiser
-//		mockedInitialiser := &InitialiserMock{
-//			GetCantabularClientFunc: func(cfg config.CantabularConfig) service.CantabularClient {
-//				panic("mock out the GetCantabularClient method")
-//			},
-//			GetDatasetAPIClientFunc: func(cfg *config.Config) service.DatasetAPIClient {
-//				panic("mock out the GetDatasetAPIClient method")
-//			},
-//			GetHTTPServerFunc: func(bindAddr string, router http.Handler) service.HTTPServer {
-//				panic("mock out the GetHTTPServer method")
-//			},
-//			GetHealthCheckFunc: func(cfg *config.Config, time string, commit string, version string) (service.HealthChecker, error) {
-//				panic("mock out the GetHealthCheck method")
-//			},
-//			GetResponderFunc: func() service.Responder {
-//				panic("mock out the GetResponder method")
-//			},
-//		}
+// 		// make and configure a mocked service.Initialiser
+// 		mockedInitialiser := &InitialiserMock{
+// 			GetCantabularClientFunc: func(cfg config.CantabularConfig) service.CantabularClient {
+// 				panic("mock out the GetCantabularClient method")
+// 			},
+// 			GetDatasetAPIClientFunc: func(cfg *config.Config) service.DatasetAPIClient {
+// 				panic("mock out the GetDatasetAPIClient method")
+// 			},
+// 			GetHTTPServerFunc: func(bindAddr string, router http.Handler) service.HTTPServer {
+// 				panic("mock out the GetHTTPServer method")
+// 			},
+// 			GetHealthCheckFunc: func(cfg *config.Config, time string, commit string, version string) (service.HealthChecker, error) {
+// 				panic("mock out the GetHealthCheck method")
+// 			},
+// 			GetResponderFunc: func() service.Responder {
+// 				panic("mock out the GetResponder method")
+// 			},
+// 		}
 //
-//		// use mockedInitialiser in code that requires service.Initialiser
-//		// and then make assertions.
+// 		// use mockedInitialiser in code that requires service.Initialiser
+// 		// and then make assertions.
 //
-//	}
+// 	}
 type InitialiserMock struct {
 	// GetCantabularClientFunc mocks the GetCantabularClient method.
 	GetCantabularClientFunc func(cfg config.CantabularConfig) service.CantabularClient
@@ -116,8 +116,7 @@ func (mock *InitialiserMock) GetCantabularClient(cfg config.CantabularConfig) se
 
 // GetCantabularClientCalls gets all the calls that were made to GetCantabularClient.
 // Check the length with:
-//
-//	len(mockedInitialiser.GetCantabularClientCalls())
+//     len(mockedInitialiser.GetCantabularClientCalls())
 func (mock *InitialiserMock) GetCantabularClientCalls() []struct {
 	Cfg config.CantabularConfig
 } {
@@ -148,8 +147,7 @@ func (mock *InitialiserMock) GetDatasetAPIClient(cfg *config.Config) service.Dat
 
 // GetDatasetAPIClientCalls gets all the calls that were made to GetDatasetAPIClient.
 // Check the length with:
-//
-//	len(mockedInitialiser.GetDatasetAPIClientCalls())
+//     len(mockedInitialiser.GetDatasetAPIClientCalls())
 func (mock *InitialiserMock) GetDatasetAPIClientCalls() []struct {
 	Cfg *config.Config
 } {
@@ -182,8 +180,7 @@ func (mock *InitialiserMock) GetHTTPServer(bindAddr string, router http.Handler)
 
 // GetHTTPServerCalls gets all the calls that were made to GetHTTPServer.
 // Check the length with:
-//
-//	len(mockedInitialiser.GetHTTPServerCalls())
+//     len(mockedInitialiser.GetHTTPServerCalls())
 func (mock *InitialiserMock) GetHTTPServerCalls() []struct {
 	BindAddr string
 	Router   http.Handler
@@ -222,8 +219,7 @@ func (mock *InitialiserMock) GetHealthCheck(cfg *config.Config, time string, com
 
 // GetHealthCheckCalls gets all the calls that were made to GetHealthCheck.
 // Check the length with:
-//
-//	len(mockedInitialiser.GetHealthCheckCalls())
+//     len(mockedInitialiser.GetHealthCheckCalls())
 func (mock *InitialiserMock) GetHealthCheckCalls() []struct {
 	Cfg     *config.Config
 	Time    string
@@ -257,8 +253,7 @@ func (mock *InitialiserMock) GetResponder() service.Responder {
 
 // GetResponderCalls gets all the calls that were made to GetResponder.
 // Check the length with:
-//
-//	len(mockedInitialiser.GetResponderCalls())
+//     len(mockedInitialiser.GetResponderCalls())
 func (mock *InitialiserMock) GetResponderCalls() []struct {
 } {
 	var calls []struct {

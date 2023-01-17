@@ -31,7 +31,7 @@ type CantabularClient struct {
 	GetCategorisationsResponse       *cantabular.GetCategorisationsResponse
 	GetBaseVariableResponse          *cantabular.GetBaseVariableResponse
 	GetDimensionCategoriesRespnse    *cantabular.GetDimensionCategoriesResponse
-	ListDatasetsResponse             []string
+	ListDatasetsResponse             *cantabular.ListDatasetsResponse
 }
 
 func (c *CantabularClient) Checker(_ context.Context, _ *healthcheck.CheckState) error {
