@@ -37,7 +37,6 @@ func (h *Dimensions) GetDimensionCategories(w http.ResponseWriter, r *http.Reque
 
 	req := contract.GetDimensionCategoriesRequest{
 		PopulationType: chi.URLParam(r, "population-type"),
-		Variables:      r.URL.Query().Get("dims"),
 	}
 
 	logData := log.Data{
@@ -45,13 +44,15 @@ func (h *Dimensions) GetDimensionCategories(w http.ResponseWriter, r *http.Reque
 	}
 
 	if err := parseRequest(r, &req); err != nil {
-		h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
-			err: errors.Wrap(err, "failed to get dimension categories"),
-		})
+		h.respond.Error(
+			ctx,
+			w,
+			http.StatusBadRequest,
+			errors.Wrap(err, "failed to get dimension categories"),
+		)
 		return
 	}
 
-	// parse the variables here for now
 	dimensions := strings.Split(req.Variables, ",")
 
 	cReq := cantabular.GetDimensionCategoriesRequest{
@@ -98,7 +99,6 @@ func (h *Dimensions) GetDimensionCategories(w http.ResponseWriter, r *http.Reque
 			dimensionCategories = append(dimensionCategories, *dimensionCategory)
 		}
 		resp.Categories = dimensionCategories
-
 	}
 
 	resp.TotalCount = len(resp.Categories)
@@ -114,9 +114,12 @@ func (h *Dimensions) GetAll(w http.ResponseWriter, r *http.Request) {
 		PopulationType: chi.URLParam(r, "population-type"),
 	}
 	if err := parseRequest(r, &req); err != nil {
-		h.respond.Error(ctx, w, http.StatusBadRequest, &Error{
-			err: errors.Wrap(err, "invalid request"),
-		})
+		h.respond.Error(
+			ctx,
+			w,
+			http.StatusBadRequest,
+			errors.Wrap(err, "invalid request"),
+		)
 		return
 	}
 
