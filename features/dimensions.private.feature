@@ -17,6 +17,11 @@ Feature: Dimensionas
                                 "label": "Household size (31 categories)",
                                 "name":  "hh_size",
                                 "description": "description",
+                                "meta": {
+								                    "ONS_Variable": {
+									                      "quality_statement_text": "quality statement"
+								                    }
+							                  },
                                 "categories": {
                                     "totalCount": 31
                                 }
@@ -27,6 +32,11 @@ Feature: Dimensionas
                                 "name": "hh_tenure",
                                 "label": "Tenure of household (11 categories)",
                                 "description": "description",
+                                "meta": {
+								                    "ONS_Variable": {
+									                      "quality_statement_text": "quality statement"
+								                    }
+							                  },
                                 "categories": {
                                     "totalCount": 11
                                 }
@@ -83,11 +93,13 @@ Feature: Dimensionas
                 "id": "hh_size",
                 "label": "Household size (31 categories)",
                 "description": "description",
+                "quality_statement_text": "quality statement",
                 "total_count": 31
             },
             {
                 "id": "hh_tenure",
                 "label": "Tenure of household (11 categories)",
+                "quality_statement_text": "quality statement",
                 "description": "description",
                 "total_count": 11
             }
@@ -95,7 +107,7 @@ Feature: Dimensionas
     }
     """
 
-  Scenario: Getting unpublished dimensions
+  Scenario: 
     Given I am identified as "user@ons.gov.uk"
 
     And I am authorised
@@ -139,12 +151,14 @@ Feature: Dimensionas
                 "id": "hh_size",
                 "label": "Household size (31 categories)",
                 "description": "description",
+                "quality_statement_text": "quality statement",
                 "total_count": 31
             },
             {
                 "id": "hh_tenure",
                 "label": "Tenure of household (11 categories)",
                 "description": "description",
+                "quality_statement_text": "quality statement",
                 "total_count": 11
             }
         ]

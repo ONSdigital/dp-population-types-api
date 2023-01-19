@@ -8,10 +8,11 @@ import (
 
 // Dimension is an area-type model with ID and Label
 type Dimension struct {
-	ID          string `json:"id"`
-	Label       string `json:"label"`
-	Description string `json:"description"`
-	TotalCount  int    `json:"total_count"`
+	ID                   string `json:"id"`
+	Label                string `json:"label"`
+	Description          string `json:"description"`
+	TotalCount           int    `json:"total_count"`
+	QualityStatementText string `json:"quality_statement_text"`
 }
 
 type GetDimensionsRequest struct {
