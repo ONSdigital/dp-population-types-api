@@ -100,6 +100,7 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	r.Get("/population-types/{population-type}/dimensions", dimensions.GetAll)
 	r.Get("/population-types/{population-type}/dimensions/{dimension}/categorisations", dimensions.GetCategorisations)
 	r.Get("/population-types/{population-type}/dimensions/{dimension}/base", dimensions.GetBaseVariable)
+	r.Get("/population-types/{population-type}/dimensions-description", dimensions.GetDescription)
 
 	areaTypes := handler.NewAreaTypes(
 		svc.Config,

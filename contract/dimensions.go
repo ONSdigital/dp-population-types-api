@@ -21,6 +21,12 @@ type GetDimensionsRequest struct {
 	SearchText     string `schema:"q"`
 }
 
+type GetDimensionsDescriptionRequest struct {
+	QueryParams
+	PopulationType string
+	DimensionNames []string `schema:"q"`
+}
+
 // GetAreaTypesResponse is the response object for GET /dimensions
 type GetDimensionsResponse struct {
 	PaginationResponse

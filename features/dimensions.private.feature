@@ -49,6 +49,39 @@ Feature: Dimensionas
     }
     """
 
+    And the following dimensions description response is available from Cantabular:
+    """
+    {
+        "dataset": {
+            "variables": {
+                "edges": [
+                    {
+                        "node": {
+                            "categories": {
+                                "totalCount": 32
+                            },
+                            "description": "description",
+                            "label": "Number of unpaid carers in household (32 categories)",
+                            "name": "hh_carers"
+                        }
+                    },
+                    {
+                        "node": {
+                            "categories": {
+                                "totalCount": 6
+                            },
+                            "description": "description",
+                            "label": "Household deprivation (6 categories)",
+                            "name": "hh_deprivation"
+                        }
+                    }
+                ],
+                "totalCount": 2
+            }
+        }
+    }
+    """
+
   Scenario: Getting published dimensions
     Given I am identified as "user@ons.gov.uk"
 
@@ -164,3 +197,60 @@ Feature: Dimensionas
         ]
     }
     """
+
+ Scenario: Getting dimensions description
+    Given I am identified as "user@ons.gov.uk"
+
+    And I am authorised
+
+    And I have the following population types in cantabular
+    """
+    {
+      "datasets":[
+        {
+          "name": "Example1",
+          "label": "Example 1"
+        },
+        {
+          "name": "Example2",
+          "label": "Example 2"
+        }
+      ]
+    }
+    """
+
+    And the following datasets based on "Example" are available
+    """
+    {
+      "total_count": 1
+    }
+    """
+
+    When I GET "/population-types/Example/dimensions-description?q=hh_carers&q=hh_deprivation"
+
+    Then the HTTP status code should be "200"
+
+    And I should receive the following JSON response:
+    """
+    {
+        "limit":  20,
+        "offset": 0,
+        "count":  0,
+        "total_count": 0,
+        "items": [
+            {
+                "id": "hh_carers",
+                "label": "Number of unpaid carers in household (32 categories)",
+                "description": "description",
+                "total_count": 32
+            },
+            {
+                "id": "hh_deprivation",
+                "label": "Household deprivation (6 categories)",
+                "description": "description",
+                "total_count": 6
+            }
+        ]
+    }
+    """
+    
