@@ -140,7 +140,7 @@ Feature: Dimensionas
     }
     """
 
-  Scenario: 
+  Scenario: Getting unpublished dimensions
     Given I am identified as "user@ons.gov.uk"
 
     And I am authorised
