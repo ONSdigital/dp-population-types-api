@@ -160,10 +160,11 @@ func (h *Dimensions) GetDescription(w http.ResponseWriter, r *http.Request) {
 		resp.TotalCount = res.TotalCount
 		for _, edge := range res.Dataset.Variables.Edges {
 			resp.Dimensions = append(resp.Dimensions, contract.Dimension{
-				ID:          edge.Node.Name,
-				Label:       edge.Node.Label,
-				Description: edge.Node.Description,
-				TotalCount:  edge.Node.Categories.TotalCount,
+				ID:                   edge.Node.Name,
+				Label:                edge.Node.Label,
+				Description:          edge.Node.Description,
+				QualityStatementText: edge.Node.Meta.ONSVariable.QualityStatementText,
+				TotalCount:           edge.Node.Categories.TotalCount,
 			})
 		}
 	}

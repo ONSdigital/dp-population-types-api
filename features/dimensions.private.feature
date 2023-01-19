@@ -61,6 +61,11 @@ Feature: Dimensionas
                                 "totalCount": 32
                             },
                             "description": "description",
+                            "meta": {
+								                "ONS_Variable": {
+									                  "quality_statement_text": "quality statement"
+								                }
+							              },
                             "label": "Number of unpaid carers in household (32 categories)",
                             "name": "hh_carers"
                         }
@@ -71,6 +76,11 @@ Feature: Dimensionas
                                 "totalCount": 6
                             },
                             "description": "description",
+                            "meta": {
+								                "ONS_Variable": {
+									                  "quality_statement_text": "quality statement"
+								                }
+							              },
                             "label": "Household deprivation (6 categories)",
                             "name": "hh_deprivation"
                         }
@@ -242,12 +252,14 @@ Feature: Dimensionas
                 "id": "hh_carers",
                 "label": "Number of unpaid carers in household (32 categories)",
                 "description": "description",
+                "quality_statement_text": "quality statement",
                 "total_count": 32
             },
             {
                 "id": "hh_deprivation",
                 "label": "Household deprivation (6 categories)",
                 "description": "description",
+                "quality_statement_text": "quality statement",
                 "total_count": 6
             }
         ]
