@@ -77,3 +77,14 @@ type GetBaseVariableResponse struct {
 	Name  string `json:"name"`
 	Label string `json:"label"`
 }
+
+type GetDimensionCategoriesRequest struct {
+	QueryParams
+	PopulationType string
+	Variables      string `schema:"dims"`
+}
+
+type GetDimensionCategoriesResponse struct {
+	PaginationResponse
+	Categories []Category `json:"items"`
+}
