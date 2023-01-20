@@ -18,10 +18,10 @@ Feature: Dimensionas
                                 "name":  "hh_size",
                                 "description": "description",
                                 "meta": {
-								                    "ONS_Variable": {
-									                      "quality_statement_text": "quality statement"
-								                    }
-							                  },
+                    "ONS_Variable": {
+                      "quality_statement_text": "quality statement"
+                    }
+                  },
                                 "categories": {
                                     "totalCount": 31
                                 }
@@ -33,10 +33,10 @@ Feature: Dimensionas
                                 "label": "Tenure of household (11 categories)",
                                 "description": "description",
                                 "meta": {
-								                    "ONS_Variable": {
-									                      "quality_statement_text": "quality statement"
-								                    }
-							                  },
+                    "ONS_Variable": {
+                      "quality_statement_text": "quality statement"
+                    }
+                  },
                                 "categories": {
                                     "totalCount": 11
                                 }
@@ -62,10 +62,10 @@ Feature: Dimensionas
                             },
                             "description": "description",
                             "meta": {
-								                "ONS_Variable": {
-									                  "quality_statement_text": "quality statement"
-								                }
-							              },
+                "ONS_Variable": {
+                  "quality_statement_text": "quality statement"
+                }
+              },
                             "label": "Number of unpaid carers in household (32 categories)",
                             "name": "hh_carers"
                         }
@@ -77,10 +77,10 @@ Feature: Dimensionas
                             },
                             "description": "description",
                             "meta": {
-								                "ONS_Variable": {
-									                  "quality_statement_text": "quality statement"
-								                }
-							              },
+                "ONS_Variable": {
+                  "quality_statement_text": "quality statement"
+                }
+              },
                             "label": "Household deprivation (6 categories)",
                             "name": "hh_deprivation"
                         }

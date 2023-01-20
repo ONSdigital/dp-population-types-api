@@ -18,10 +18,10 @@ Feature: Dimensionas
                                 "name":  "hh_size",
                                 "description": "description",
                                 "meta": {
-								    "ONS_Variable": {
-									    "quality_statement_text": "quality statement"
-								    }
-							    },
+    "ONS_Variable": {
+    "quality_statement_text": "quality statement"
+    }
+    },
                                 "categories": {
                                     "totalCount": 31
                                 }
@@ -33,10 +33,10 @@ Feature: Dimensionas
                                 "label": "Tenure of household (11 categories)",
                                 "description": "description",
                                 "meta": {
-								    "ONS_Variable": {
-									    "quality_statement_text": "quality statement"
-								    }
-							    },
+    "ONS_Variable": {
+    "quality_statement_text": "quality statement"
+    }
+    },
                                 "categories": {
                                     "totalCount": 11
                                 }
