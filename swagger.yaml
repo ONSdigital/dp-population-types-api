@@ -43,6 +43,12 @@ parameters:
     description: "A comma separated list of dimensions to retrieve information for."
     in: query
     type: string
+  area-type:
+    description: "The name of the area-type dimension that is being flexed, e.g. country"
+    name: area-type
+    in: query
+    required: false
+    type: string
 tags:
   - name: "Public"
   - name: "Private"
@@ -129,6 +135,39 @@ paths:
           $ref: "#/responses/InternalError"
         502:
           $ref: '#/responses/BadGateway'
+  /population-types/{population-type}/json:
+    get:
+      summary: "Return observations for a custom selection of variables"
+      tags:
+        - "Public"
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: population-type
+          type: string
+          in: path
+          required: true
+        - $ref: '#/parameters/dims'
+        - $ref: '#/parameters/area-type'
+      responses:
+        200:
+          description: "Json object containing all metadata for a version"
+          schema:
+            $ref: '#/definitions/GetDatasetJSONResponse'
+        400:
+          description: |
+            Invalid request, reasons can be one of the following:
+              * query parameters contain incorrect dimensions
+        404:
+          description: |
+            Resource not found, reasons can be one of the following:
+              * dataset id was incorrect
+              * edition was incorrect
+              * version was incorrect
+              * observations not found for selected query paramaters
+        500:
+          $ref: '#/responses/InternalError'
   /population-types/{population-type}/dimension-categories:
     get:
       summary: "Get list of categories for dimensions"
@@ -478,6 +517,43 @@ definitions:
         description: "The total number of area-types"
         readOnly: true
         type: integer
+  GetDatasetJSONResponse:
+    description: "An object containing information on a list of observations"
+    type: object
+    properties:
+      dimensions:
+        description: "A list of dimensions for the given query"
+        type: array
+        items:
+          type: object
+          description: "Each element is a dimension and will represent a query parameter in the request"
+          properties:
+            name:
+              description: "The name of the dimension"
+            options:
+              type: array
+              items:
+                description: "A list of links to the corresponding dimension codes for the given `dimension_options`"
+                $ref: '#/definitions/Link'
+      links:
+        description: "A list of links related to this observation resource"
+        readOnly: true
+        type: object
+        properties:
+          dataset_metadata:
+            $ref: '#/definitions/Link'
+          self:
+            $ref: '#/definitions/Link'
+          version:
+            $ref: '#/definitions/Link'
+      observations:
+        description: "A list of observations found when filtering on query parameters"
+        type: array
+        items:
+         type: integer
+      total_observations:
+        description: "The number of observations found"
+        type: integer
   GetPopulationTypesResponse:
     description: "The response body containing all available population-types for Census 2021"
     properties:
@@ -676,3 +752,11 @@ definitions:
         type: string
       label:
         type: string
+  Link:
+    properties:
+      href:
+        type: string
+        description: "link to resource"
+      id:
+        type: string
+        description: "id of resource"
