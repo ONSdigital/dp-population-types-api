@@ -79,10 +79,10 @@ Background:
                 {
                     "id": "name 2",
                     "label": "label 2",
-                                        "quality_statement_text": "quality statement",
+                    "quality_statement_text": "quality statement",
                     "categories": [{
                          "id": "2",
-                                             "quality_statement_text": "quality statement",
+                          "quality_statement_text": "quality statement",
                          "label": "category 2"
                     }]
                 }
