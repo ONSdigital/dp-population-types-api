@@ -85,15 +85,17 @@ func (h *Dimensions) GetDimensionCategories(w http.ResponseWriter, r *http.Reque
 		dimensionCategories := make([]contract.Category, 0)
 		for _, edge := range res.Dataset.Variables.Edges {
 			dimensionCategory := &contract.Category{
-				Id:         edge.Node.Name,
-				Label:      edge.Node.Label,
-				Categories: []contract.DimensionCategory{},
+				Id:                   edge.Node.Name,
+				Label:                edge.Node.Label,
+				QualityStatementText: edge.Node.Meta.ONSVariable.QualityStatementText,
+				Categories:           []contract.DimensionCategory{},
 			}
 
 			for _, category := range edge.Node.Categories.Edges {
 				dimensionCategory.Categories = append(dimensionCategory.Categories, contract.DimensionCategory{
-					ID:    category.Node.Code,
-					Label: category.Node.Label,
+					ID:                   category.Node.Code,
+					Label:                category.Node.Label,
+					QualityStatementText: edge.Node.Meta.ONSVariable.QualityStatementText,
 				})
 			}
 			dimensionCategories = append(dimensionCategories, *dimensionCategory)

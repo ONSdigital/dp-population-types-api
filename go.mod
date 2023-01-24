@@ -8,7 +8,7 @@ go 1.19
 replace github.com/spf13/cobra => github.com/spf13/cobra v1.4.0
 
 require (
-	github.com/ONSdigital/dp-api-clients-go/v2 v2.218.0
+	github.com/ONSdigital/dp-api-clients-go/v2 v2.220.0
 	github.com/ONSdigital/dp-authorisation v0.2.0
 	github.com/ONSdigital/dp-component-test v0.9.0
 	github.com/ONSdigital/dp-healthcheck v1.5.0

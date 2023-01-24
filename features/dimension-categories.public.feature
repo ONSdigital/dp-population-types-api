@@ -15,20 +15,35 @@ Feature: Area Types
                       {
                         "node": {
                           "code": "1",
-                          "label": "Female"
+                          "label": "Female",
+                          "meta": {
+                            "ONS_Variable": {
+                              "quality_statement_text": "quality statement"
+                            }
+                          }
                         }
                       },
                       {
                         "node": {
                           "code": "2",
-                          "label": "Male"
+                          "label": "Male",
+                          "meta": {
+                            "ONS_Variable": {
+                              "quality_statement_text": "quality statement"
+                            }
+                          }
                         }
                       }
                     ],
                     "totalCount": 2
                   },
                   "label": "Sex (2 categories)",
-                  "name": "sex"
+                  "name": "sex",
+                  "meta": {
+                    "ONS_Variable": {
+                      "quality_statement_text": "quality statement"
+                    }
+                  }
                 }
               }
             ]
@@ -54,14 +69,17 @@ Feature: Area Types
           {
               "id": "sex",
               "label": "Sex (2 categories)",
+              "quality_statement_text": "quality statement",
               "categories": [
                   {
                       "id": "1",
-                      "label": "Female"
+                      "label": "Female",
+                      "quality_statement_text": "quality statement"
                   },
                   {
                       "id": "2",
-                      "label": "Male"
+                      "label": "Male",
+                      "quality_statement_text": "quality statement"
                   }
               ]
           }
