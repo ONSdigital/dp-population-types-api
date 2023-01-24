@@ -23,12 +23,22 @@ Background:
                                    "edges": [
                                       {
                                          "node": {
+                                           "meta": {
+                                             "ONS_Variable": {
+                                               "quality_statement_text": "quality statement"
+                                               }
+                                           },
                                            "code": "2",
                                            "label": "category 2"
                                           }
                                        }
                                     ]
                                     },
+                                "meta": {
+                                  "ONS_Variable": {
+                                    "quality_statement_text": "quality statement"
+                                  }
+                                },
                                 "label": "label 2",
                                 "name": "name 2"
                                 }
@@ -69,8 +79,10 @@ Background:
                 {
                     "id": "name 2",
                     "label": "label 2",
+                                        "quality_statement_text": "quality statement",
                     "categories": [{
                          "id": "2",
+                                             "quality_statement_text": "quality statement",
                          "label": "category 2"
                     }]
                 }

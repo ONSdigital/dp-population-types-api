@@ -58,14 +58,16 @@ type GetCategorisationsResponse struct {
 }
 
 type Category struct {
-	Id         string              `json:"id"`
-	Label      string              `json:"label"`
-	Categories []DimensionCategory `json:"categories"`
+	Id                   string              `json:"id"`
+	Label                string              `json:"label"`
+	Categories           []DimensionCategory `json:"categories"`
+	QualityStatementText string              `json:"quality_statement_text"`
 }
 
 type DimensionCategory struct {
-	ID    string `json:"id"`
-	Label string `json:"label"`
+	ID                   string `json:"id"`
+	Label                string `json:"label"`
+	QualityStatementText string `json:"quality_statement_text"`
 }
 
 type GetBaseVariableRequest struct {
