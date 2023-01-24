@@ -30,6 +30,7 @@ type CantabularClient struct {
 	GetParentAreaCountResult         *cantabular.GetParentAreaCountResult
 	GetCategorisationsResponse       *cantabular.GetCategorisationsResponse
 	GetBaseVariableResponse          *cantabular.GetBaseVariableResponse
+	GetDimensionCategoriesRespnse    *cantabular.GetDimensionCategoriesResponse
 	ListDatasetsResponse             *cantabular.ListDatasetsResponse
 }
 
@@ -47,6 +48,32 @@ func (c *CantabularClient) ListDatasets(_ context.Context) (*cantabular.ListData
 	}
 
 	return c.ListDatasetsResponse, nil
+}
+
+func (c *CantabularClient) GetDimensionCategories(_ context.Context, _ cantabular.GetDimensionCategoriesRequest) (
+	*cantabular.GetDimensionCategoriesResponse, error) {
+	if c.BadRequest {
+		return nil, dperrors.New(
+			errors.New("bad request"),
+			http.StatusBadRequest,
+			log.Data{"errors": map[string]string{"message": "400 Bad Request: dataset not loaded in this server"}},
+		)
+	}
+	if c.NotFound {
+		return nil, dperrors.New(
+			errors.New("not found"),
+			http.StatusNotFound,
+			log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+		)
+	}
+	if !c.Healthy {
+		return nil, dperrors.New(
+			errors.New("error(s) returned by graphQL query"),
+			http.StatusNotFound,
+			log.Data{"errors": map[string]string{"message": "404 Not Found: dataset not loaded in this server"}},
+		)
+	}
+	return c.GetDimensionCategoriesRespnse, nil
 }
 
 func (c *CantabularClient) GetGeographyDimensions(_ context.Context, _ cantabular.GetGeographyDimensionsRequest) (*cantabular.GetGeographyDimensionsResponse, error) {
