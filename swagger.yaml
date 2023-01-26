@@ -554,6 +554,9 @@ definitions:
       total_observations:
         description: "The number of observations found"
         type: integer
+      blocked_area_count:
+        description: "The number of areas blocked by this query"
+        type: integer
   GetPopulationTypesResponse:
     description: "The response body containing all available population-types for Census 2021"
     properties:
