@@ -85,15 +85,17 @@ func (h *Dimensions) GetDimensionCategories(w http.ResponseWriter, r *http.Reque
 		dimensionCategories := make([]contract.Category, 0)
 		for _, edge := range res.Dataset.Variables.Edges {
 			dimensionCategory := &contract.Category{
-				Id:         edge.Node.Name,
-				Label:      edge.Node.Label,
-				Categories: []contract.DimensionCategory{},
+				Id:                   edge.Node.Name,
+				Label:                edge.Node.Label,
+				QualityStatementText: edge.Node.Meta.ONSVariable.QualityStatementText,
+				Categories:           []contract.DimensionCategory{},
 			}
 
 			for _, category := range edge.Node.Categories.Edges {
 				dimensionCategory.Categories = append(dimensionCategory.Categories, contract.DimensionCategory{
-					ID:    category.Node.Code,
-					Label: category.Node.Label,
+					ID:                   category.Node.Code,
+					Label:                category.Node.Label,
+					QualityStatementText: edge.Node.Meta.ONSVariable.QualityStatementText,
 				})
 			}
 			dimensionCategories = append(dimensionCategories, *dimensionCategory)
@@ -324,15 +326,17 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 							cats := []contract.DimensionCategory{}
 							for _, categories := range isSourceOf.Node.Categories.Edges {
 								cats = append(cats, contract.DimensionCategory{
-									ID:    categories.Node.Code,
-									Label: categories.Node.Label,
+									ID:                   categories.Node.Code,
+									Label:                categories.Node.Label,
+									QualityStatementText: categories.Node.Meta.ONSVariable.QualityStatementText,
 								})
 							}
 
 							resp.Items = append(resp.Items, contract.Category{
-								Id:         isSourceOf.Node.Name,
-								Label:      isSourceOf.Node.Label,
-								Categories: cats,
+								Id:                   isSourceOf.Node.Name,
+								Label:                isSourceOf.Node.Label,
+								QualityStatementText: isSourceOf.Node.Meta.ONSVariable.QualityStatementText,
+								Categories:           cats,
 							})
 						}
 					}
@@ -345,15 +349,17 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 					cats := []contract.DimensionCategory{}
 					for _, categories := range sourceOf.Node.Categories.Edges {
 						cats = append(cats, contract.DimensionCategory{
-							ID:    categories.Node.Code,
-							Label: categories.Node.Label,
+							ID:                   categories.Node.Code,
+							Label:                categories.Node.Label,
+							QualityStatementText: categories.Node.Meta.ONSVariable.QualityStatementText,
 						})
 					}
 
 					resp.Items = append(resp.Items, contract.Category{
-						Id:         sourceOf.Node.Name,
-						Label:      sourceOf.Node.Label,
-						Categories: cats,
+						Id:                   sourceOf.Node.Name,
+						Label:                sourceOf.Node.Label,
+						QualityStatementText: sourceOf.Node.Meta.ONSVariable.QualityStatementText,
+						Categories:           cats,
 					})
 				}
 			}
