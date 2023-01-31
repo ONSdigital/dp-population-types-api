@@ -40,7 +40,6 @@ type HealthChecker interface {
 	AddCheck(name string, checker healthcheck.Checker) (err error)
 }
 
-// CantabularClient fetches lists of datasets
 type CantabularClient interface {
 	ListDatasets(context.Context) (*cantabular.ListDatasetsResponse, error)
 	GetDimensions(context.Context, cantabular.GetDimensionsRequest) (*cantabular.GetDimensionsResponse, error)
@@ -52,6 +51,7 @@ type CantabularClient interface {
 	GetArea(context.Context, cantabular.GetAreaRequest) (*cantabular.GetAreaResponse, error)
 	GetParents(context.Context, cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error)
 	GetParentAreaCount(ctx context.Context, req cantabular.GetParentAreaCountRequest) (*cantabular.GetParentAreaCountResult, error)
+	GetBlockedAreaCount(ctx context.Context, req cantabular.GetBlockedAreaCountRequest) (*cantabular.GetBlockedAreaCountResult, error)
 	GetCategorisations(context.Context, cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error)
 	GetBaseVariable(context.Context, cantabular.GetBaseVariableRequest) (*cantabular.GetBaseVariableResponse, error)
 	Checker(ctx context.Context, state *healthcheck.CheckState) error

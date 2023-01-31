@@ -253,6 +253,52 @@ func (h *Dimensions) GetDescription(w http.ResponseWriter, r *http.Request) {
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }
 
+func (h *Dimensions) GetBlockedAreaCount(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	cReq := cantabular.GetBlockedAreaCountRequest{
+		Dataset:   chi.URLParam(r, "population-type"),
+		Variables: strings.Split(r.URL.Query().Get("vars"), ","),
+	}
+
+	if r.URL.Query().Get("fvar") != "" {
+		cReq.Filters = []cantabular.Filter{{
+			Variable: r.URL.Query().Get("fvar"),
+			Codes:    strings.Split(r.URL.Query().Get("areas"), ","),
+		}}
+	}
+
+	logData := log.Data{
+		"population_type": cReq.Dataset,
+		"variables":       cReq.Variables,
+		"filters":         cReq.Filters,
+	}
+
+	// only return results for published population-types on web
+	if !h.cfg.EnablePrivateEndpoints {
+		if err := h.published(ctx, cReq.Dataset); err != nil {
+			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+				err:     errors.Wrap(err, "failed to check published state"),
+				message: "population type not found",
+				logData: logData,
+			})
+			return
+		}
+	}
+
+	res, err := h.cantabular.GetBlockedAreaCount(ctx, cReq)
+	if err != nil {
+		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), &Error{
+			err:     errors.Wrap(err, "failed to get parent areas count"),
+			message: "failed to get parent areas count",
+			logData: logData,
+		})
+		return
+	}
+
+	h.respond.JSON(ctx, w, http.StatusOK, res)
+}
+
 // GetCategorisations is the handler for GET /population-types/{population-type}/dimensions/{dimension}/categoristations
 func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()

@@ -24,6 +24,7 @@ type cantabularClient interface {
 	GetArea(context.Context, cantabular.GetAreaRequest) (*cantabular.GetAreaResponse, error)
 	GetParents(context.Context, cantabular.GetParentsRequest) (*cantabular.GetParentsResponse, error)
 	GetParentAreaCount(context.Context, cantabular.GetParentAreaCountRequest) (*cantabular.GetParentAreaCountResult, error)
+	GetBlockedAreaCount(context.Context, cantabular.GetBlockedAreaCountRequest) (*cantabular.GetBlockedAreaCountResult, error)
 	GetCategorisations(context.Context, cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error)
 	GetBaseVariable(context.Context, cantabular.GetBaseVariableRequest) (*cantabular.GetBaseVariableResponse, error)
 	StatusCode(error) int

@@ -32,6 +32,7 @@ type CantabularClient struct {
 	GetBaseVariableResponse          *cantabular.GetBaseVariableResponse
 	GetDimensionCategoriesRespnse    *cantabular.GetDimensionCategoriesResponse
 	ListDatasetsResponse             *cantabular.ListDatasetsResponse
+	GetBlockedAreaCountResult        *cantabular.GetBlockedAreaCountResult
 }
 
 func (c *CantabularClient) Checker(_ context.Context, _ *healthcheck.CheckState) error {
@@ -232,6 +233,17 @@ func (c *CantabularClient) GetParentAreaCount(_ context.Context, _ cantabular.Ge
 	}
 
 	return c.GetParentAreaCountResult, nil
+}
+
+func (c *CantabularClient) GetBlockedAreaCount(_ context.Context, _ cantabular.GetBlockedAreaCountRequest) (*cantabular.GetBlockedAreaCountResult, error) {
+	if !c.Healthy {
+		return nil, dperrors.New(
+			errors.New("test error response"),
+			http.StatusNotFound,
+			nil,
+		)
+	}
+	return c.GetBlockedAreaCountResult, nil
 }
 
 func (c *CantabularClient) GetCategorisations(_ context.Context, _ cantabular.GetCategorisationsRequest) (*cantabular.GetCategorisationsResponse, error) {

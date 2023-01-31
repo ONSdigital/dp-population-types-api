@@ -17,22 +17,22 @@ var _ service.DatasetAPIClient = &DatasetAPIClientMock{}
 
 // DatasetAPIClientMock is a mock implementation of service.DatasetAPIClient.
 //
-// 	func TestSomethingThatUsesDatasetAPIClient(t *testing.T) {
+//	func TestSomethingThatUsesDatasetAPIClient(t *testing.T) {
 //
-// 		// make and configure a mocked service.DatasetAPIClient
-// 		mockedDatasetAPIClient := &DatasetAPIClientMock{
-// 			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error {
-// 				panic("mock out the Checker method")
-// 			},
-// 			GetDatasetsFunc: func(ctx context.Context, uToken string, svcToken string, collectionID string, params *dataset.QueryParams) (dataset.List, error) {
-// 				panic("mock out the GetDatasets method")
-// 			},
-// 		}
+//		// make and configure a mocked service.DatasetAPIClient
+//		mockedDatasetAPIClient := &DatasetAPIClientMock{
+//			CheckerFunc: func(ctx context.Context, state *healthcheck.CheckState) error {
+//				panic("mock out the Checker method")
+//			},
+//			GetDatasetsFunc: func(ctx context.Context, uToken string, svcToken string, collectionID string, params *dataset.QueryParams) (dataset.List, error) {
+//				panic("mock out the GetDatasets method")
+//			},
+//		}
 //
-// 		// use mockedDatasetAPIClient in code that requires service.DatasetAPIClient
-// 		// and then make assertions.
+//		// use mockedDatasetAPIClient in code that requires service.DatasetAPIClient
+//		// and then make assertions.
 //
-// 	}
+//	}
 type DatasetAPIClientMock struct {
 	// CheckerFunc mocks the Checker method.
 	CheckerFunc func(ctx context.Context, state *healthcheck.CheckState) error
@@ -87,7 +87,8 @@ func (mock *DatasetAPIClientMock) Checker(ctx context.Context, state *healthchec
 
 // CheckerCalls gets all the calls that were made to Checker.
 // Check the length with:
-//     len(mockedDatasetAPIClient.CheckerCalls())
+//
+//	len(mockedDatasetAPIClient.CheckerCalls())
 func (mock *DatasetAPIClientMock) CheckerCalls() []struct {
 	Ctx   context.Context
 	State *healthcheck.CheckState
@@ -128,7 +129,8 @@ func (mock *DatasetAPIClientMock) GetDatasets(ctx context.Context, uToken string
 
 // GetDatasetsCalls gets all the calls that were made to GetDatasets.
 // Check the length with:
-//     len(mockedDatasetAPIClient.GetDatasetsCalls())
+//
+//	len(mockedDatasetAPIClient.GetDatasetsCalls())
 func (mock *DatasetAPIClientMock) GetDatasetsCalls() []struct {
 	Ctx          context.Context
 	UToken       string
