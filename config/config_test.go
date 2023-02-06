@@ -8,6 +8,7 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 
+	"github.com/ONSdigital/dp-mongodb/v3/mongodb"
 	"github.com/ONSdigital/dp-population-types-api/config"
 )
 
@@ -37,6 +38,27 @@ func TestConfig(t *testing.T) {
 						CantabularExtURL:             "http://localhost:8492",
 						DefaultRequestTimeout:        10 * time.Second,
 						CantabularHealthcheckEnabled: false,
+					},
+					MetadataCollection: "filterMetadata",
+					Mongo: mongodb.MongoDriverConfig{
+						Username:        "",
+						Password:        "",
+						ClusterEndpoint: "localhost:27017",
+						Database:        "filters",
+						Collections: map[string]string{
+							"filterMetadata": "filterMetadata",
+						},
+						ReplicaSet:                    "",
+						IsStrongReadConcernEnabled:    false,
+						IsWriteConcernMajorityEnabled: true,
+						ConnectTimeout:                time.Duration(5000000000),
+						QueryTimeout:                  time.Duration(15000000000),
+						TLSConnectionConfig: mongodb.TLSConnectionConfig{
+							IsSSL:              false,
+							VerifyCert:         false,
+							CACertChain:        "",
+							RealHostnameForSSH: "",
+						},
 					},
 				})
 			})

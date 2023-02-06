@@ -3,6 +3,7 @@ package config
 import (
 	"time"
 
+	mongo "github.com/ONSdigital/dp-mongodb/v3/mongodb"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -17,6 +18,8 @@ type Config struct {
 	EnablePermissionsAuth      bool          `envconfig:"ENABLE_PERMISSIONS_AUTH"`
 	ZebedeeURL                 string        `envconfig:"ZEBEDEE_URL"`
 	DatasetAPIURL              string        `envconfig:"DATASET_API_URL"`
+	MetadataCollection         string        `envconfig:"METADATA_COLLECTION"`
+	Mongo                      mongo.MongoDriverConfig
 	CantabularConfig
 }
 
@@ -51,6 +54,24 @@ func Get() (*Config, error) {
 			CantabularExtURL:             "http://localhost:8492",
 			DefaultRequestTimeout:        10 * time.Second,
 			CantabularHealthcheckEnabled: false,
+		},
+		MetadataCollection: "filterMetadata",
+		Mongo: mongo.MongoDriverConfig{
+			ClusterEndpoint: "localhost:27017",
+			Username:        "",
+			Password:        "",
+			Database:        "filters",
+			Collections: map[string]string{
+				"filterMetadata": "filterMetadata",
+			},
+			ReplicaSet:                    "",
+			IsStrongReadConcernEnabled:    false,
+			IsWriteConcernMajorityEnabled: true,
+			ConnectTimeout:                5 * time.Second,
+			QueryTimeout:                  15 * time.Second,
+			TLSConnectionConfig: mongo.TLSConnectionConfig{
+				IsSSL: false,
+			},
 		},
 	}
 

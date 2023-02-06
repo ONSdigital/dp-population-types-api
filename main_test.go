@@ -21,8 +21,7 @@ var componentFlag = flag.Bool("component", false, "perform component tests")
 var loggingFlag = flag.Bool("logging", false, "print logging")
 
 type ComponentTest struct {
-	MongoFeature *componenttest.MongoFeature
-	t            testing.TB
+	t testing.TB
 }
 
 func (f *ComponentTest) InitializeScenario(ctx *godog.ScenarioContext) {
@@ -54,6 +53,7 @@ func (f *ComponentTest) InitializeScenario(ctx *godog.ScenarioContext) {
 	component.RegisterSteps(ctx)
 	apiFeature.RegisterSteps(ctx)
 	authFeature.RegisterSteps(ctx)
+
 }
 
 func (f *ComponentTest) InitializeTestSuite(ctx *godog.TestSuiteContext) {}

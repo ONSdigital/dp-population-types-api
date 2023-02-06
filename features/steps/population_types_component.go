@@ -13,6 +13,7 @@ import (
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-net/v2/responder"
 	"github.com/ONSdigital/dp-population-types-api/config"
+	"github.com/ONSdigital/dp-population-types-api/datastore"
 	"github.com/ONSdigital/dp-population-types-api/features/mock"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	svcmock "github.com/ONSdigital/dp-population-types-api/service/mock"
@@ -30,6 +31,7 @@ type PopulationTypesComponent struct {
 	fakeCantabularIsUnresponsive bool
 	service                      *service.Service
 	InitialiserMock              service.Initialiser
+	MongoFeature                 *MongoFeature
 	datasetAPI                   *httpfake.HTTPFake
 	CantabularApiExt             *httpfake.HTTPFake
 	CantabularSrv                *httpfake.HTTPFake
@@ -63,6 +65,8 @@ func NewComponent(t testing.TB, zebedeeURL string) (*PopulationTypesComponent, e
 		NotFound:   false,
 	}
 
+	c.MongoFeature = NewMongoFeature(c.ErrorFeature, config)
+
 	return c, nil
 }
 
@@ -92,6 +96,7 @@ func (c *PopulationTypesComponent) InitialiseService() (http.Handler, error) {
 		GetCantabularClientFunc: c.GetCantabularClient,
 		GetResponderFunc:        c.GetResponder,
 		GetDatasetAPIClientFunc: c.GetDatasetAPIClient,
+		GetMongoClientFunc:      c.Get,
 	}
 
 	c.service = service.New()
@@ -129,6 +134,9 @@ func (c *PopulationTypesComponent) GetCantabularClient(_ config.CantabularConfig
 	return c.fakeCantabular
 }
 
+func (c *PopulationTypesComponent) GetMongoClient(_ *config.Config) service.MongoClient {
+	return datastore.NewClient(context.Background(), c.Config.Mongo)
+}
 func (c *PopulationTypesComponent) GetDatasetAPIClient(_ *config.Config) service.DatasetAPIClient {
 	return dataset.NewAPIClient(c.Config.DatasetAPIURL)
 }
