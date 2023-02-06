@@ -18,8 +18,7 @@ type MongoClient struct {
 
 func NewClient(ctx context.Context, cfg Config) (*MongoClient, error) {
 	c := MongoClient{
-		cfg:                cfg,
-		MetadataCollection: cfg.MetadataCollection,
+		cfg: cfg,
 	}
 	var err error
 	if c.conn, err = mongo.Open(&cfg.MongoDriverConfig); err != nil {

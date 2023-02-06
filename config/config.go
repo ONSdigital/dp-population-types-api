@@ -62,7 +62,7 @@ func Get() (*Config, error) {
 			Password:        "",
 			Database:        "filters",
 			Collections: map[string]string{
-				"filterMetadata": "filterMetadata",
+				"metadata": "filterMetadata",
 			},
 			ReplicaSet:                    "",
 			IsStrongReadConcernEnabled:    false,
