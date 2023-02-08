@@ -96,7 +96,7 @@ func (c *PopulationTypesComponent) InitialiseService() (http.Handler, error) {
 		GetCantabularClientFunc: c.GetCantabularClient,
 		GetResponderFunc:        c.GetResponder,
 		GetDatasetAPIClientFunc: c.GetDatasetAPIClient,
-		GetMongoClientFunc:      c.Get,
+		GetMongoClientFunc:      c.GetMongoClient,
 	}
 
 	c.service = service.New()
@@ -134,8 +134,11 @@ func (c *PopulationTypesComponent) GetCantabularClient(_ config.CantabularConfig
 	return c.fakeCantabular
 }
 
-func (c *PopulationTypesComponent) GetMongoClient(_ *config.Config) service.MongoClient {
-	return datastore.NewClient(context.Background(), c.Config.Mongo)
+func (c *PopulationTypesComponent) GetMongoClient(_ context.Context, _ *config.Config) (service.MongoClient, error) {
+	return datastore.NewClient(context.Background(), datastore.Config{
+		MongoDriverConfig:  c.Config.Mongo,
+		MetadataCollection: "filterMetadata",
+	})
 }
 func (c *PopulationTypesComponent) GetDatasetAPIClient(_ *config.Config) service.DatasetAPIClient {
 	return dataset.NewAPIClient(c.Config.DatasetAPIURL)
