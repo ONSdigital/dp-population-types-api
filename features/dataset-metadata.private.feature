@@ -22,10 +22,12 @@ Feature: Filter Metadata
     And a document in collection "filterMetadata" with key "id" value "UR" should match:
     """
     {
+      "_id": "UR",
       "id": "UR",
       "default-dataset-id": "default-dataset"
     }
     """
+    
   Scenario: The root population-types endpoint should get metadata
     Given I have this metadata:
     """
@@ -38,7 +40,7 @@ Feature: Filter Metadata
     ]
     """
     When I GET "/population-types/UR/metadata"
-    Then the HTTP status code should be "201"
+    Then the HTTP status code should be "200"
     And I should receive the following JSON response:
     """
     {
@@ -48,7 +50,7 @@ Feature: Filter Metadata
     """
 
   Scenario: The root population-types endpoint should return 404 if Blob not found
-    When I PUT "/population-types/DOESNT-EXIST/metadata"
+    When I GET "/population-types/DOESNT-EXIST/metadata"
     """
     {
       "default-dataset-id": "default-dataset"

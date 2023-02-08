@@ -53,7 +53,7 @@ func (f *ComponentTest) InitializeScenario(ctx *godog.ScenarioContext) {
 	component.RegisterSteps(ctx)
 	apiFeature.RegisterSteps(ctx)
 	authFeature.RegisterSteps(ctx)
-
+	component.MongoFeature.RegisterSteps(ctx)
 }
 
 func (f *ComponentTest) InitializeTestSuite(ctx *godog.TestSuiteContext) {}
