@@ -16,49 +16,41 @@ Background:
             "count": 0,
             "total_count": 0,
             "dataset": {
-                "variables": {  
+                "variables": {
                     "edges": [
-                    {
+                     {
                         "node": {
-                        "isSourceOf": {
-                            "totalCount": 1,
-                            "edges": [
-                            {
-                                "node": {
-                                "categories": {
-                                   "edges": [
-                                      {
-                                         "node": {
-                                           "meta": {
-                                             "ONS_Variable": {
-                                               "quality_statement_text": "quality statement"
-                                               }
-                                           },
-                                           "code": "1",
-                                           "label": "category 1"
-                                          }
-                                       }
-                                    ]
-                                    },
-                                "meta": {
-                                  "ONS_Variable": {
-                                    "quality_statement_text": "quality statement"
-                                  }
-                                },
-                                "label": "label 1",
-                                "name": "code 1"
-                                }
+                            "isSourceOf": {
+                                "edges": [
+                                    {
+                                        "node": {
+                                            "categories": {
+                                                "edges": [
+                                                    {
+                                                        "node": {
+                                                            "code": "code 1",
+                                                            "label": "label 1"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "label": "label 2",
+                                            "meta": {
+                                                "ONS_Variable": {
+                                                    "Quality_Statement_Text": "quality statement 1"
+                                                }
+                                            },
+                                            "name": "name 1"
+                                        }
+                                    }
+                                ],
+                                "totalCount": 1
                             }
-                            ]
-                        },
-                        
-                        "mapFrom": []
                         }
                     }
-                    ]
-                }
-                
+                ]
             }
+        }
         }
         """
 
@@ -73,13 +65,12 @@ Background:
 	        "total_count": 1,
             "items": [
                 {
-                    "id": "code 1",
-                    "label": "label 1",
-                    "quality_statement_text": "quality statement",
+                    "id": "name 1",
+                    "label": "label 2",
+                    "quality_statement_text":"quality statement 1",
                     "categories": [{
-                         "id": "1",
-                         "label": "category 1",
-                         "quality_statement_text": "quality statement"
+                         "id": "code 1",
+                         "label": "label 1"
                     }]
                 }
             ]

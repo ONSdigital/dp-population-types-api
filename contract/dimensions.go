@@ -67,7 +67,6 @@ type Category struct {
 type DimensionCategory struct {
 	ID                   string `json:"id"`
 	Label                string `json:"label"`
-	QualityStatementText string `json:"quality_statement_text"`
 }
 
 type GetBaseVariableRequest struct {

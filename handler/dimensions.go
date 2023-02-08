@@ -93,9 +93,8 @@ func (h *Dimensions) GetDimensionCategories(w http.ResponseWriter, r *http.Reque
 
 			for _, category := range edge.Node.Categories.Edges {
 				dimensionCategory.Categories = append(dimensionCategory.Categories, contract.DimensionCategory{
-					ID:                   category.Node.Code,
-					Label:                category.Node.Label,
-					QualityStatementText: edge.Node.Meta.ONSVariable.QualityStatementText,
+					ID:    category.Node.Code,
+					Label: category.Node.Label,
 				})
 			}
 			dimensionCategories = append(dimensionCategories, *dimensionCategory)
@@ -372,9 +371,8 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 							cats := []contract.DimensionCategory{}
 							for _, categories := range isSourceOf.Node.Categories.Edges {
 								cats = append(cats, contract.DimensionCategory{
-									ID:                   categories.Node.Code,
-									Label:                categories.Node.Label,
-									QualityStatementText: categories.Node.Meta.ONSVariable.QualityStatementText,
+									ID:    categories.Node.Code,
+									Label: categories.Node.Label,
 								})
 							}
 
@@ -395,9 +393,8 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 					cats := []contract.DimensionCategory{}
 					for _, categories := range sourceOf.Node.Categories.Edges {
 						cats = append(cats, contract.DimensionCategory{
-							ID:                   categories.Node.Code,
-							Label:                categories.Node.Label,
-							QualityStatementText: categories.Node.Meta.ONSVariable.QualityStatementText,
+							ID:    categories.Node.Code,
+							Label: categories.Node.Label,
 						})
 					}
 
