@@ -4,53 +4,42 @@ Feature: Area Types
     Given private endpoints are not enabled
     And the following dimension categories response is available from Cantabular:
     """
-    {
-        "dataset": {
-          "variables": {
-            "edges": [
-              {
-                "node": {
-                  "categories": {
-                    "edges": [
-                      {
-                        "node": {
-                          "code": "1",
-                          "label": "Female",
-                          "meta": {
-                            "ONS_Variable": {
-                              "quality_statement_text": "quality statement"
-                            }
+        {
+          "dataset": {
+            "variables": {
+              "edges": [
+                {
+                  "node": {
+                    "categories": {
+                      "edges": [
+                        {
+                          "node": {
+                            "code": "1",
+                            "label": "Female"
+                          }
+                        },
+                        {
+                          "node": {
+                            "code": "2",
+                            "label": "Male"
                           }
                         }
-                      },
-                      {
-                        "node": {
-                          "code": "2",
-                          "label": "Male",
-                          "meta": {
-                            "ONS_Variable": {
-                              "quality_statement_text": "quality statement"
-                            }
-                          }
-                        }
+                      ],
+                      "totalCount": 2
+                    },
+                    "label": "Sex (2 categories)",
+                    "name": "sex",
+                    "meta": {
+                      "ONS_Variable": {
+                        "quality_statement_text": "quality statement"
                       }
-                    ],
-                    "totalCount": 2
-                  },
-                  "label": "Sex (2 categories)",
-                  "name": "sex",
-                  "meta": {
-                    "ONS_Variable": {
-                      "quality_statement_text": "quality statement"
                     }
                   }
                 }
-              }
-            ]
+              ]
+            }
           }
         }
-
-    }
     """
   Scenario: Getting dimension categories happy
 
@@ -73,13 +62,11 @@ Feature: Area Types
               "categories": [
                   {
                       "id": "1",
-                      "label": "Female",
-                      "quality_statement_text": "quality statement"
+                      "label": "Female"
                   },
                   {
                       "id": "2",
-                      "label": "Male",
-                      "quality_statement_text": "quality statement"
+                      "label": "Male"
                   }
               ]
           }
