@@ -137,7 +137,7 @@ func (c *PopulationTypesComponent) GetCantabularClient(_ config.CantabularConfig
 func (c *PopulationTypesComponent) GetMongoClient(_ context.Context, _ *config.Config) (service.MongoClient, error) {
 	return datastore.NewClient(context.Background(), datastore.Config{
 		MongoDriverConfig:  c.Config.Mongo,
-		MetadataCollection: "filterMetadata",
+		MetadataCollection: "defaultDatasetMetadata",
 	})
 }
 func (c *PopulationTypesComponent) GetDatasetAPIClient(_ *config.Config) service.DatasetAPIClient {

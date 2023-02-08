@@ -32,7 +32,8 @@ func NewMongoFeature(ef componenttest.ErrorFeature, cfg *config.Config) *MongoFe
 		MongoFeature: componenttest.NewMongoFeature(componenttest.MongoOptions{
 			MongoVersion: mongoVersion,
 		}),
-		cfg: cfg}
+		cfg: cfg,
+	}
 
 	mf.cfg.Mongo.ClusterEndpoint = mf.MongoFeature.Server.URI()
 
@@ -55,7 +56,7 @@ func (mf *MongoFeature) RegisterSteps(ctx *godog.ScenarioContext) {
 }
 
 func (mf *MongoFeature) iHaveThisMetadata(docs *godog.DocString) error {
-	var populationTypeMetadata []datastore.PopulationTypeMetadata
+	var populationTypeMetadata []datastore.DefaultDatasetMetadata
 
 	err := json.Unmarshal([]byte(docs.Content), &populationTypeMetadata)
 	if err != nil {
@@ -69,7 +70,7 @@ func (mf *MongoFeature) iHaveThisMetadata(docs *godog.DocString) error {
 	return nil
 }
 
-func (mf *MongoFeature) insertPopulationTypeMetadata(metadata []datastore.PopulationTypeMetadata) error {
+func (mf *MongoFeature) insertPopulationTypeMetadata(metadata []datastore.DefaultDatasetMetadata) error {
 	ctx := context.Background()
 	db := mf.cfg.Mongo.Database
 	col := mf.cfg.MetadataCollection

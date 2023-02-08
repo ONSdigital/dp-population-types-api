@@ -55,14 +55,14 @@ func Get() (*Config, error) {
 			DefaultRequestTimeout:        10 * time.Second,
 			CantabularHealthcheckEnabled: false,
 		},
-		MetadataCollection: "filterMetadata",
+		MetadataCollection: "defaultDatasetMetadata",
 		Mongo: mongo.MongoDriverConfig{
 			ClusterEndpoint: "localhost:27017",
 			Username:        "",
 			Password:        "",
 			Database:        "filters",
 			Collections: map[string]string{
-				"metadata": "filterMetadata",
+				"defaultDatasetMetadata": "defaultDatasetMetadata",
 			},
 			ReplicaSet:                    "",
 			IsStrongReadConcernEnabled:    false,

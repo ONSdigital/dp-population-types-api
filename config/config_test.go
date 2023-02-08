@@ -39,14 +39,14 @@ func TestConfig(t *testing.T) {
 						DefaultRequestTimeout:        10 * time.Second,
 						CantabularHealthcheckEnabled: false,
 					},
-					MetadataCollection: "filterMetadata",
+					MetadataCollection: "defaultDatasetMetadata",
 					Mongo: mongodb.MongoDriverConfig{
 						Username:        "",
 						Password:        "",
 						ClusterEndpoint: "localhost:27017",
 						Database:        "filters",
 						Collections: map[string]string{
-							"filterMetadata": "filterMetadata",
+							"defaultDatasetMetadata": "defaultDatasetMetadata",
 						},
 						ReplicaSet:                    "",
 						IsStrongReadConcernEnabled:    false,

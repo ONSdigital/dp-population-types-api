@@ -37,12 +37,12 @@ func (m *Metadata) PutMetadata(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	metadata := datastore.PopulationTypeMetadata{
+	metadata := datastore.DefaultDatasetMetadata{
 		ID:               populationType,
 		DefaultDatasetID: req.DefaultDatasetID,
 	}
 
-	if err := m.MongoClient.PutMetadataRecord(ctx, metadata); err != nil {
+	if err := m.MongoClient.PutDefaultDatasetMetadata(ctx, metadata); err != nil {
 		m.respond.Error(ctx, w, http.StatusInternalServerError, errors.New("Failed to get metadata"))
 		return
 	}
@@ -56,7 +56,7 @@ func (m *Metadata) GetMetadata(w http.ResponseWriter, r *http.Request) {
 
 	populationType := chi.URLParam(r, "population-type")
 
-	metadata, err := m.MongoClient.GetMetadataRecord(ctx, populationType)
+	metadata, err := m.MongoClient.GetDefaultDatasetMetadata(ctx, populationType)
 	if err != nil {
 		m.respond.Error(
 			ctx,

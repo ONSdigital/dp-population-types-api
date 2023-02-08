@@ -15,26 +15,26 @@ Feature: Filter Metadata
     When I PUT "/population-types/UR/metadata"
     """
     {
-      "default-dataset-id": "default-dataset"
+      "default_dataset_id": "default-dataset"
     }
     """
     Then the HTTP status code should be "201"
-    And a document in collection "filterMetadata" with key "id" value "UR" should match:
+    And a document in collection "defaultDatasetMetadata" with key "id" value "UR" should match:
     """
     {
       "_id": "UR",
       "id": "UR",
-      "default-dataset-id": "default-dataset"
+      "default_dataset_id": "default-dataset"
     }
     """
-    
+
   Scenario: The root population-types endpoint should get metadata
     Given I have this metadata:
     """
     [
       {
         "_id": "UR",
-        "default-dataset-id": "default-dataset",
+        "default_dataset_id": "default-dataset",
         "id": "UR"
       }
     ]
@@ -45,7 +45,7 @@ Feature: Filter Metadata
     """
     {
       "population-type": "UR",
-      "default-dataset-id": "default-dataset"
+      "default_dataset_id": "default-dataset"
     }
     """
 
@@ -53,7 +53,7 @@ Feature: Filter Metadata
     When I GET "/population-types/DOESNT-EXIST/metadata"
     """
     {
-      "default-dataset-id": "default-dataset"
+      "default_dataset_id": "default-dataset"
     }
     """
     Then the HTTP status code should be "404"
