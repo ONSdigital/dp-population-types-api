@@ -289,8 +289,8 @@ func (h *Dimensions) GetBlockedAreaCount(w http.ResponseWriter, r *http.Request)
 	res, err := h.cantabular.GetBlockedAreaCount(ctx, cReq)
 	if err != nil {
 		h.respond.Error(ctx, w, h.cantabular.StatusCode(err), &Error{
-			err:     errors.Wrap(err, "failed to get parent areas count"),
-			message: "failed to get parent areas count",
+			err:     errors.Wrap(err, "failed to get blocked areas count"),
+			message: "failed to get blocked areas count",
 			logData: logData,
 		})
 		return
