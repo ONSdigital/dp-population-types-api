@@ -132,8 +132,8 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 
 	metadata := handler.NewMetada(svc.Config, svc.responder, svc.mongoClient)
 
-	r.Get("/population-types/{population-type}/metadata", metadata.GetMetadata)
-	r.Put("/population-types/{population-type}/metadata", metadata.PutMetadata)
+	r.Get("/population-types/{population-type}/metadata", metadata.Get)
+	r.Put("/population-types/{population-type}/metadata", metadata.Put)
 
 	svc.Router.Mount("/", r)
 }

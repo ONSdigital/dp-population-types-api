@@ -10,30 +10,34 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Metadata struct {
+type PopulationTypeMetadata struct {
 	cfg         *config.Config
 	respond     responder
 	MongoClient Datastore
 }
 
 // NewMetada returns a new Metadata Handler
-func NewMetada(cfg *config.Config, r responder, databaseClient Datastore) *Metadata {
-	return &Metadata{
+func NewMetada(cfg *config.Config, r responder, d Datastore) *PopulationTypeMetadata {
+	return &PopulationTypeMetadata{
 		cfg:         cfg,
 		respond:     r,
-		MongoClient: databaseClient,
+		MongoClient: d,
 	}
 }
 
-func (m *Metadata) PutMetadata(w http.ResponseWriter, r *http.Request) {
+func (m *PopulationTypeMetadata) Put(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	populationType := chi.URLParam(r, "population-type")
 	var req contract.PutMetadataRequest
+
 	if err := parseRequest(r, &req); err != nil {
-		m.respond.Error(ctx, w, http.StatusNotFound, &Error{
-			err: errors.Wrap(err, "query parameter error"),
-		})
+		m.respond.Error(
+			ctx,
+			w,
+			http.StatusBadRequest,
+			errors.Wrap(err, "query parameter error"),
+		)
 		return
 	}
 
@@ -45,15 +49,19 @@ func (m *Metadata) PutMetadata(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := m.MongoClient.PutDefaultDatasetMetadata(ctx, metadata); err != nil {
-		m.respond.Error(ctx, w, http.StatusInternalServerError, errors.New("Failed to get metadata"))
+		m.respond.Error(
+			ctx,
+			w,
+			statusCode(err),
+			errors.Wrap(err, "failed to get metadata"),
+		)
 		return
 	}
 
 	m.respond.JSON(ctx, w, http.StatusCreated, nil)
-
 }
 
-func (m *Metadata) GetMetadata(w http.ResponseWriter, r *http.Request) {
+func (m *PopulationTypeMetadata) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	populationType := chi.URLParam(r, "population-type")
@@ -64,7 +72,7 @@ func (m *Metadata) GetMetadata(w http.ResponseWriter, r *http.Request) {
 			ctx,
 			w,
 			statusCode(err),
-			errors.New("Failed to get metadata"),
+			errors.Wrap(err, "failed to get metadata"),
 		)
 		return
 	}
