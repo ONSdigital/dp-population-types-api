@@ -6,46 +6,46 @@ Background:
 
     And the following categorisations response is available from Cantabular:
     """
-        {
-          "count": 0,
-          "total_count": 0,
-          "dataset": {
-            "variables": {
-              "edges": [
-                {
-                  "node": {
-                    "isSourceOf": {
-                      "edges": [
-                        {
-                          "node": {
-                            "categories": {
-                              "edges": [
-                                {
-                                  "node": {
-                                    "code": "code 1",
-                                    "label": "label 1"
-                                  }
-                                }
-                              ]
-                            },
-                            "label": "label 2",
-                            "meta": {
-                              "ONS_Variable": {
-                                "Quality_Statement_Text": "quality statement"
+    {
+      "count": 0,
+      "total_count": 0,
+      "dataset": {
+        "variables": {
+          "edges": [
+            {
+              "node": {
+                "isSourceOf": {
+                  "edges": [
+                    {
+                      "node": {
+                        "categories": {
+                          "edges": [
+                            {
+                              "node": {
+                                "code": "code 1",
+                                "label": "label 1"
                               }
-                            },
-                            "name": "name 1"
+                            }
+                          ]
+                        },
+                        "label": "label 2",
+                        "meta": {
+                          "ONS_Variable": {
+                            "Quality_Statement_Text": "quality statement"
                           }
-                        }
-                      ],
-                      "totalCount": 1
+                        },
+                        "name": "name 1"
+                      }
                     }
-                  }
+                  ],
+                  "totalCount": 1
                 }
-              ]
+              }
             }
-          }
+          ]
         }
+      }
+    }
     """
 
   Scenario: Getting published dimensions
@@ -62,23 +62,23 @@ Background:
 
     And I should receive the following JSON response:
     """
+    {
+      "limit": 20,
+      "offset": 0,
+      "count": 0,
+      "total_count": 1,
+      "items": [
         {
-            "limit": 20,
-	        "offset": 0,
-	        "count": 0,
-	        "total_count": 1,
-            "items": [
-                {
-                    "id": "name 1",
-                    "label": "label 2",
-                    "quality_statement_text": "quality statement",
-                    "categories": [{
-                         "id": "code 1",
-                         "label": "label 1"
-                    }]
-                }
-            ]
+          "id": "name 1",
+          "label": "label 2",
+          "quality_statement_text": "quality statement",
+          "categories": [{
+            "id": "code 1",
+            "label": "label 1"
+          }]
         }
+      ]
+    }
     """
 
   Scenario: Getting unpublished categorisations
