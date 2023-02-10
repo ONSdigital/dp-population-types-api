@@ -7,6 +7,7 @@ import (
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
+	"github.com/ONSdigital/dp-population-types-api/datastore"
 )
 
 type responder interface {
@@ -35,6 +36,15 @@ type datasetAPIClient interface {
 	Checker(context.Context, *healthcheck.CheckState) error
 }
 
+type Datastore interface {
+	GetDefaultDatasetMetadata(ctx context.Context, populationType string) (*datastore.DefaultDatasetMetadata, error)
+	PutDefaultDatasetMetadata(ctx context.Context, metadata datastore.DefaultDatasetMetadata) error
+}
+
 type validator interface {
 	Valid() error
+}
+
+type coder interface {
+	Code() int
 }

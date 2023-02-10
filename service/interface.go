@@ -8,6 +8,7 @@ import (
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/config"
+	"github.com/ONSdigital/dp-population-types-api/datastore"
 )
 
 //go:generate moq -out mock/initialiser.go -pkg mock . Initialiser
@@ -23,6 +24,7 @@ type Initialiser interface {
 	GetCantabularClient(cfg config.CantabularConfig) CantabularClient
 	GetHealthCheck(cfg *config.Config, time, commit, version string) (HealthChecker, error)
 	GetDatasetAPIClient(cfg *config.Config) DatasetAPIClient
+	GetMongoClient(ctx context.Context, cfg *config.Config) (MongoClient, error)
 	GetResponder() Responder
 }
 
@@ -69,4 +71,9 @@ type Responder interface {
 type DatasetAPIClient interface {
 	GetDatasets(ctx context.Context, uToken, svcToken, collectionID string, params *dataset.QueryParams) (dataset.List, error)
 	Checker(ctx context.Context, state *healthcheck.CheckState) error
+}
+
+type MongoClient interface {
+	GetDefaultDatasetMetadata(ctx context.Context, populationType string) (*datastore.DefaultDatasetMetadata, error)
+	PutDefaultDatasetMetadata(ctx context.Context, metadata datastore.DefaultDatasetMetadata) error
 }

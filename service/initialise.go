@@ -1,9 +1,11 @@
 package service
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/ONSdigital/dp-population-types-api/config"
+	"github.com/ONSdigital/dp-population-types-api/datastore"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
@@ -57,6 +59,12 @@ func (i *Init) GetDatasetAPIClient(cfg *config.Config) DatasetAPIClient {
 	return dataset.NewAPIClient(cfg.DatasetAPIURL)
 }
 
+func (i *Init) GetMongoClient(ctx context.Context, cfg *config.Config) (MongoClient, error) {
+	return datastore.NewClient(ctx, datastore.Config{
+		MongoDriverConfig:  cfg.Mongo,
+		MetadataCollection: cfg.MetadataCollection,
+	})
+}
 func cantabularNewClient(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.Client {
 	return cantabular.NewClient(cfg, ua, nil)
 }

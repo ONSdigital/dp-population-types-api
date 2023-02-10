@@ -294,5 +294,9 @@ func buildInitialiserMockWithNilDependencies() mock.InitialiserMock {
 		GetDatasetAPIClientFunc: func(cfg *config.Config) service.DatasetAPIClient {
 			return nil
 		},
+		GetMongoClientFunc: func(ctx context.Context, cfg *config.Config) (service.MongoClient, error) {
+			return nil, nil
+		},
 	}
+
 }

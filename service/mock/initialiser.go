@@ -4,10 +4,12 @@
 package mock
 
 import (
-	"github.com/ONSdigital/dp-population-types-api/config"
-	"github.com/ONSdigital/dp-population-types-api/service"
+	"context"
 	"net/http"
 	"sync"
+
+	"github.com/ONSdigital/dp-population-types-api/config"
+	"github.com/ONSdigital/dp-population-types-api/service"
 )
 
 // Ensure, that InitialiserMock does implement service.Initialiser.
@@ -16,6 +18,7 @@ var _ service.Initialiser = &InitialiserMock{}
 
 // InitialiserMock is a mock implementation of service.Initialiser.
 //
+//	func TestSomethingThatUsesInitialiser(t *testing.T) {
 //	func TestSomethingThatUsesInitialiser(t *testing.T) {
 //
 //		// make and configure a mocked service.Initialiser
@@ -54,6 +57,9 @@ type InitialiserMock struct {
 	// GetHealthCheckFunc mocks the GetHealthCheck method.
 	GetHealthCheckFunc func(cfg *config.Config, time string, commit string, version string) (service.HealthChecker, error)
 
+	// GetMongoClientFunc mocks the GetMongoClient method.
+	GetMongoClientFunc func(ctx context.Context, cfg *config.Config) (service.MongoClient, error)
+
 	// GetResponderFunc mocks the GetResponder method.
 	GetResponderFunc func() service.Responder
 
@@ -87,6 +93,13 @@ type InitialiserMock struct {
 			// Version is the version argument value.
 			Version string
 		}
+		// GetMongoClient holds details about calls to the GetMongoClient method.
+		GetMongoClient []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// Cfg is the cfg argument value.
+			Cfg *config.Config
+		}
 		// GetResponder holds details about calls to the GetResponder method.
 		GetResponder []struct {
 		}
@@ -95,6 +108,7 @@ type InitialiserMock struct {
 	lockGetDatasetAPIClient sync.RWMutex
 	lockGetHTTPServer       sync.RWMutex
 	lockGetHealthCheck      sync.RWMutex
+	lockGetMongoClient      sync.RWMutex
 	lockGetResponder        sync.RWMutex
 }
 
@@ -239,6 +253,42 @@ func (mock *InitialiserMock) GetHealthCheckCalls() []struct {
 	mock.lockGetHealthCheck.RLock()
 	calls = mock.calls.GetHealthCheck
 	mock.lockGetHealthCheck.RUnlock()
+	return calls
+}
+
+// GetMongoClient calls GetMongoClientFunc.
+func (mock *InitialiserMock) GetMongoClient(ctx context.Context, cfg *config.Config) (service.MongoClient, error) {
+	if mock.GetMongoClientFunc == nil {
+		panic("InitialiserMock.GetMongoClientFunc: method is nil but Initialiser.GetMongoClient was just called")
+	}
+	callInfo := struct {
+		Ctx context.Context
+		Cfg *config.Config
+	}{
+		Ctx: ctx,
+		Cfg: cfg,
+	}
+	mock.lockGetMongoClient.Lock()
+	mock.calls.GetMongoClient = append(mock.calls.GetMongoClient, callInfo)
+	mock.lockGetMongoClient.Unlock()
+	return mock.GetMongoClientFunc(ctx, cfg)
+}
+
+// GetMongoClientCalls gets all the calls that were made to GetMongoClient.
+// Check the length with:
+//
+//	len(mockedInitialiser.GetMongoClientCalls())
+func (mock *InitialiserMock) GetMongoClientCalls() []struct {
+	Ctx context.Context
+	Cfg *config.Config
+} {
+	var calls []struct {
+		Ctx context.Context
+		Cfg *config.Config
+	}
+	mock.lockGetMongoClient.RLock()
+	calls = mock.calls.GetMongoClient
+	mock.lockGetMongoClient.RUnlock()
 	return calls
 }
 

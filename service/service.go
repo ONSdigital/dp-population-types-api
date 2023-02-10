@@ -21,6 +21,7 @@ type Service struct {
 	responder        Responder
 	cantabularClient CantabularClient
 	datasetAPIClient DatasetAPIClient
+	mongoClient      MongoClient
 	HealthCheck      HealthChecker
 	identityClient   *identity.Client
 }
@@ -48,6 +49,10 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 	svc.responder = init.GetResponder()
 	svc.cantabularClient = init.GetCantabularClient(cfg.CantabularConfig)
 	svc.datasetAPIClient = init.GetDatasetAPIClient(cfg)
+	svc.mongoClient, err = init.GetMongoClient(ctx, cfg)
+	if err != nil {
+		return errors.Wrap(err, "failed to get mongo client")
+	}
 
 	svc.buildRoutes(ctx)
 
