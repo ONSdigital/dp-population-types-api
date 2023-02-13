@@ -15,7 +15,9 @@ Feature: Filter Metadata
     When I PUT "/population-types/UR/metadata"
     """
     {
-      "default_dataset_id": "default-dataset"
+      "default_dataset_id": "default-dataset",
+      "edition": "2021",
+      "version": 2
     }
     """
     Then the HTTP status code should be "201"
@@ -24,7 +26,11 @@ Feature: Filter Metadata
     {
       "_id": "UR",
       "id": "UR",
-      "default_dataset_id": "default-dataset"
+      "default_dataset_id": "default-dataset",
+      "edition": "2021",
+      "version": {
+          "$numberInt":"2"
+        }
     }
     """
 
@@ -35,7 +41,9 @@ Feature: Filter Metadata
       {
         "_id": "UR",
         "default_dataset_id": "default-dataset",
-        "id": "UR"
+        "id": "UR",
+        "edition": "2021",
+        "version": 2
       }
     ]
     """
@@ -44,8 +52,10 @@ Feature: Filter Metadata
     And I should receive the following JSON response:
     """
     {
-      "population-type": "UR",
-      "default_dataset_id": "default-dataset"
+      "population_type": "UR",
+      "default_dataset_id": "default-dataset",
+      "edition": "2021",
+      "version": 2
     }
     """
 

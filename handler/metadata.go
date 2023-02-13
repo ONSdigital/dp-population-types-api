@@ -40,6 +40,8 @@ func (m *Metadata) PutMetadata(w http.ResponseWriter, r *http.Request) {
 	metadata := datastore.DefaultDatasetMetadata{
 		ID:               populationType,
 		DefaultDatasetID: req.DefaultDatasetID,
+		Edition:          req.Edition,
+		Version:          req.Version,
 	}
 
 	if err := m.MongoClient.PutDefaultDatasetMetadata(ctx, metadata); err != nil {
@@ -70,5 +72,7 @@ func (m *Metadata) GetMetadata(w http.ResponseWriter, r *http.Request) {
 	m.respond.JSON(ctx, w, http.StatusOK, contract.GetMetadataResponse{
 		PopulationType:   populationType,
 		DefaultDatasetID: metadata.DefaultDatasetID,
+		Edition:          metadata.Edition,
+		Version:          metadata.Version,
 	})
 }

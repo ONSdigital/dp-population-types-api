@@ -12,6 +12,8 @@ type DefaultDatasetMetadata struct {
 	// This ID refers to the Population Type
 	ID               string `json:"id" bson:"id"`
 	DefaultDatasetID string `json:"default_dataset_id" bson:"default_dataset_id"`
+	Edition          string `json:"edition" bson:"edition"`
+	Version          int    `json:"version" bson:"version"`
 }
 
 // GetMetadataRecord gets the metadata stored against a particular population type
