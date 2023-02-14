@@ -15,18 +15,20 @@ import (
 )
 
 type PopulationTypes struct {
-	cfg        *config.Config
-	respond    responder
-	cantabular cantabularClient
-	datasets   datasetAPIClient
+	cfg         *config.Config
+	respond     responder
+	cantabular  cantabularClient
+	datasets    datasetAPIClient
+	mongoClient Datastore
 }
 
-func NewPopulationTypes(cfg *config.Config, r responder, c cantabularClient, d datasetAPIClient) *PopulationTypes {
+func NewPopulationTypes(cfg *config.Config, r responder, c cantabularClient, d datasetAPIClient, m Datastore) *PopulationTypes {
 	return &PopulationTypes{
-		cfg:        cfg,
-		respond:    r,
-		cantabular: c,
-		datasets:   d,
+		cfg:         cfg,
+		respond:     r,
+		cantabular:  c,
+		datasets:    d,
+		mongoClient: m,
 	}
 }
 
@@ -54,6 +56,23 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	log.Info(ctx, "population types found", logData)
 	lpt := len(ptypes.Datasets)
 
+	var defaultDatasets []string
+
+	if r.DefaultDatasets {
+		response, err := h.mongoClient.GetDefaultDatasetPopulationTypes(ctx)
+		if err != nil {
+			h.respond.Error(
+				ctx,
+				w,
+				http.StatusInternalServerError,
+				errors.Wrap(err, "Failed to get metadata"),
+			)
+			return
+		}
+
+		defaultDatasets = response
+	}
+
 	// return all population types on publishing
 	if h.cfg.EnablePrivateEndpoints {
 		resp := contract.GetPopulationTypesResponse{
@@ -68,6 +87,10 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 				Name:  pt.Name,
 				Label: pt.Label,
 			})
+		}
+
+		if r.DefaultDatasets {
+			resp.Items = filterPopulationTypes(defaultDatasets, resp.Items)
 		}
 		resp.Paginate()
 		h.respond.JSON(ctx, w, http.StatusOK, resp)
@@ -113,6 +136,11 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 		},
 		Items: published,
 	}
+
+	if r.DefaultDatasets {
+		resp.Items = filterPopulationTypes(defaultDatasets, resp.Items)
+	}
+
 	resp.Paginate()
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)

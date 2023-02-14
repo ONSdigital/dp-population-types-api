@@ -61,3 +61,30 @@ Feature: Population types endpoint
     """
     {"errors": ["failed to get population types"]}
     """
+  Scenario: The root population-types endpoint should return only one population type
+    Given I have this metadata:
+    """
+    [
+      {
+        "_id": "dataset_1",
+        "default_dataset_id": "default-dataset",
+        "id": "dataset_1"
+      }
+    ]
+    """
+    When I GET "/population-types?require-default-dataset=true"
+    Then I should receive the following JSON response:
+    """
+    {
+        "limit": 20,
+        "count": 1,
+        "total_count": 2,
+        "offset": 0,
+        "items":[
+          {
+            "name": "dataset_1",
+            "label": "dataset 1"
+          }
+        ]
+    }
+    """
