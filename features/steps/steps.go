@@ -222,9 +222,10 @@ func (c *PopulationTypesComponent) theFollowingBlockedAreaResponseIsAavailable(b
 		return fmt.Errorf("failed to unmarshal body: %w", err)
 	}
 	c.fakeCantabular.GetBlockedAreaCountResult = &cantabular.GetBlockedAreaCountResult{
-		Passed:  resp.Dataset.Table.Rules.Passed.Count,
-		Total:   resp.Dataset.Table.Rules.Total.Count,
-		Blocked: resp.Dataset.Table.Rules.Blocked.Count,
+		Passed:     resp.Dataset.Table.Rules.Passed.Count,
+		Total:      resp.Dataset.Table.Rules.Total.Count,
+		Blocked:    resp.Dataset.Table.Rules.Blocked.Count,
+		TableError: resp.Dataset.Table.Error,
 	}
 	return nil
 }
