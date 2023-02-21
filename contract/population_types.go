@@ -6,6 +6,7 @@ type PopulationType struct {
 }
 
 type GetPopulationTypesRequest struct {
+	DefaultDatasets bool `schema:"require-default-dataset"`
 	QueryParams
 }
 

@@ -76,4 +76,5 @@ type DatasetAPIClient interface {
 type MongoClient interface {
 	GetDefaultDatasetMetadata(ctx context.Context, populationType string) (*datastore.DefaultDatasetMetadata, error)
 	PutDefaultDatasetMetadata(ctx context.Context, metadata datastore.DefaultDatasetMetadata) error
+	GetDefaultDatasetPopulationTypes(ctx context.Context) ([]string, error)
 }

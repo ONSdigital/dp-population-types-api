@@ -15,18 +15,20 @@ import (
 )
 
 type PopulationTypes struct {
-	cfg        *config.Config
-	respond    responder
-	cantabular cantabularClient
-	datasets   datasetAPIClient
+	cfg         *config.Config
+	respond     responder
+	cantabular  cantabularClient
+	datasets    datasetAPIClient
+	mongoClient Datastore
 }
 
-func NewPopulationTypes(cfg *config.Config, r responder, c cantabularClient, d datasetAPIClient) *PopulationTypes {
+func NewPopulationTypes(cfg *config.Config, r responder, c cantabularClient, d datasetAPIClient, m Datastore) *PopulationTypes {
 	return &PopulationTypes{
-		cfg:        cfg,
-		respond:    r,
-		cantabular: c,
-		datasets:   d,
+		cfg:         cfg,
+		respond:     r,
+		cantabular:  c,
+		datasets:    d,
+		mongoClient: m,
 	}
 }
 
@@ -54,6 +56,43 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	log.Info(ctx, "population types found", logData)
 	lpt := len(ptypes.Datasets)
 
+	var defaultDatasets []string
+
+	// return just default datasets only for BYO
+	if r.DefaultDatasets {
+		response, err := h.mongoClient.GetDefaultDatasetPopulationTypes(ctx)
+		if err != nil {
+			h.respond.Error(
+				ctx,
+				w,
+				http.StatusInternalServerError,
+				errors.Wrap(err, "Failed to get metadata"),
+			)
+			return
+		}
+		defaultDatasets = response
+
+		resp := contract.GetPopulationTypesResponse{
+			PaginationResponse: contract.PaginationResponse{
+				Limit:  r.Limit,
+				Offset: r.Offset,
+			},
+		}
+		for _, pt := range ptypes.Datasets {
+			resp.Items = append(resp.Items, contract.PopulationType{
+				Name:  pt.Name,
+				Label: pt.Label,
+			})
+		}
+
+		resp.Items = filterPopulationTypes(defaultDatasets, resp.Items)
+		defaultDatasets = response
+		resp.Paginate()
+		resp.TotalCount = len(resp.Items)
+		h.respond.JSON(ctx, w, http.StatusOK, resp)
+		return
+	}
+
 	// return all population types on publishing
 	if h.cfg.EnablePrivateEndpoints {
 		resp := contract.GetPopulationTypesResponse{
@@ -69,6 +108,7 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 				Label: pt.Label,
 			})
 		}
+
 		resp.Paginate()
 		h.respond.JSON(ctx, w, http.StatusOK, resp)
 		return
@@ -113,6 +153,7 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 		},
 		Items: published,
 	}
+
 	resp.Paginate()
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)

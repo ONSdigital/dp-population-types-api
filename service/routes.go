@@ -36,6 +36,7 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 		svc.responder,
 		svc.cantabularClient,
 		svc.datasetAPIClient,
+		svc.mongoClient,
 	)
 	svc.Router.Get("/population-types", populationTypes.Get)
 
@@ -93,6 +94,7 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 		svc.responder,
 		svc.cantabularClient,
 		svc.datasetAPIClient,
+		svc.mongoClient,
 	)
 	r.Get("/population-types", populationTypes.Get)
 
