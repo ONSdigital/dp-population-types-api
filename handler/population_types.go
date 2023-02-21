@@ -58,6 +58,7 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 
 	var defaultDatasets []string
 
+	// return just default datasets only for BYO
 	if r.DefaultDatasets {
 		response, err := h.mongoClient.GetDefaultDatasetPopulationTypes(ctx)
 		if err != nil {
@@ -69,8 +70,27 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 			)
 			return
 		}
-
 		defaultDatasets = response
+
+		resp := contract.GetPopulationTypesResponse{
+			PaginationResponse: contract.PaginationResponse{
+				Limit:  r.Limit,
+				Offset: r.Offset,
+			},
+		}
+		for _, pt := range ptypes.Datasets {
+			resp.Items = append(resp.Items, contract.PopulationType{
+				Name:  pt.Name,
+				Label: pt.Label,
+			})
+		}
+
+		resp.Items = filterPopulationTypes(defaultDatasets, resp.Items)
+		defaultDatasets = response
+		resp.Paginate()
+		resp.TotalCount = len(resp.Items)
+		h.respond.JSON(ctx, w, http.StatusOK, resp)
+		return
 	}
 
 	// return all population types on publishing
@@ -89,9 +109,6 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 			})
 		}
 
-		if r.DefaultDatasets {
-			resp.Items = filterPopulationTypes(defaultDatasets, resp.Items)
-		}
 		resp.Paginate()
 		h.respond.JSON(ctx, w, http.StatusOK, resp)
 		return
@@ -135,10 +152,6 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 			Offset:     r.Offset,
 		},
 		Items: published,
-	}
-
-	if r.DefaultDatasets {
-		resp.Items = filterPopulationTypes(defaultDatasets, resp.Items)
 	}
 
 	resp.Paginate()

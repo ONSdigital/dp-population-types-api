@@ -30,8 +30,6 @@ func (c *MongoClient) GetDefaultDatasetPopulationTypes(ctx context.Context) ([]s
 	populationTypes := make([]string, len(datasetMetadata))
 
 	for _, metadata := range datasetMetadata {
-		// This means there may be duplicates, must be careful of that or
-		// enforce index constraints
 		populationTypes = append(populationTypes, metadata.ID)
 	}
 

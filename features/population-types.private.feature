@@ -78,7 +78,7 @@ Feature: Population types endpoint
     {
         "limit": 20,
         "count": 1,
-        "total_count": 2,
+        "total_count": 1,
         "offset": 0,
         "items":[
           {
