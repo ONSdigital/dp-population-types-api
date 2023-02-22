@@ -1,8 +1,9 @@
 package contract
 
 type PopulationType struct {
-	Name  string `json:"name"`
-	Label string `json:"label"`
+	Name        string `json:"name"`
+	Label       string `json:"label"`
+	Description string `json:"description"`
 }
 
 type GetPopulationTypesRequest struct {

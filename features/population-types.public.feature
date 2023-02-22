@@ -60,10 +60,12 @@ Feature: Population types endpoint
         "items":[
           {
             "name": "dataset_1",
+            "description": "",
             "label": "dataset 1"
           },
           {
             "name": "dataset_2",
+            "description": "",
             "label": "dataset 2"
           }
         ]

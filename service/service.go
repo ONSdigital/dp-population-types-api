@@ -36,7 +36,6 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 	if cfg == nil {
 		return errors.New("nil config passed to service init")
 	}
-
 	log.Info(ctx, "initialising service with config", log.Data{"config": cfg})
 
 	svc.Config = cfg

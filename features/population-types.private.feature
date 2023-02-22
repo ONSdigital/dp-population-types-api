@@ -19,10 +19,12 @@ Feature: Population types endpoint
     "datasets":[
       {
         "name": "dataset_1",
+        "description": "dataset_1",
         "label": "dataset 1"
       },
       {
         "name": "dataset_2",
+        "description": "dataset_2",
         "label": "dataset 2"
       }
     ]
@@ -42,10 +44,12 @@ Feature: Population types endpoint
         "items":[
           {
             "name": "dataset_1",
+            "description": "dataset_1",
             "label": "dataset 1"
           },
           {
             "name": "dataset_2",
+            "description": "dataset_2",
             "label": "dataset 2"
           }
         ]
@@ -83,6 +87,7 @@ Feature: Population types endpoint
         "items":[
           {
             "name": "dataset_1",
+            "description": "dataset_1",
             "label": "dataset 1"
           }
         ]

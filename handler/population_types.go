@@ -78,10 +78,12 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 				Offset: r.Offset,
 			},
 		}
+
 		for _, pt := range ptypes.Datasets {
 			resp.Items = append(resp.Items, contract.PopulationType{
-				Name:  pt.Name,
-				Label: pt.Label,
+				Name:        pt.Name,
+				Label:       pt.Label,
+				Description: pt.Description,
 			})
 		}
 
@@ -104,8 +106,9 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 		}
 		for _, pt := range ptypes.Datasets {
 			resp.Items = append(resp.Items, contract.PopulationType{
-				Name:  pt.Name,
-				Label: pt.Label,
+				Name:        pt.Name,
+				Label:       pt.Label,
+				Description: pt.Description,
 			})
 		}
 
@@ -129,8 +132,9 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 		}
 
 		published = append(published, contract.PopulationType{
-			Name:  pt.Name,
-			Label: pt.Label,
+			Name:        pt.Name,
+			Label:       pt.Label,
+			Description: pt.Description,
 		})
 	}
 
