@@ -104,3 +104,31 @@ Background:
 
     And the HTTP status code should be "200"
     
+    Scenario: Getting blocked area type successfully but with table level error
+
+    Given the following blocked area response is available from Cantabular:
+    """
+    {
+        "dataset": {
+            "table": {
+                "error": "withinMaxCells",
+                "rules": null
+            }
+        }
+    }
+    """
+
+    When I GET "/population-types/Example/blocked-areas-count?vars=oa,resident_age_101a"
+
+    Then I should receive the following JSON response:
+    """
+    {
+        "passed": 0,
+        "blocked": 0,
+        "total": 0,
+        "table_error" : "withinMaxCells"
+    }
+    """
+
+    And the HTTP status code should be "200"
+    
