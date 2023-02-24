@@ -79,6 +79,28 @@ paths:
           description: "Unauthorised to fetch"
         500:
           $ref: "#/responses/InternalError"
+  /population-types/{population-type}:
+    get:
+      parameters:
+      - name: population-type
+        type: string
+        in: path
+        required: true
+      tags:
+        - "Public"
+      summary: "Get a single population type relevant to Census"
+      description: "Retrieves a single population type for Census"
+      security:
+        - InternalAPIKey: []
+      responses:
+        200:
+          description: "Json object containing a population type for Census"
+          schema:
+            $ref: "#/definitions/PopulationType"
+        401:
+          description: "Unauthorised to fetch"
+        500:
+          $ref: "#/responses/InternalError"
   /population-types/{population-type}/area-types:
     get:
       summary: "Get list of area types for given population type "
@@ -495,6 +517,14 @@ definitions:
         description: "The name of the population type"
         type: string
         example: "Usual-Residents"
+      label:
+        description: "The label of the population type"
+        type: string
+        example: "All usual residents"
+      description:
+        description: "The description of the population type"
+        type: string
+        example: "All usual residents"
   GetAreaTypesResponse:
     description: "The response body containing all available area-types for a given population-type"
     properties:
