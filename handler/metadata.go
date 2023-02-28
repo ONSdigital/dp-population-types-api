@@ -16,8 +16,8 @@ type PopulationTypeMetadata struct {
 	MongoClient Datastore
 }
 
-// NewMetada returns a new Metadata Handler
-func NewMetada(cfg *config.Config, r responder, d Datastore) *PopulationTypeMetadata {
+// NewMetadata returns a new Metadata Handler
+func NewMetadata(cfg *config.Config, r responder, d Datastore) *PopulationTypeMetadata {
 	return &PopulationTypeMetadata{
 		cfg:         cfg,
 		respond:     r,

@@ -73,6 +73,8 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.GetAll)
 	svc.Router.Get("/population-types/{population-type}/area-types/{area-type}/areas/{area-id}", areas.Get)
 
+	metadata := handler.NewMetadata(svc.Config, svc.responder, svc.mongoClient)
+	svc.Router.Get("/population-types/{population-type}/metadata", metadata.Get)
 }
 
 func (svc *Service) privateEndpoints(ctx context.Context) {
@@ -130,7 +132,7 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	r.Get("/population-types/{population-type}/area-types/{area-type}/areas", areas.GetAll)
 	r.Get("/population-types/{population-type}/area-types/{area-type}/areas/{area-id}", areas.Get)
 
-	metadata := handler.NewMetada(svc.Config, svc.responder, svc.mongoClient)
+	metadata := handler.NewMetadata(svc.Config, svc.responder, svc.mongoClient)
 
 	r.Get("/population-types/{population-type}/metadata", metadata.Get)
 	r.Put("/population-types/{population-type}/metadata", metadata.Put)
