@@ -171,6 +171,17 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, r *http.Request) {
 		"population_type": ptype,
 	}
 
+	if !h.cfg.EnablePrivateEndpoints {
+		if err := h.published(ctx, ptype); err != nil {
+			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+				err:     errors.Wrap(err, "failed to check published state"),
+				message: "population type not found",
+				logData: logData,
+			})
+			return
+		}
+	}
+
 	ptypes, err := h.cantabular.ListDatasets(ctx)
 	if err != nil {
 		h.respond.Error(ctx, w, dperrors.StatusCode(err), &Error{
@@ -199,17 +210,6 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, r *http.Request) {
 			logData: logData,
 		})
 		return
-	}
-
-	if !h.cfg.EnablePrivateEndpoints {
-		if err := h.published(ctx, ptype); err != nil {
-			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
-				err:     errors.Wrap(err, "failed to check published state"),
-				message: "population type not found",
-				logData: logData,
-			})
-			return
-		}
 	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
