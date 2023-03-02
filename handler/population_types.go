@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
@@ -32,7 +33,7 @@ func NewPopulationTypes(cfg *config.Config, r responder, c cantabularClient, d d
 	}
 }
 
-func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
+func (h *PopulationTypes) GetAll(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
 	r := contract.GetPopulationTypesRequest{}
@@ -159,6 +160,57 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, req *http.Request) {
 	}
 
 	resp.Paginate()
+
+	h.respond.JSON(ctx, w, http.StatusOK, resp)
+}
+
+func (h *PopulationTypes) Get(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	ptype := chi.URLParam(r, "population-type")
+	logData := log.Data{
+		"population_type": ptype,
+	}
+
+	if !h.cfg.EnablePrivateEndpoints {
+		if err := h.published(ctx, ptype); err != nil {
+			h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+				err:     errors.Wrap(err, "failed to check published state"),
+				message: "population type not found",
+				logData: logData,
+			})
+			return
+		}
+	}
+
+	ptypes, err := h.cantabular.ListDatasets(ctx)
+	if err != nil {
+		h.respond.Error(ctx, w, dperrors.StatusCode(err), &Error{
+			err:     errors.Wrap(err, "failed to fetch population types"),
+			message: "failed to get population types",
+		})
+		return
+	}
+
+	var resp contract.GetPopulationTypeResponse
+
+	for _, p := range ptypes.Datasets {
+		if p.Name == ptype {
+			resp.PopulationType = contract.PopulationType{
+				Name:        p.Name,
+				Label:       p.Label,
+				Description: p.Description,
+			}
+			break
+		}
+	}
+
+	if resp.PopulationType.Name == "" {
+		h.respond.Error(ctx, w, http.StatusNotFound, &Error{
+			err:     errors.New("population type not found"),
+			logData: logData,
+		})
+		return
+	}
 
 	h.respond.JSON(ctx, w, http.StatusOK, resp)
 }

@@ -93,3 +93,33 @@ Feature: Population types endpoint
         ]
     }
     """
+
+  Scenario: The population-types/{population-type} endpoint should return a population type
+    When I GET "/population-types/dataset_1"
+
+    Then I should receive the following JSON response:
+    """
+    {
+        "population_type":{
+          "name": "dataset_1",
+          "description": "dataset_1",
+          "label": "dataset 1"
+        }
+    }
+    """
+
+    And the HTTP status code should be "200"
+
+  Scenario: Population type not found
+    When I GET "/population-types/dataset_3"
+
+    Then I should receive the following JSON response:
+    """
+    {
+        "errors":[
+          "population type not found"
+        ]
+    }
+    """
+
+    And the HTTP status code should be "404"

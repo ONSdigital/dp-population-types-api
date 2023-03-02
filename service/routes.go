@@ -38,7 +38,8 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 		svc.datasetAPIClient,
 		svc.mongoClient,
 	)
-	svc.Router.Get("/population-types", populationTypes.Get)
+	svc.Router.Get("/population-types", populationTypes.GetAll)
+	svc.Router.Get("/population-types/{population-type}", populationTypes.Get)
 
 	dimensions := handler.NewDimensions(
 		svc.Config,
@@ -98,7 +99,8 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 		svc.datasetAPIClient,
 		svc.mongoClient,
 	)
-	r.Get("/population-types", populationTypes.Get)
+	r.Get("/population-types", populationTypes.GetAll)
+	r.Get("/population-types/{population-type}", populationTypes.Get)
 
 	dimensions := handler.NewDimensions(
 		svc.Config,

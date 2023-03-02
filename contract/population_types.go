@@ -6,6 +6,10 @@ type PopulationType struct {
 	Description string `json:"description"`
 }
 
+type GetPopulationTypeResponse struct {
+	PopulationType PopulationType `json:"population_type"`
+}
+
 type GetPopulationTypesRequest struct {
 	DefaultDatasets bool `schema:"require-default-dataset"`
 	QueryParams
