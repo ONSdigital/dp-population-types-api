@@ -157,7 +157,7 @@ paths:
           $ref: "#/responses/InternalError"
         502:
           $ref: '#/responses/BadGateway'
-  /population-types/{population-type}/observations:
+  /population-types/{population-type}/census-observations:
     get:
       summary: "Return observations for a custom selection of variables"
       tags:
