@@ -38,7 +38,7 @@ parameters:
     in: query
     type: string
   dims:
-    name: dims
+    name: dimensions
     required: false
     description: "A comma separated list of dimensions to retrieve information for."
     in: query
@@ -157,7 +157,7 @@ paths:
           $ref: "#/responses/InternalError"
         502:
           $ref: '#/responses/BadGateway'
-  /population-types/{population-type}/json:
+  /population-types/{population-type}/observations:
     get:
       summary: "Return observations for a custom selection of variables"
       tags:
@@ -176,7 +176,7 @@ paths:
         200:
           description: "Json object containing all metadata for a version"
           schema:
-            $ref: '#/definitions/GetDatasetJSONResponse'
+            $ref: '#/definitions/GetDatasetObservationsResponse'
         400:
           description: |
             Invalid request, reasons can be one of the following:
@@ -547,24 +547,15 @@ definitions:
         description: "The total number of area-types"
         readOnly: true
         type: integer
-  GetDatasetJSONResponse:
-    description: "An object containing information on a list of observations"
+  GetDatasetObservationsResponse:
+    description: "An object containing information on a list of observations for a given version of a census dataset - updated response"
     type: object
     properties:
-      dimensions:
+      observations:
         description: "A list of dimensions for the given query"
         type: array
         items:
-          type: object
-          description: "Each element is a dimension and will represent a query parameter in the request"
-          properties:
-            name:
-              description: "The name of the dimension"
-            options:
-              type: array
-              items:
-                description: "A list of links to the corresponding dimension codes for the given `dimension_options`"
-                $ref: '#/definitions/Link'
+          $ref: "#/definitions/GetDatasetObservation"
       links:
         description: "A list of links related to this observation resource"
         readOnly: true
@@ -576,16 +567,23 @@ definitions:
             $ref: '#/definitions/Link'
           version:
             $ref: '#/definitions/Link'
-      observations:
-        description: "A list of observations found when filtering on query parameters"
-        type: array
-        items:
-         type: integer
       total_observations:
         description: "The number of observations found"
         type: integer
       blocked_area_count:
         description: "The number of areas blocked by this query"
+        type: integer
+  GetDatasetObservation:
+    description: "An object containing information on a list of observations for a given version of a census dataset - updated response"
+    type: object
+    properties:
+      dimensions:
+        description: "A list of dimensions for the given query"
+        type: array
+        items:
+          $ref: "#/definitions/ObservationDimension"
+      observation:
+        description: "The observation relating to the combination of dimensions and options"
         type: integer
   GetPopulationTypesResponse:
     description: "The response body containing all available population-types for Census 2021"
