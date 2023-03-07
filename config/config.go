@@ -13,7 +13,7 @@ type Config struct {
 	GracefulShutdownTimeout    time.Duration `envconfig:"GRACEFUL_SHUTDOWN_TIMEOUT"`
 	HealthCheckInterval        time.Duration `envconfig:"HEALTHCHECK_INTERVAL"`
 	HealthCheckCriticalTimeout time.Duration `envconfig:"HEALTHCHECK_CRITICAL_TIMEOUT"`
-	ServiceAuthToken           string        `envconfig:"SERVICE_AUTH_TOKEN"`
+	ServiceAuthToken           string        `envconfig:"SERVICE_AUTH_TOKEN"    json:"-"`
 	EnablePrivateEndpoints     bool          `envconfig:"ENABLE_PRIVATE_ENDPOINTS"`
 	EnablePermissionsAuth      bool          `envconfig:"ENABLE_PERMISSIONS_AUTH"`
 	ZebedeeURL                 string        `envconfig:"ZEBEDEE_URL"`
