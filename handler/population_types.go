@@ -85,6 +85,7 @@ func (h *PopulationTypes) GetAll(w http.ResponseWriter, req *http.Request) {
 				Name:        pt.Name,
 				Label:       pt.Label,
 				Description: pt.Description,
+				Type:        pt.Type,
 			})
 		}
 
@@ -110,6 +111,7 @@ func (h *PopulationTypes) GetAll(w http.ResponseWriter, req *http.Request) {
 				Name:        pt.Name,
 				Label:       pt.Label,
 				Description: pt.Description,
+				Type:        pt.Type,
 			})
 		}
 
@@ -136,6 +138,7 @@ func (h *PopulationTypes) GetAll(w http.ResponseWriter, req *http.Request) {
 			Name:        pt.Name,
 			Label:       pt.Label,
 			Description: pt.Description,
+			Type:        pt.Type,
 		})
 	}
 
@@ -199,6 +202,7 @@ func (h *PopulationTypes) Get(w http.ResponseWriter, r *http.Request) {
 				Name:        p.Name,
 				Label:       p.Label,
 				Description: p.Description,
+				Type:        p.Type,
 			}
 			break
 		}
