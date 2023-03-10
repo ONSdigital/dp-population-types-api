@@ -4,6 +4,7 @@ type PopulationType struct {
 	Name        string `json:"name"`
 	Label       string `json:"label"`
 	Description string `json:"description"`
+	Type        string `json:"type"`
 }
 
 type GetPopulationTypeResponse struct {

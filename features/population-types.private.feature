@@ -20,12 +20,14 @@ Feature: Population types endpoint
       {
         "name": "dataset_1",
         "description": "dataset_1",
-        "label": "dataset 1"
+        "label": "dataset 1",
+        "type": "microdata"
       },
       {
         "name": "dataset_2",
         "description": "dataset_2",
-        "label": "dataset 2"
+        "label": "dataset 2",
+        "type": "tabular"
       }
     ]
   }
@@ -45,12 +47,14 @@ Feature: Population types endpoint
           {
             "name": "dataset_1",
             "description": "dataset_1",
-            "label": "dataset 1"
+            "label": "dataset 1",
+            "type": "microdata"
           },
           {
             "name": "dataset_2",
             "description": "dataset_2",
-            "label": "dataset 2"
+            "label": "dataset 2",
+            "type": "tabular"
           }
         ]
     }
@@ -88,7 +92,8 @@ Feature: Population types endpoint
           {
             "name": "dataset_1",
             "description": "dataset_1",
-            "label": "dataset 1"
+            "label": "dataset 1",
+            "type": "microdata"
           }
         ]
     }
@@ -103,7 +108,8 @@ Feature: Population types endpoint
         "population_type":{
           "name": "dataset_1",
           "description": "dataset_1",
-          "label": "dataset 1"
+          "label": "dataset 1",
+          "type": "microdata"
         }
     }
     """
