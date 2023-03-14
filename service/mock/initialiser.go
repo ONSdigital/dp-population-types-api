@@ -5,11 +5,10 @@ package mock
 
 import (
 	"context"
-	"net/http"
-	"sync"
-
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
+	"net/http"
+	"sync"
 )
 
 // Ensure, that InitialiserMock does implement service.Initialiser.
@@ -18,7 +17,6 @@ var _ service.Initialiser = &InitialiserMock{}
 
 // InitialiserMock is a mock implementation of service.Initialiser.
 //
-//	func TestSomethingThatUsesInitialiser(t *testing.T) {
 //	func TestSomethingThatUsesInitialiser(t *testing.T) {
 //
 //		// make and configure a mocked service.Initialiser
@@ -34,6 +32,9 @@ var _ service.Initialiser = &InitialiserMock{}
 //			},
 //			GetHealthCheckFunc: func(cfg *config.Config, time string, commit string, version string) (service.HealthChecker, error) {
 //				panic("mock out the GetHealthCheck method")
+//			},
+//			GetMongoClientFunc: func(ctx context.Context, cfg *config.Config) (service.MongoClient, error) {
+//				panic("mock out the GetMongoClient method")
 //			},
 //			GetResponderFunc: func() service.Responder {
 //				panic("mock out the GetResponder method")

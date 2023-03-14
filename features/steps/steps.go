@@ -33,7 +33,7 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the cantabular response is bad gateway`, c.cantabularIsBadGateway)
 	ctx.Step(`^the following base variable response is available from Cantabular:$`, c.theFollowingBaseVariableResponseIsAvailableFromCantabular)
 	ctx.Step(`^the following dimension categories response is available from Cantabular:$`, c.theFollowingDimensionCategoryResponseIsAvailableFromCantabular)
-
+	ctx.Step(`^the following census observations response is available from Cantabular:$`, c.theFollowingCensusObservationsResponseIsAvailableFromCantabular)
 }
 
 func (c *PopulationTypesComponent) theFollowingDimensionCategoryResponseIsAvailableFromCantabular(body *godog.DocString) error {
@@ -239,4 +239,19 @@ func (c *PopulationTypesComponent) theFollowingCantabularCategorisationsResponse
 
 	c.fakeCantabular.GetCategorisationsResponse = &resp
 	return nil
+}
+
+func (c *PopulationTypesComponent) theFollowingCensusObservationsResponseIsAvailableFromCantabular(body *godog.DocString) error {
+	var resp cantabular.StaticDatasetQuery
+	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
+		return fmt.Errorf("failed to unmarshal body: %w", err)
+	}
+
+	if resp.Dataset.Table.Dimensions == nil {
+		c.fakeCantabular.BadRequest = true
+	}
+
+	c.fakeCantabular.GetStaticDatasetQuery = &resp
+	return nil
+
 }

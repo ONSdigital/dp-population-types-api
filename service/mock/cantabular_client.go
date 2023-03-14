@@ -66,6 +66,9 @@ var _ service.CantabularClient = &CantabularClientMock{}
 //			ListDatasetsFunc: func(contextMoqParam context.Context) (*cantabular.ListDatasetsResponse, error) {
 //				panic("mock out the ListDatasets method")
 //			},
+//			StaticDatasetQueryFunc: func(contextMoqParam context.Context, staticDatasetQueryRequest cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error) {
+//				panic("mock out the StaticDatasetQuery method")
+//			},
 //			StatusCodeFunc: func(err error) int {
 //				panic("mock out the StatusCode method")
 //			},
@@ -120,6 +123,9 @@ type CantabularClientMock struct {
 
 	// ListDatasetsFunc mocks the ListDatasets method.
 	ListDatasetsFunc func(contextMoqParam context.Context) (*cantabular.ListDatasetsResponse, error)
+
+	// StaticDatasetQueryFunc mocks the StaticDatasetQuery method.
+	StaticDatasetQueryFunc func(contextMoqParam context.Context, staticDatasetQueryRequest cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error)
 
 	// StatusCodeFunc mocks the StatusCode method.
 	StatusCodeFunc func(err error) int
@@ -229,6 +235,13 @@ type CantabularClientMock struct {
 			// ContextMoqParam is the contextMoqParam argument value.
 			ContextMoqParam context.Context
 		}
+		// StaticDatasetQuery holds details about calls to the StaticDatasetQuery method.
+		StaticDatasetQuery []struct {
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
+			// StaticDatasetQueryRequest is the staticDatasetQueryRequest argument value.
+			StaticDatasetQueryRequest cantabular.StaticDatasetQueryRequest
+		}
 		// StatusCode holds details about calls to the StatusCode method.
 		StatusCode []struct {
 			// Err is the err argument value.
@@ -250,6 +263,7 @@ type CantabularClientMock struct {
 	lockGetParentAreaCount       sync.RWMutex
 	lockGetParents               sync.RWMutex
 	lockListDatasets             sync.RWMutex
+	lockStaticDatasetQuery       sync.RWMutex
 	lockStatusCode               sync.RWMutex
 }
 
@@ -786,6 +800,42 @@ func (mock *CantabularClientMock) ListDatasetsCalls() []struct {
 	mock.lockListDatasets.RLock()
 	calls = mock.calls.ListDatasets
 	mock.lockListDatasets.RUnlock()
+	return calls
+}
+
+// StaticDatasetQuery calls StaticDatasetQueryFunc.
+func (mock *CantabularClientMock) StaticDatasetQuery(contextMoqParam context.Context, staticDatasetQueryRequest cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error) {
+	if mock.StaticDatasetQueryFunc == nil {
+		panic("CantabularClientMock.StaticDatasetQueryFunc: method is nil but CantabularClient.StaticDatasetQuery was just called")
+	}
+	callInfo := struct {
+		ContextMoqParam           context.Context
+		StaticDatasetQueryRequest cantabular.StaticDatasetQueryRequest
+	}{
+		ContextMoqParam:           contextMoqParam,
+		StaticDatasetQueryRequest: staticDatasetQueryRequest,
+	}
+	mock.lockStaticDatasetQuery.Lock()
+	mock.calls.StaticDatasetQuery = append(mock.calls.StaticDatasetQuery, callInfo)
+	mock.lockStaticDatasetQuery.Unlock()
+	return mock.StaticDatasetQueryFunc(contextMoqParam, staticDatasetQueryRequest)
+}
+
+// StaticDatasetQueryCalls gets all the calls that were made to StaticDatasetQuery.
+// Check the length with:
+//
+//	len(mockedCantabularClient.StaticDatasetQueryCalls())
+func (mock *CantabularClientMock) StaticDatasetQueryCalls() []struct {
+	ContextMoqParam           context.Context
+	StaticDatasetQueryRequest cantabular.StaticDatasetQueryRequest
+} {
+	var calls []struct {
+		ContextMoqParam           context.Context
+		StaticDatasetQueryRequest cantabular.StaticDatasetQueryRequest
+	}
+	mock.lockStaticDatasetQuery.RLock()
+	calls = mock.calls.StaticDatasetQuery
+	mock.lockStaticDatasetQuery.RUnlock()
 	return calls
 }
 

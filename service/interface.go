@@ -59,6 +59,7 @@ type CantabularClient interface {
 	Checker(ctx context.Context, state *healthcheck.CheckState) error
 	CheckerAPIExt(ctx context.Context, state *healthcheck.CheckState) error
 	StatusCode(error) int
+	StaticDatasetQuery(context.Context, cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error)
 }
 
 // Responder handles responding to http requests

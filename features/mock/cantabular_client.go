@@ -33,6 +33,7 @@ type CantabularClient struct {
 	GetDimensionCategoriesRespnse    *cantabular.GetDimensionCategoriesResponse
 	ListDatasetsResponse             *cantabular.ListDatasetsResponse
 	GetBlockedAreaCountResult        *cantabular.GetBlockedAreaCountResult
+	GetStaticDatasetQuery            *cantabular.StaticDatasetQuery
 }
 
 func (c *CantabularClient) Checker(_ context.Context, _ *healthcheck.CheckState) error {
@@ -283,4 +284,16 @@ func (c *CantabularClient) GetBaseVariable(_ context.Context, _ cantabular.GetBa
 	}
 
 	return c.GetBaseVariableResponse, nil
+}
+
+func (c *CantabularClient) StaticDatasetQuery(context.Context, cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error) {
+	if c.BadRequest {
+		return nil, dperrors.New(
+			errors.New("bad request"),
+			http.StatusBadRequest,
+			log.Data{"errors": map[string]string{"message": "400 Bad Request: codes not found for variable on filter for ltla"}},
+		)
+	}
+
+	return c.GetStaticDatasetQuery, nil
 }
