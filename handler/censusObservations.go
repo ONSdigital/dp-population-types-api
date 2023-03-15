@@ -128,6 +128,21 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 		}}
 	}
 
+	//check if the dimensions has the area-type (variable) in it, else append
+	//e.g. /population-types/UR/census-observations?dimensions=resident_age_7b&area-type=ltla,E06000008
+	//in this case `dimensions=resident_age_7` is considered as `ltla,dimensions=resident_age_7`
+	addVaraible := true
+	for _, v := range cReq.Variables {
+		if v == cReq.Filters[0].Variable {
+			addVaraible = false
+			break
+		}
+	}
+
+	if addVaraible {
+		cReq.Variables = append([]string{cReq.Filters[0].Variable}, cReq.Variables...)
+	}
+
 	logData := log.Data{
 		"population_type": cReq.Dataset,
 		"variables":       cReq.Variables,

@@ -19,6 +19,7 @@ type Config struct {
 	ZebedeeURL                 string        `envconfig:"ZEBEDEE_URL"`
 	DatasetAPIURL              string        `envconfig:"DATASET_API_URL"`
 	MetadataCollection         string        `envconfig:"METADATA_COLLECTION"`
+	CensusObservationsFF       bool          `envconfig:"CENSUS_OBSERVATIONS_FF"`
 	Mongo                      mongo.MongoDriverConfig
 	CantabularConfig
 }
@@ -73,6 +74,7 @@ func Get() (*Config, error) {
 				IsSSL: false,
 			},
 		},
+		CensusObservationsFF: false,
 	}
 
 	return cfg, envconfig.Process("", cfg)

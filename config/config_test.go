@@ -60,6 +60,7 @@ func TestConfig(t *testing.T) {
 							RealHostnameForSSH: "",
 						},
 					},
+					CensusObservationsFF: false,
 				})
 			})
 

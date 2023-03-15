@@ -77,8 +77,10 @@ func (svc *Service) publicEndpoints(ctx context.Context) {
 	metadata := handler.NewMetadata(svc.Config, svc.responder, svc.mongoClient)
 	svc.Router.Get("/population-types/{population-type}/metadata", metadata.Get)
 
-	censusObservations := handler.NewCensusObservations(svc.Config, svc.responder, svc.cantabularClient)
-	svc.Router.Get("/population-types/{population-type}/census-observations", censusObservations.Get)
+	if svc.Config.CensusObservationsFF {
+		censusObservations := handler.NewCensusObservations(svc.Config, svc.responder, svc.cantabularClient)
+		svc.Router.Get("/population-types/{population-type}/census-observations", censusObservations.Get)
+	}
 }
 
 func (svc *Service) privateEndpoints(ctx context.Context) {
@@ -142,8 +144,10 @@ func (svc *Service) privateEndpoints(ctx context.Context) {
 	r.Get("/population-types/{population-type}/metadata", metadata.Get)
 	r.Put("/population-types/{population-type}/metadata", metadata.Put)
 
-	censusObservations := handler.NewCensusObservations(svc.Config, svc.responder, svc.cantabularClient)
-	r.Get("/population-types/{population-type}/census-observations", censusObservations.Get)
+	if svc.Config.CensusObservationsFF {
+		censusObservations := handler.NewCensusObservations(svc.Config, svc.responder, svc.cantabularClient)
+		r.Get("/population-types/{population-type}/census-observations", censusObservations.Get)
+	}
 
 	svc.Router.Mount("/", r)
 }
