@@ -77,7 +77,7 @@ Scenario: Getting census observations successfully
         }
     }
     """
-    When I GET "/population-types/UR/census-observations?dims=ltla,resident_age_7b&area-type=ltla&areas=E06000001"
+    When I GET "/population-types/UR/census-observations?dimensions=ltla,resident_age_7b&area-type=ltla,E06000001"
 
     Then I should receive the following JSON response:
     """
@@ -205,7 +205,7 @@ Scenario: Getting census observations successfully
         ],
         "links": {
             "self": {
-                "href": "http://foo/population-types/UR/census-observations?dims=ltla,resident_age_7b&area-type=ltla&areas=E06000001"
+                "href": "http://foo/population-types/UR/census-observations?dimensions=ltla,resident_age_7b&area-type=ltla,E06000001"
             }
         },
         "total_observations": 7
@@ -224,6 +224,6 @@ Given the following census observations response is available from Cantabular:
         }
     }
     """
-    When I GET "/population-types/UR/census-observations?dims=ltla,resident_age_7b&area-type=ltla&areas=E06000001"
+    When I GET "/population-types/UR/census-observations?dimensions=ltla,resident_age_7b&area-type=ltla,E06000001"
 
     Then the HTTP status code should be "400"

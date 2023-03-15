@@ -116,13 +116,15 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 
 	cReq := cantabular.StaticDatasetQueryRequest{
 		Dataset:   chi.URLParam(r, "population-type"),
-		Variables: strings.Split(r.URL.Query().Get("dims"), ","),
+		Variables: strings.Split(r.URL.Query().Get("dimensions"), ","),
 	}
 
 	if r.URL.Query().Get("area-type") != "" {
+		//the first value in this collection is variable and rest are codes
+		vals := strings.Split(r.URL.Query().Get("area-type"), ",")
 		cReq.Filters = []cantabular.Filter{{
-			Variable: r.URL.Query().Get("area-type"),
-			Codes:    strings.Split(r.URL.Query().Get("areas"), ","),
+			Variable: vals[0],
+			Codes:    vals[1:],
 		}}
 	}
 
