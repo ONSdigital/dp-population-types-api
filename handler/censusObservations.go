@@ -119,13 +119,18 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 		Variables: strings.Split(r.URL.Query().Get("dimensions"), ","),
 	}
 
+	areaType := ""
 	if r.URL.Query().Get("area-type") != "" {
 		//the first value in this collection is variable and rest are codes
 		vals := strings.Split(r.URL.Query().Get("area-type"), ",")
-		cReq.Filters = []cantabular.Filter{{
-			Variable: vals[0],
-			Codes:    vals[1:],
-		}}
+		areaType = vals[0]
+
+		if len(vals[1:]) > 0 { //only populate filters if codes are available
+			cReq.Filters = []cantabular.Filter{{
+				Variable: vals[0],
+				Codes:    vals[1:],
+			}}
+		}
 	}
 
 	//check if the dimensions has the area-type (variable) in it, else append
@@ -133,14 +138,14 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 	//in this case `dimensions=resident_age_7` is considered as `ltla,dimensions=resident_age_7`
 	addVaraible := true
 	for _, v := range cReq.Variables {
-		if v == cReq.Filters[0].Variable {
+		if v == areaType {
 			addVaraible = false
 			break
 		}
 	}
 
 	if addVaraible {
-		cReq.Variables = append([]string{cReq.Filters[0].Variable}, cReq.Variables...)
+		cReq.Variables = append([]string{areaType}, cReq.Variables...)
 	}
 
 	logData := log.Data{
