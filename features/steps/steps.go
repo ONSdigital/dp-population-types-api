@@ -13,6 +13,7 @@ import (
 func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^private endpoints are enabled`, c.privateEndpointsAreEnabled)
 	ctx.Step(`^private endpoints are not enabled`, c.privateEndpointsAreNotEnabled)
+	ctx.Step(`^census observations endpoint is enabled`, c.censusOservationsEndpointEnabled)
 	ctx.Step(`^cantabular is unresponsive$`, c.cantabularIsUnresponsive)
 	ctx.Step(`^the following geography response is available from Cantabular:$`, c.theFollowingCantabularGeographyResponseIsAvailable)
 	ctx.Step(`^the following dimensions response is available from Cantabular:$`, c.theFollowingCantabularDimensionsResponseIsAvailable)
@@ -81,6 +82,11 @@ func (c *PopulationTypesComponent) datasetClientReturnsErrors(populationType str
 
 func (c *PopulationTypesComponent) privateEndpointsAreNotEnabled() error {
 	c.Config.EnablePrivateEndpoints = false
+	return nil
+}
+
+func (c *PopulationTypesComponent) censusOservationsEndpointEnabled() error {
+	c.Config.CensusObservationsFF = true
 	return nil
 }
 

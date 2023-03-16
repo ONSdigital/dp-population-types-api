@@ -4,9 +4,17 @@ Background:
 
     Given private endpoints are not enabled
 
+Scenario: Census observations endpoint is not enabled
+
+    When I GET "/population-types/UR/census-observations?dimensions=ltla,resident_age_7b&area-type=ltla,E06000001"
+
+    And the HTTP status code should be "404"
+
 Scenario: Getting census observations successfully
 
-    Given the following census observations response is available from Cantabular:
+    Given census observations endpoint is enabled
+
+    And the following census observations response is available from Cantabular:
     """
     {
         "dataset": {
@@ -224,6 +232,9 @@ Given the following census observations response is available from Cantabular:
         }
     }
     """
+    
+    And census observations endpoint is enabled
+
     When I GET "/population-types/UR/census-observations?dimensions=ltla,resident_age_7b&area-type=ltla,E06000001"
 
     Then the HTTP status code should be "400"
