@@ -18,3 +18,19 @@ func filterPopulationTypes(coundition []string, toFilter []contract.PopulationTy
 
 	return filtered
 }
+
+type CantabularError string
+
+const (
+	MaxVariableError        = "Maximum variables at MSOA and above is 5"
+	MaxVariableGraphqlError = "Maximum variables in query is 5"
+)
+
+func handleError(errString CantabularError) string {
+	switch errString {
+	case MaxVariableError, MaxVariableGraphqlError:
+		return "More than 5 variables selected, query failed"
+	default:
+		return "Unexpected error"
+	}
+}

@@ -167,6 +167,18 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 		)
 		return
 	}
+	if len(qRes.Dataset.Table.Error) > 0 {
+		c.respond.Error(
+			ctx,
+			w,
+			http.StatusBadRequest,
+			Error{
+				err:     errors.New(handleError(CantabularError(qRes.Dataset.Table.Error))),
+				logData: logData,
+			},
+		)
+		return
+	}
 
 	response, err := c.toGetDatasetObservationsResponse(qRes)
 	if err != nil {
@@ -179,9 +191,10 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 				logData: logData,
 			},
 		)
-	} else {
-		//special handling for self link
-		response.Links.Self.HREF = r.URL.String()
-		c.respond.JSON(ctx, w, http.StatusOK, response)
 	}
+
+	//special handling for self link
+	response.Links.Self.HREF = r.URL.String()
+	c.respond.JSON(ctx, w, http.StatusOK, response)
+
 }
