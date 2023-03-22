@@ -36,6 +36,7 @@ Background:
                                             },
                                             "label": "label 2",
                                             "meta": {
+                                                "Default_Classification_Flag": "Y",
                                                 "ONS_Variable": {
                                                     "Quality_Statement_Text": "quality statement 1"
                                                 }
@@ -68,6 +69,7 @@ Background:
                     "id": "name 1",
                     "label": "label 2",
                     "quality_statement_text":"quality statement 1",
+                    "default_categorisation": true,
                     "categories": [{
                          "id": "code 1",
                          "label": "label 1"

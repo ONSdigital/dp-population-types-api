@@ -376,11 +376,17 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 								})
 							}
 
+							defaultCategorisation := false
+							if isSourceOf.Node.Meta.DefaultClassification == "Y" {
+								defaultCategorisation = true
+							}
+
 							resp.Items = append(resp.Items, contract.Category{
-								Id:                   isSourceOf.Node.Name,
-								Label:                isSourceOf.Node.Label,
-								QualityStatementText: isSourceOf.Node.Meta.ONSVariable.QualityStatementText,
-								Categories:           cats,
+								Id:                    isSourceOf.Node.Name,
+								Label:                 isSourceOf.Node.Label,
+								QualityStatementText:  isSourceOf.Node.Meta.ONSVariable.QualityStatementText,
+								Categories:            cats,
+								DefaultCategorisation: defaultCategorisation,
 							})
 						}
 					}
@@ -398,11 +404,17 @@ func (h *Dimensions) GetCategorisations(w http.ResponseWriter, r *http.Request) 
 						})
 					}
 
+					defaultCategorisation := false
+					if sourceOf.Node.Meta.DefaultClassification == "Y" {
+						defaultCategorisation = true
+					}
+
 					resp.Items = append(resp.Items, contract.Category{
-						Id:                   sourceOf.Node.Name,
-						Label:                sourceOf.Node.Label,
-						QualityStatementText: sourceOf.Node.Meta.ONSVariable.QualityStatementText,
-						Categories:           cats,
+						Id:                    sourceOf.Node.Name,
+						Label:                 sourceOf.Node.Label,
+						QualityStatementText:  sourceOf.Node.Meta.ONSVariable.QualityStatementText,
+						DefaultCategorisation: defaultCategorisation,
+						Categories:            cats,
 					})
 				}
 			}
