@@ -253,10 +253,6 @@ func (c *PopulationTypesComponent) theFollowingCensusObservationsResponseIsAvail
 		return fmt.Errorf("failed to unmarshal body: %w", err)
 	}
 
-	if resp.Dataset.Table.Dimensions == nil {
-		c.fakeCantabular.BadRequest = true
-	}
-
 	c.fakeCantabular.GetStaticDatasetQuery = &resp
 	return nil
 

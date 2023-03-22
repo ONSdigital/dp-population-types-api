@@ -232,6 +232,8 @@ Given the following census observations response is available from Cantabular:
         }
     }
     """
+    
+    And the cantabular area response is bad request
 
     And census observations endpoint is enabled
 
@@ -245,7 +247,7 @@ Scenario: Getting More Than 5 errors:
        {
         "dataset": {
           "table": {
-            "dimensions": null
+            "dimensions": null,
             "error": "Maximum variables in query is 5",
             "values": null
           }
