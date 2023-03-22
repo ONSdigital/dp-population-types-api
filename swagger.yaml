@@ -754,6 +754,8 @@ definitions:
               $ref: '#/definitions/Category'
           total_count:
             type: integer
+          default_categorisation:
+            type: boolean
   DimensionCategory:
     description: "The response body containing the information for a dimension category"
     properties:
@@ -791,3 +793,19 @@ definitions:
       id:
         type: string
         description: "id of resource"
+  ObservationDimension:
+    type: object
+    description: "A dimension returned relating to an observation"
+    properties:
+      dimension:
+        type: string
+        description: "The dimension description"
+      dimension_id:
+        type: string
+        description: "The dimension id"
+      option:
+        type: string
+        description: "The description of the option the observation relates to"
+      option_id:
+        type: string
+        description: "The id of the option the observation relates to"
