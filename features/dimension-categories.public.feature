@@ -59,6 +59,7 @@ Feature: Area Types
               "id": "sex",
               "label": "Sex (2 categories)",
               "quality_statement_text": "quality statement",
+              "default_categorisation": false,
               "categories": [
                   {
                       "id": "1",
