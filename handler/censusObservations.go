@@ -27,6 +27,9 @@ type GetObservationsResponse struct {
 	Observations      []GetObservationResponse `bson:"observations"           json:"observations"`
 	Links             DatasetJSONLinks         `json:"links"`
 	TotalObservations int                      `json:"total_observations"`
+	BlockedAreas      int                      `json:"blocked_areas"`
+	TotalAreas        int                      `json:"total_areas"`
+	AreasReturned     int                      `json:"areas_returned"`
 }
 
 type ObservationDimension struct {
@@ -109,6 +112,10 @@ func (c *CensusObservations) toGetDatasetObservationsResponse(query *cantabular.
 	var getObservationsResponse GetObservationsResponse
 	getObservationsResponse.Observations = getObservationResponse
 	getObservationsResponse.TotalObservations = len(query.Dataset.Table.Values)
+
+	getObservationsResponse.BlockedAreas = query.Dataset.Table.Rules.Blocked.Count
+	getObservationsResponse.TotalAreas = query.Dataset.Table.Rules.Total.Count
+	getObservationsResponse.AreasReturned = query.Dataset.Table.Rules.Total.Count
 
 	return &getObservationsResponse, nil
 }

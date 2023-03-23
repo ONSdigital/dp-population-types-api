@@ -83,6 +83,17 @@ Scenario: Getting census observations successfully
                     }
                 ],
                 "error": null,
+                "rules": {
+                    "blocked": {
+                        "count": 0
+                    },
+                    "evaluated": {
+                        "count": 1
+                    },
+                    "passed": {
+                        "count": 1
+                    }
+                },
                 "values": [
                     57326,
                     4376,
@@ -227,7 +238,10 @@ Scenario: Getting census observations successfully
                 "href": "http://foo/population-types/UR/census-observations?dimensions=ltla,resident_age_7b&area-type=ltla,E06000001"
             }
         },
-        "total_observations": 7
+        "total_observations": 7,
+        "blocked_areas": 0,
+        "total_areas": 1,
+        "areas_returned": 1
     }
     """
 
