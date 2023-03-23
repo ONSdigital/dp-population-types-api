@@ -12,6 +12,8 @@ import (
 	"github.com/pkg/errors"
 )
 
+const DATASET_TYPE_MICRODATA = "microdata"
+
 type GetObservationResponse struct {
 	Dimensions  []ObservationDimension `bson:"dimensions"           json:"dimensions"`
 	Observation float32                `bson:"observation"   json:"observation"`
@@ -113,10 +115,40 @@ func (c *CensusObservations) toGetDatasetObservationsResponse(query *cantabular.
 
 func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-
+	logData := log.Data{
+		"method": http.MethodGet,
+	}
 	cReq := cantabular.StaticDatasetQueryRequest{
 		Dataset:   chi.URLParam(r, "population-type"),
 		Variables: strings.Split(r.URL.Query().Get("dimensions"), ","),
+	}
+
+	//check if the dataset is of type microdata
+	dataset, err := c.ctblr.StaticDatasetType(ctx, cReq.Dataset)
+	if err != nil {
+		c.respond.Error(
+			ctx,
+			w,
+			statusCode(err),
+			Error{
+				err:     err,
+				logData: logData,
+			},
+		)
+		return
+	}
+
+	if dataset.Type != DATASET_TYPE_MICRODATA {
+		c.respond.Error(
+			ctx,
+			w,
+			http.StatusBadRequest,
+			Error{
+				err:     errors.New("Only supports dataset of type microdata"),
+				logData: logData,
+			},
+		)
+		return
 	}
 
 	areaType := ""
@@ -148,11 +180,9 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 		cReq.Variables = append([]string{areaType}, cReq.Variables...)
 	}
 
-	logData := log.Data{
-		"population_type": cReq.Dataset,
-		"variables":       cReq.Variables,
-		"filters":         cReq.Filters,
-	}
+	logData["population_type"] = cReq.Dataset
+	logData["variables"] = cReq.Variables
+	logData["filters"] = cReq.Filters
 
 	qRes, err := c.ctblr.StaticDatasetQuery(ctx, cReq)
 	if err != nil {

@@ -8,7 +8,7 @@ go 1.19
 replace github.com/spf13/cobra => github.com/spf13/cobra v1.4.0
 
 require (
-	github.com/ONSdigital/dp-api-clients-go/v2 v2.245.0
+	github.com/ONSdigital/dp-api-clients-go/v2 v2.246.0
 	github.com/ONSdigital/dp-authorisation v0.2.0
 	github.com/ONSdigital/dp-cantabular-filter-flex-api v1.19.0
 	github.com/ONSdigital/dp-component-test v0.9.0
@@ -25,7 +25,7 @@ require (
 	github.com/maxcnunes/httpfake v1.2.4
 	github.com/pkg/errors v0.9.1
 	github.com/smartystreets/goconvey v1.7.2
-	go.mongodb.org/mongo-driver v1.11.2
+	go.mongodb.org/mongo-driver v1.11.3
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 )
 
@@ -34,8 +34,8 @@ require (
 	github.com/ONSdigital/dp-mongodb-in-memory v1.5.0 // indirect
 	github.com/ONSdigital/dp-rchttp v1.0.0 // indirect
 	github.com/ONSdigital/go-ns v0.0.0-20210916104633-ac1c1c52327e // indirect
-	github.com/aws/aws-sdk-go v1.44.220 // indirect
-	github.com/chromedp/cdproto v0.0.0-20230310204135-a6d692f2c96d // indirect
+	github.com/aws/aws-sdk-go v1.44.227 // indirect
+	github.com/chromedp/cdproto v0.0.0-20230319112347-6603f2c23d36 // indirect
 	github.com/chromedp/chromedp v0.9.1 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/cucumber/gherkin-go/v19 v19.0.3 // indirect
@@ -60,7 +60,7 @@ require (
 	github.com/klauspost/compress v1.16.3 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.17 // indirect
+	github.com/mattn/go-isatty v0.0.18 // indirect
 	github.com/montanaflynn/stats v0.7.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/shurcooL/graphql v0.0.0-20220606043923-3cf50f8a0a29 // indirect

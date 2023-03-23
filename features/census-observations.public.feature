@@ -14,6 +14,17 @@ Scenario: Getting census observations successfully
 
     Given census observations endpoint is enabled
 
+    And the following dataset type is available from Cantabular:
+    """
+    {
+        "data": {
+            "dataset": {
+            "type": "microdata"
+            }
+        }
+    }
+    """
+
     And the following census observations response is available from Cantabular:
     """
     {
@@ -235,6 +246,36 @@ Given the following census observations response is available from Cantabular:
     
     And the cantabular area response is bad request
 
+    And the following dataset type is available from Cantabular:
+    """
+    {
+        "data": {
+            "dataset": {
+            "type": "microdata"
+            }
+        }
+    }
+    """
+    And census observations endpoint is enabled
+
+    When I GET "/population-types/UR/census-observations?dimensions=ltla,resident_age_7b&area-type=ltla,E06000001"
+
+    Then the HTTP status code should be "400"
+
+
+Scenario: Getting census observations dataset error
+
+Given the following dataset type is available from Cantabular:
+    """
+    {
+        "data": {
+            "dataset": {
+            "type": "not-microdata"
+            }
+        }
+    }
+    """
+
     And census observations endpoint is enabled
 
     When I GET "/population-types/UR/census-observations?dimensions=ltla,resident_age_7b&area-type=ltla,E06000001"
@@ -243,17 +284,29 @@ Given the following census observations response is available from Cantabular:
 
 Scenario: Getting More Than 5 errors:
     Given the following census observations response is available from Cantabular:
-       """
-       {
+    """
+    {
         "dataset": {
-          "table": {
+            "table": {
             "dimensions": null,
             "error": "Maximum variables in query is 5",
             "values": null
-          }
+            }
         }
-       }
-       """
+    }
+    """
+
+    And the following dataset type is available from Cantabular:
+    """
+    {
+        "data": {
+            "dataset": {
+            "type": "microdata"
+            }
+        }
+    }
+    """
+    
     And census observations endpoint is enabled
 
     When I GET "/population-types/UR/census-observations?dimensions=ltla,resident_age_7b&area-type=ltla,E06000001"

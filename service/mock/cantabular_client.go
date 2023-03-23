@@ -6,6 +6,7 @@ package mock
 import (
 	"context"
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular/gql"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"sync"
@@ -69,6 +70,9 @@ var _ service.CantabularClient = &CantabularClientMock{}
 //			StaticDatasetQueryFunc: func(contextMoqParam context.Context, staticDatasetQueryRequest cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error) {
 //				panic("mock out the StaticDatasetQuery method")
 //			},
+//			StaticDatasetTypeFunc: func(ctx context.Context, datasetName string) (*gql.Dataset, error) {
+//				panic("mock out the StaticDatasetType method")
+//			},
 //			StatusCodeFunc: func(err error) int {
 //				panic("mock out the StatusCode method")
 //			},
@@ -126,6 +130,9 @@ type CantabularClientMock struct {
 
 	// StaticDatasetQueryFunc mocks the StaticDatasetQuery method.
 	StaticDatasetQueryFunc func(contextMoqParam context.Context, staticDatasetQueryRequest cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error)
+
+	// StaticDatasetTypeFunc mocks the StaticDatasetType method.
+	StaticDatasetTypeFunc func(ctx context.Context, datasetName string) (*gql.Dataset, error)
 
 	// StatusCodeFunc mocks the StatusCode method.
 	StatusCodeFunc func(err error) int
@@ -242,6 +249,13 @@ type CantabularClientMock struct {
 			// StaticDatasetQueryRequest is the staticDatasetQueryRequest argument value.
 			StaticDatasetQueryRequest cantabular.StaticDatasetQueryRequest
 		}
+		// StaticDatasetType holds details about calls to the StaticDatasetType method.
+		StaticDatasetType []struct {
+			// Ctx is the ctx argument value.
+			Ctx context.Context
+			// DatasetName is the datasetName argument value.
+			DatasetName string
+		}
 		// StatusCode holds details about calls to the StatusCode method.
 		StatusCode []struct {
 			// Err is the err argument value.
@@ -264,6 +278,7 @@ type CantabularClientMock struct {
 	lockGetParents               sync.RWMutex
 	lockListDatasets             sync.RWMutex
 	lockStaticDatasetQuery       sync.RWMutex
+	lockStaticDatasetType        sync.RWMutex
 	lockStatusCode               sync.RWMutex
 }
 
@@ -836,6 +851,42 @@ func (mock *CantabularClientMock) StaticDatasetQueryCalls() []struct {
 	mock.lockStaticDatasetQuery.RLock()
 	calls = mock.calls.StaticDatasetQuery
 	mock.lockStaticDatasetQuery.RUnlock()
+	return calls
+}
+
+// StaticDatasetType calls StaticDatasetTypeFunc.
+func (mock *CantabularClientMock) StaticDatasetType(ctx context.Context, datasetName string) (*gql.Dataset, error) {
+	if mock.StaticDatasetTypeFunc == nil {
+		panic("CantabularClientMock.StaticDatasetTypeFunc: method is nil but CantabularClient.StaticDatasetType was just called")
+	}
+	callInfo := struct {
+		Ctx         context.Context
+		DatasetName string
+	}{
+		Ctx:         ctx,
+		DatasetName: datasetName,
+	}
+	mock.lockStaticDatasetType.Lock()
+	mock.calls.StaticDatasetType = append(mock.calls.StaticDatasetType, callInfo)
+	mock.lockStaticDatasetType.Unlock()
+	return mock.StaticDatasetTypeFunc(ctx, datasetName)
+}
+
+// StaticDatasetTypeCalls gets all the calls that were made to StaticDatasetType.
+// Check the length with:
+//
+//	len(mockedCantabularClient.StaticDatasetTypeCalls())
+func (mock *CantabularClientMock) StaticDatasetTypeCalls() []struct {
+	Ctx         context.Context
+	DatasetName string
+} {
+	var calls []struct {
+		Ctx         context.Context
+		DatasetName string
+	}
+	mock.lockStaticDatasetType.RLock()
+	calls = mock.calls.StaticDatasetType
+	mock.lockStaticDatasetType.RUnlock()
 	return calls
 }
 

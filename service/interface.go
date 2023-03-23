@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular/gql"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/config"
@@ -60,6 +61,7 @@ type CantabularClient interface {
 	CheckerAPIExt(ctx context.Context, state *healthcheck.CheckState) error
 	StatusCode(error) int
 	StaticDatasetQuery(context.Context, cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error)
+	StaticDatasetType(ctx context.Context, datasetName string) (*gql.Dataset, error)
 }
 
 // Responder handles responding to http requests

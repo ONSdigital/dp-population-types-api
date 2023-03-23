@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular/gql"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/datastore"
@@ -30,6 +31,7 @@ type cantabularClient interface {
 	GetBaseVariable(context.Context, cantabular.GetBaseVariableRequest) (*cantabular.GetBaseVariableResponse, error)
 	StatusCode(error) int
 	StaticDatasetQuery(context.Context, cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error)
+	StaticDatasetType(ctx context.Context, datasetName string) (*gql.Dataset, error)
 }
 
 type datasetAPIClient interface {

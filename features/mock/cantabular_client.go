@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
+	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular/gql"
 
 	dperrors "github.com/ONSdigital/dp-api-clients-go/v2/errors"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
@@ -34,6 +35,7 @@ type CantabularClient struct {
 	ListDatasetsResponse             *cantabular.ListDatasetsResponse
 	GetBlockedAreaCountResult        *cantabular.GetBlockedAreaCountResult
 	GetStaticDatasetQuery            *cantabular.StaticDatasetQuery
+	GetStaticDataset                 *gql.Dataset
 }
 
 func (c *CantabularClient) Checker(_ context.Context, _ *healthcheck.CheckState) error {
@@ -296,4 +298,8 @@ func (c *CantabularClient) StaticDatasetQuery(context.Context, cantabular.Static
 	}
 
 	return c.GetStaticDatasetQuery, nil
+}
+
+func (c *CantabularClient) StaticDatasetType(ctx context.Context, datasetName string) (*gql.Dataset, error) {
+	return c.GetStaticDataset, nil
 }
