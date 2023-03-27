@@ -132,8 +132,6 @@ paths:
   /population-types/{population-type}/dimensions:
     get:
       summary: "Get list of non-geography base variables for given dataset "
-      tags:
-        - "Private"
       description: ""
       produces:
         - "application/json"
@@ -222,8 +220,6 @@ paths:
   /population-types/{population-type}/dimensions/{dimension}/categorisations:
     get:
       summary: "Get list of categorisations for a base level variable"
-      tags:
-        - "Private"
       description: ""
       produces:
         - "application/json"
