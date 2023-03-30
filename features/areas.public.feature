@@ -64,7 +64,7 @@ Feature: Areas
     Then I should receive the following JSON response:
       """
       {
-        "limit": 20,
+        "limit": 30,
         "offset": 0,
         "count": 3,
         "total_count": 3,
@@ -129,7 +129,7 @@ Feature: Areas
     Then I should receive the following JSON response:
     """
     {
-      "limit": 20,
+      "limit": 30,
       "offset": 0,
       "count": 1,
       "total_count": 1,
@@ -224,7 +224,7 @@ Feature: Areas
     Then I should receive the following JSON response:
     """
     {
-      "limit": 20,
+      "limit": 30,
       "offset": 0,
       "count": 5,
       "total_count": 5,
@@ -303,7 +303,7 @@ Feature: Areas
     Then I should receive the following JSON response:
     """
     {
-      "limit": 20,
+      "limit": 30,
       "offset": 0,
       "count": 0,
       "total_count": 0,

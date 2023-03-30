@@ -3,7 +3,7 @@ package contract
 import "github.com/pkg/errors"
 
 const (
-	defaultLimit = 20
+	defaultLimit = 30
 )
 
 type QueryParams struct {

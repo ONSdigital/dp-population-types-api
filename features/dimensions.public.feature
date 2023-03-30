@@ -64,7 +64,7 @@ Feature: Dimensionas
     And I should receive the following JSON response:
     """
     {
-        "limit":  20,
+        "limit":  30,
         "offset": 0,
         "count":  2,
         "total_count": 2,

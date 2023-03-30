@@ -39,7 +39,7 @@ Feature: Population types endpoint
     Then I should receive the following JSON response:
     """
     {
-        "limit": 20,
+        "limit": 30,
         "count": 2,
         "total_count": 2,
         "offset": 0,
@@ -84,7 +84,7 @@ Feature: Population types endpoint
     Then I should receive the following JSON response:
     """
     {
-        "limit": 20,
+        "limit":30,
         "count": 1,
         "total_count": 1,
         "offset": 0,
