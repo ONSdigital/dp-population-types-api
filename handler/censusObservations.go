@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"strings"
 
@@ -79,7 +80,9 @@ func getDimensionRow(query *cantabular.StaticDatasetQuery, dimIndices []int, dim
 	return observationDimensions
 }
 
-func (c *CensusObservations) toGetDatasetObservationsResponse(query *cantabular.StaticDatasetQuery) (*GetObservationsResponse, error) {
+func (c *CensusObservations) toGetDatasetObservationsResponse(query *cantabular.StaticDatasetQuery, ctx context.Context) (*GetObservationsResponse, error) {
+	log.Info(ctx, "Starting to process response", log.Data{"area-type": query.Dataset.Table.Dimensions[0].Variable.Name})
+
 	var getObservationResponse []GetObservationResponse
 
 	dimLength := make([]int, 0)
@@ -89,6 +92,8 @@ func (c *CensusObservations) toGetDatasetObservationsResponse(query *cantabular.
 		dimLength = append(dimLength, len(query.Dataset.Table.Dimensions[k].Categories))
 		dimIndices = append(dimIndices, 0)
 	}
+
+	log.Info(ctx, "Created the arrays to hold dimension and categorisation information.  About to begin the processing loop for the results.", log.Data{"area-type": query.Dataset.Table.Dimensions[0].Variable.Name})
 
 	for v := 0; v < len(query.Dataset.Table.Values); v++ {
 		dimension := getDimensionRow(query, dimIndices, v)
@@ -109,6 +114,8 @@ func (c *CensusObservations) toGetDatasetObservationsResponse(query *cantabular.
 
 	}
 
+	log.Info(ctx, "Process observation response", log.Data{"observation-response-size": len(getObservationResponse)})
+
 	var getObservationsResponse GetObservationsResponse
 	getObservationsResponse.Observations = getObservationResponse
 	getObservationsResponse.TotalObservations = len(query.Dataset.Table.Values)
@@ -116,6 +123,8 @@ func (c *CensusObservations) toGetDatasetObservationsResponse(query *cantabular.
 	getObservationsResponse.BlockedAreas = query.Dataset.Table.Rules.Blocked.Count
 	getObservationsResponse.TotalAreas = query.Dataset.Table.Rules.Total.Count
 	getObservationsResponse.AreasReturned = query.Dataset.Table.Rules.Total.Count
+
+	log.Info(ctx, "Complete response processed, about to return to user", log.Data{"total-response-length": len(getObservationsResponse.Observations)})
 
 	return &getObservationsResponse, nil
 }
@@ -125,10 +134,13 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 	logData := log.Data{
 		"method": http.MethodGet,
 	}
+
 	cReq := cantabular.StaticDatasetQueryRequest{
 		Dataset:   chi.URLParam(r, "population-type"),
 		Variables: strings.Split(r.URL.Query().Get("dimensions"), ","),
 	}
+
+	log.Info(ctx, "handling census-observations request", log.Data{"request": cReq})
 
 	//check if the dataset is of type microdata
 	dataset, err := c.ctblr.StaticDatasetType(ctx, cReq.Dataset)
@@ -172,6 +184,8 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	log.Info(ctx, "census-observations - determined area-type and areas values", log.Data{"updated-request": cReq})
+
 	//check if the dimensions has the area-type (variable) in it, else append
 	//e.g. /population-types/UR/census-observations?dimensions=resident_age_7b&area-type=ltla,E06000008
 	//in this case `dimensions=resident_age_7` is considered as `ltla,dimensions=resident_age_7`
@@ -190,6 +204,8 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 	logData["population_type"] = cReq.Dataset
 	logData["variables"] = cReq.Variables
 	logData["filters"] = cReq.Filters
+
+	log.Info(ctx, "handling census-observations - all parameters now set.  Sending query to cantabular", logData)
 
 	qRes, err := c.ctblr.StaticDatasetQuery(ctx, cReq)
 	if err != nil {
@@ -217,7 +233,9 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := c.toGetDatasetObservationsResponse(qRes)
+	log.Info(ctx, "Response received from Cantabular - no errors have been returned", log.Data{"value-count": len(qRes.Dataset.Table.Values)})
+
+	response, err := c.toGetDatasetObservationsResponse(qRes, ctx)
 	if err != nil {
 		c.respond.Error(
 			ctx,
