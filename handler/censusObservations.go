@@ -81,7 +81,7 @@ func getDimensionRow(query *cantabular.StaticDatasetQuery, dimIndices []int, dim
 }
 
 func (c *CensusObservations) toGetDatasetObservationsResponse(query *cantabular.StaticDatasetQuery, ctx context.Context) (*GetObservationsResponse, error) {
-	log.Info(ctx, "Starting to process response", log.Data{"area-type": query.Dataset.Table.Dimensions[0].Variable.Name})
+	log.Info(ctx, "Starting to process response")
 
 	var getObservationResponse []GetObservationResponse
 
@@ -93,7 +93,7 @@ func (c *CensusObservations) toGetDatasetObservationsResponse(query *cantabular.
 		dimIndices = append(dimIndices, 0)
 	}
 
-	log.Info(ctx, "Created the arrays to hold dimension and categorisation information.  About to begin the processing loop for the results.", log.Data{"area-type": query.Dataset.Table.Dimensions[0].Variable.Name})
+	log.Info(ctx, "Created the arrays to hold dimension and categorisation information.  About to begin the processing loop for the results.")
 
 	for v := 0; v < len(query.Dataset.Table.Values); v++ {
 		dimension := getDimensionRow(query, dimIndices, v)
