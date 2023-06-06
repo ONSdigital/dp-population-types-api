@@ -8,15 +8,15 @@ go 1.19
 replace github.com/spf13/cobra => github.com/spf13/cobra v1.4.0
 
 require (
-	github.com/ONSdigital/dp-api-clients-go/v2 v2.249.0
+	github.com/ONSdigital/dp-api-clients-go/v2 v2.252.0
 	github.com/ONSdigital/dp-authorisation v0.2.0
 	github.com/ONSdigital/dp-cantabular-filter-flex-api v1.19.0
 	github.com/ONSdigital/dp-component-test v0.9.0
-	github.com/ONSdigital/dp-healthcheck v1.5.0
+	github.com/ONSdigital/dp-healthcheck v1.6.0
 	github.com/ONSdigital/dp-mongodb/v3 v3.5.0
 	github.com/ONSdigital/dp-net v1.5.0
-	github.com/ONSdigital/dp-net/v2 v2.8.1
-	github.com/ONSdigital/log.go/v2 v2.3.0
+	github.com/ONSdigital/dp-net/v2 v2.10.0
+	github.com/ONSdigital/log.go/v2 v2.4.0
 	github.com/cucumber/godog v0.12.6
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/google/go-cmp v0.5.9
@@ -24,7 +24,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/maxcnunes/httpfake v1.2.4
 	github.com/pkg/errors v0.9.1
-	github.com/smartystreets/goconvey v1.7.2
+	github.com/smartystreets/goconvey v1.8.0
 	go.mongodb.org/mongo-driver v1.11.3
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 )
@@ -64,7 +64,7 @@ require (
 	github.com/montanaflynn/stats v0.7.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/shurcooL/graphql v0.0.0-20220606043923-3cf50f8a0a29 // indirect
-	github.com/smartystreets/assertions v1.13.0 // indirect
+	github.com/smartystreets/assertions v1.13.1 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/square/mongo-lock v0.0.0-20220601164918-701ecf357cd7 // indirect
