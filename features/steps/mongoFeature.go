@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	mongoVersion = "4.4.22"
+	mongoVersion = "4.4.8"
 )
 
 type MongoFeature struct {
