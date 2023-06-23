@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"syscall"
 
 	"github.com/pkg/errors"
@@ -59,6 +60,10 @@ func run(ctx context.Context) error {
 	if err := svc.Init(ctx, init, cfg, BuildTime, GitCommit, Version); err != nil {
 		return errors.Wrap(err, "failed to initialise service")
 	}
+
+	// The following value could be read from some a config setting ...
+	debug.SetGCPercent(25)
+
 	svc.Start(ctx, svcErrors)
 
 	// blocks until an os interrupt or a fatal error occurs
