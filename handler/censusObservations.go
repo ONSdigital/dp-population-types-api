@@ -2,8 +2,11 @@ package handler
 
 import (
 	"context"
+	"fmt"
+	"io"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-cantabular-filter-flex-api/model"
@@ -80,57 +83,28 @@ func getDimensionRow(query *cantabular.StaticDatasetQuery, dimIndices []int, dim
 	return observationDimensions
 }
 
-func (c *CensusObservations) toGetDatasetObservationsResponse(query *cantabular.StaticDatasetQuery, ctx context.Context) (*GetObservationsResponse, error) {
+func (c *CensusObservations) toGetDatasetObservationsResponse(r io.Reader, ctx context.Context, w http.ResponseWriter) (string, error) {
 	log.Info(ctx, "Starting to process response")
 
-	var getObservationResponse []GetObservationResponse
+	buf := new(strings.Builder)
 
-	dimLength := make([]int, 0)
-	dimIndices := make([]int, 0)
-
-	for k := 0; k < len(query.Dataset.Table.Dimensions); k++ {
-		dimLength = append(dimLength, len(query.Dataset.Table.Dimensions[k].Categories))
-		dimIndices = append(dimIndices, 0)
+	writ, err := io.Copy(buf, r)
+	if err != nil {
+		fmt.Println(writ)
+		fmt.Println("an error occurred")
+		fmt.Println(err)
 	}
 
-	log.Info(ctx, "Created the arrays to hold dimension and categorisation information.  About to begin the processing loop for the results.")
+	//var datasetResponse interface{}
 
-	for v := 0; v < len(query.Dataset.Table.Values); v++ {
-		dimension := getDimensionRow(query, dimIndices, v)
-		getObservationResponse = append(getObservationResponse, GetObservationResponse{
-			Dimensions:  dimension,
-			Observation: query.Dataset.Table.Values[v],
-		})
-
-		i := len(dimIndices) - 1
-		for i >= 0 {
-			dimIndices[i] += 1
-			if dimIndices[i] < dimLength[i] {
-				break
-			}
-			dimIndices[i] = 0
-			i -= 1
-		}
-
-	}
-
-	log.Info(ctx, "Process observation response", log.Data{"observation-response-size": len(getObservationResponse)})
-
-	var getObservationsResponse GetObservationsResponse
-	getObservationsResponse.Observations = getObservationResponse
-	getObservationsResponse.TotalObservations = len(query.Dataset.Table.Values)
-
-	getObservationsResponse.BlockedAreas = query.Dataset.Table.Rules.Blocked.Count
-	getObservationsResponse.TotalAreas = query.Dataset.Table.Rules.Total.Count
-	getObservationsResponse.AreasReturned = query.Dataset.Table.Rules.Total.Count
-
-	log.Info(ctx, "Complete response processed, about to return to user", log.Data{"total-response-length": len(getObservationsResponse.Observations)})
-
-	return &getObservationsResponse, nil
+	//c.respond.JSON(ctx, w, http.StatusOK, buf.String())
+	return buf.String(), nil
 }
 
 func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	cancelContext, cancel := context.WithTimeout(ctx, time.Second*300)
+	defer cancel()
 	logData := log.Data{
 		"method": http.MethodGet,
 	}
@@ -207,7 +181,45 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 
 	log.Info(ctx, "handling census-observations - all parameters now set.  Sending query to cantabular", logData)
 
-	qRes, err := c.ctblr.StaticDatasetQuery(ctx, cReq)
+	// // stream consumer/uploader for encrypted private files
+	// consume = func(ctx context.Context, file io.Reader) error {
+	// 	// if file == nil {
+	// 	// 	return errors.New("no file content has been provided")
+	// 	// }
+	// 	// log.Info(ctx, "uploading encrypted private file to S3", logData)
+	var consume cantabular.Consumer
+	consume = func(ctx context.Context, file io.Reader) error {
+		if file == nil {
+			return errors.New("no file content has been provided")
+		}
+
+		response, err := c.toGetDatasetObservationsResponse(file, cancelContext, w)
+		if err != nil {
+			panic("That didn't go well")
+		}
+		fmt.Println("THE RESPONSE IS")
+		if len(response) == 0 {
+			fmt.Println("there was an error")
+		}
+		fmt.Println(response)
+
+		// var trimmed string
+		// trimmed := strings.TrimLeft(response, "{")
+		// newtrimmed := strings.TrimLeft(trimmed, ":")
+		// // //fmt.Println(newtrimmed)
+
+		// if err != nil {
+		// 	fmt.Println(err.Error())
+		// }
+		w.Write([]byte(response))
+		//c.respond.JSON(ctx, w, http.StatusOK, response)
+
+		//fmt.Println(data)
+		return nil
+	}
+
+	//qRes, err := c.ctblr.StaticDatasetQuery(ctx, cReq)
+	qRes, err := c.ctblr.StaticDatasetQueryStreamJson(cancelContext, cReq, consume)
 	if err != nil {
 		c.respond.Error(
 			ctx,
@@ -220,36 +232,10 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 		)
 		return
 	}
-	if len(qRes.Dataset.Table.Error) > 0 {
-		c.respond.Error(
-			ctx,
-			w,
-			http.StatusBadRequest,
-			Error{
-				err:     errors.New(handleError(CantabularError(qRes.Dataset.Table.Error))),
-				logData: logData,
-			},
-		)
-		return
-	}
 
-	log.Info(ctx, "Response received from Cantabular - no errors have been returned", log.Data{"value-count": len(qRes.Dataset.Table.Values)})
+	fmt.Println("THE COUNT IS ")
+	fmt.Println(len(qRes.Observations))
 
-	response, err := c.toGetDatasetObservationsResponse(qRes, ctx)
-	if err != nil {
-		c.respond.Error(
-			ctx,
-			w,
-			statusCode(err),
-			Error{
-				err:     errors.Wrap(err, "failed to generate response"),
-				logData: logData,
-			},
-		)
-	}
-
-	//special handling for self link
-	response.Links.Self.HREF = r.URL.String()
-	c.respond.JSON(ctx, w, http.StatusOK, response)
+	//c.respond.JSON(ctx, w, http.StatusOK, b)
 
 }
