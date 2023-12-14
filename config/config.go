@@ -20,6 +20,8 @@ type Config struct {
 	DatasetAPIURL              string        `envconfig:"DATASET_API_URL"`
 	MetadataCollection         string        `envconfig:"METADATA_COLLECTION"`
 	CensusObservationsFF       bool          `envconfig:"CENSUS_OBSERVATIONS_FF"`
+	OTExporterOTLPEndpoint     string        `envconfig:"OTEL_EXPORTER_OTLP_ENDPOINT"`
+	OTServiceName              string        `envconfig:"OTEL_SERVICE_NAME"`
 	Mongo                      mongo.MongoDriverConfig
 	CantabularConfig
 }
@@ -50,6 +52,8 @@ func Get() (*Config, error) {
 		ServiceAuthToken:           "",
 		EnablePermissionsAuth:      true,
 		DatasetAPIURL:              "http://localhost:22000",
+		OTExporterOTLPEndpoint:     "localhost:4317",
+		OTServiceName:              "dp-population-types-api",
 		CantabularConfig: CantabularConfig{
 			CantabularURL:                "http://localhost:8491",
 			CantabularExtURL:             "http://localhost:8492",
