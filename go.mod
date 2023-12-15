@@ -28,6 +28,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/maxcnunes/httpfake v1.2.4
 	github.com/pkg/errors v0.9.1
+	github.com/riandyrn/otelchi v0.5.1
 	github.com/smartystreets/goconvey v1.8.0
 	go.mongodb.org/mongo-driver v1.13.1
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.46.1
@@ -84,6 +85,7 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
+	go.opentelemetry.io/contrib v1.0.0 // indirect
 	go.opentelemetry.io/contrib/propagators/autoprop v0.45.0 // indirect
 	go.opentelemetry.io/contrib/propagators/aws v1.21.0 // indirect
 	go.opentelemetry.io/contrib/propagators/b3 v1.20.0 // indirect
