@@ -56,7 +56,7 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 
 	svc.buildRoutes(ctx)
 
-	svc.Router.use(otelchi.Middleware(cfg.OTServiceName))
+	svc.Router.Use(otelchi.Middleware(cfg.OTServiceName))
 
 	svc.Server = init.GetHTTPServer(cfg.BindAddr, svc.Router)
 
