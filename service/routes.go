@@ -8,14 +8,20 @@ import (
 
 	"github.com/ONSdigital/dp-authorisation/auth"
 	dphandlers "github.com/ONSdigital/dp-net/v2/handlers"
+	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/handler"
 	"github.com/ONSdigital/dp-population-types-api/middleware"
 
 	"github.com/ONSdigital/log.go/v2/log"
+	"github.com/riandyrn/otelchi"
 )
 
 func (svc *Service) buildRoutes(ctx context.Context) {
 	svc.Router = chi.NewRouter()
+
+	cfg, _ := config.Get()
+	svc.Router.Use(otelchi.Middleware(cfg.OTServiceName))
+
 	if svc.HealthCheck != nil {
 		svc.Router.Handle("/health", http.HandlerFunc(svc.HealthCheck.Handler))
 	}

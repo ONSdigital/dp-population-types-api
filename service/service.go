@@ -11,7 +11,6 @@ import (
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/log.go/v2/log"
-	"github.com/riandyrn/otelchi"
 )
 
 // Service contains all the configs, server and clients to run the API
@@ -55,8 +54,6 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 	}
 
 	svc.buildRoutes(ctx)
-
-	svc.Router.Use(otelchi.Middleware(cfg.OTServiceName))
 
 	svc.Server = init.GetHTTPServer(cfg.BindAddr, svc.Router)
 
