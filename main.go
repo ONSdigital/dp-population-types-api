@@ -10,7 +10,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	dpotelgo "github.com/ONSdigital/dp-otel-go"
+	"github.com/ONSdigital/dp-otel-go"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"github.com/ONSdigital/log.go/v2/log"

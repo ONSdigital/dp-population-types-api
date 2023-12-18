@@ -20,6 +20,7 @@ Exposes representation of the population types resources which support selection
 | HEALTHCHECK_CRITICAL_TIMEOUT | 90s                     | Time to wait until an unhealthy dependent propagates its state to make this app unhealthy (`time.Duration` format)
 | OTEL_EXPORTER_OTLP_ENDPOINT  | localhost:4317          | Endpoint for OpenTelemetry service
 | OTEL_SERVICE_NAME            | dp-population-types-api | Label of service for OpenTelemetry service
+| OTEL_BATCH_TIMEOUT           | 5s                      | Timeout for OpenTelemetry
 
 ## Contributing
 

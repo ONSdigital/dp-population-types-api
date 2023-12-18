@@ -22,6 +22,7 @@ type Config struct {
 	CensusObservationsFF       bool          `envconfig:"CENSUS_OBSERVATIONS_FF"`
 	OTExporterOTLPEndpoint     string        `envconfig:"OTEL_EXPORTER_OTLP_ENDPOINT"`
 	OTServiceName              string        `envconfig:"OTEL_SERVICE_NAME"`
+	OTBatchTimeout             time.Duration `envconfig:"OTEL_BATCH_TIMEOUT"`
 	Mongo                      mongo.MongoDriverConfig
 	CantabularConfig
 }
@@ -54,6 +55,7 @@ func Get() (*Config, error) {
 		DatasetAPIURL:              "http://localhost:22000",
 		OTExporterOTLPEndpoint:     "localhost:4317",
 		OTServiceName:              "dp-population-types-api",
+		OTBatchTimeout:             5 * time.Second,
 		CantabularConfig: CantabularConfig{
 			CantabularURL:                "http://localhost:8491",
 			CantabularExtURL:             "http://localhost:8492",
