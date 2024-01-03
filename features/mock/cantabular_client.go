@@ -3,6 +3,7 @@ package mock
 import (
 	"context"
 	"errors"
+	"io"
 	"net/http"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
@@ -36,6 +37,23 @@ type CantabularClient struct {
 	GetBlockedAreaCountResult        *cantabular.GetBlockedAreaCountResult
 	GetStaticDatasetQuery            *cantabular.StaticDatasetQuery
 	GetStaticDataset                 *gql.Dataset
+	GetObservationsResponse          *cantabular.GetObservationsResponse
+}
+
+// CheckQueryCount implements service.CantabularClient.
+func (c *CantabularClient) CheckQueryCount(context.Context, cantabular.StaticDatasetQueryRequest) (int, error) {
+	return 0, nil
+}
+
+// StaticDatasetQueryStreamCSV implements service.CantabularClient.
+func (c *CantabularClient) StaticDatasetQueryStreamCSV(context.Context, cantabular.StaticDatasetQueryRequest, func(ctx context.Context, r io.Reader) error) (int32, error) {
+	return 0, nil
+}
+
+// StaticDatasetQueryStreamJson implements service.CantabularClient.
+func (c *CantabularClient) StaticDatasetQueryStreamJson(context.Context, cantabular.StaticDatasetQueryRequest, func(ctx context.Context, r io.Reader) error) (cantabular.GetObservationsResponse, int32, error) {
+	return *c.GetObservationsResponse, 0, nil
+
 }
 
 func (c *CantabularClient) Checker(_ context.Context, _ *healthcheck.CheckState) error {

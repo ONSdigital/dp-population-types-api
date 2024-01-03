@@ -54,7 +54,7 @@ func Get() (*Config, error) {
 		CantabularConfig: CantabularConfig{
 			CantabularURL:                "http://localhost:8491",
 			CantabularExtURL:             "http://localhost:8492",
-			DefaultRequestTimeout:        200 * time.Second,
+			DefaultRequestTimeout:        10 * time.Second,
 			CantabularHealthcheckEnabled: false,
 		},
 		MetadataCollection: "defaultDatasetMetadata",
