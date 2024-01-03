@@ -20,6 +20,7 @@ type Config struct {
 	DatasetAPIURL              string        `envconfig:"DATASET_API_URL"`
 	MetadataCollection         string        `envconfig:"METADATA_COLLECTION"`
 	CensusObservationsFF       bool          `envconfig:"CENSUS_OBSERVATIONS_FF"`
+	MaxRowsReturned            int           `envconfig:"MAX_ROWS_RETURNED"`
 	Mongo                      mongo.MongoDriverConfig
 	CantabularConfig
 }
@@ -53,7 +54,7 @@ func Get() (*Config, error) {
 		CantabularConfig: CantabularConfig{
 			CantabularURL:                "http://localhost:8491",
 			CantabularExtURL:             "http://localhost:8492",
-			DefaultRequestTimeout:        10 * time.Second,
+			DefaultRequestTimeout:        200 * time.Second,
 			CantabularHealthcheckEnabled: false,
 		},
 		MetadataCollection: "defaultDatasetMetadata",
@@ -75,6 +76,7 @@ func Get() (*Config, error) {
 			},
 		},
 		CensusObservationsFF: false,
+		MaxRowsReturned:      100000,
 	}
 
 	return cfg, envconfig.Process("", cfg)

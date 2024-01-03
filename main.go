@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"runtime/debug"
@@ -12,6 +13,9 @@ import (
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"github.com/ONSdigital/log.go/v2/log"
+
+	"net/http"
+	_ "net/http/pprof"
 )
 
 const serviceName = "dp-population-types-api"
@@ -60,6 +64,11 @@ func run(ctx context.Context) error {
 	if err := svc.Init(ctx, init, cfg, BuildTime, GitCommit, Version); err != nil {
 		return errors.Wrap(err, "failed to initialise service")
 	}
+
+	// Server for pprof
+	go func() {
+		fmt.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 
 	// The following value could be read from some a config setting ...
 	debug.SetGCPercent(25)

@@ -61,6 +61,7 @@ func TestConfig(t *testing.T) {
 						},
 					},
 					CensusObservationsFF: false,
+					MaxRowsReturned:      100000,
 				})
 			})
 

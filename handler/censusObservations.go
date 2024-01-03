@@ -86,6 +86,9 @@ func getDimensionRow(query *cantabular.StaticDatasetQuery, dimIndices []int, dim
 func (c *CensusObservations) toGetDatasetObservationsResponse(r io.Reader, ctx context.Context, w http.ResponseWriter) (string, error) {
 	log.Info(ctx, "Starting to process response")
 
+	//rc := http.NewResponseController(w)
+	//rc.SetWriteDeadline(time.Time{})
+
 	buf := new(strings.Builder)
 
 	writ, err := io.Copy(buf, r)
@@ -95,9 +98,12 @@ func (c *CensusObservations) toGetDatasetObservationsResponse(r io.Reader, ctx c
 		fmt.Println(err)
 	}
 
+	//io.WriteString(w, buf.String())
+	//w.(http.Flusher).Flush()
 	//var datasetResponse interface{}
-
+	//json.NewEncoder(w).Encode(buf.String())
 	//c.respond.JSON(ctx, w, http.StatusOK, buf.String())
+
 	return buf.String(), nil
 }
 
@@ -181,12 +187,30 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 
 	log.Info(ctx, "handling census-observations - all parameters now set.  Sending query to cantabular", logData)
 
+	countcheck, err := c.ctblr.CheckQueryCount(ctx, cReq)
+
+	fmt.Println("THE CHECK COUNT IS")
+	fmt.Println(countcheck)
+	if countcheck > c.cfg.MaxRowsReturned {
+		c.respond.Error(
+			ctx,
+			w,
+			400,
+			Error{
+				message: "Too many rows returned, please refine your query by requesting specific areas and/or reducing the number of categories returned.  For further information please visit https://developer.ons.gov.uk/createyourowndataset/",
+			},
+		)
+		return
+	}
+
 	// // stream consumer/uploader for encrypted private files
 	// consume = func(ctx context.Context, file io.Reader) error {
 	// 	// if file == nil {
 	// 	// 	return errors.New("no file content has been provided")
 	// 	// }
 	// 	// log.Info(ctx, "uploading encrypted private file to S3", logData)
+
+	// THIS IS WHERE I COMMENTED FROM
 	var consume cantabular.Consumer
 	consume = func(ctx context.Context, file io.Reader) error {
 		if file == nil {
@@ -201,7 +225,8 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 		if len(response) == 0 {
 			fmt.Println("there was an error")
 		}
-		fmt.Println(response)
+		//fmt.Println(response)
+		//c.respond.JSON(ctx, w, http.StatusOK, response)
 
 		// var trimmed string
 		// trimmed := strings.TrimLeft(response, "{")
@@ -211,15 +236,24 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 		// if err != nil {
 		// 	fmt.Println(err.Error())
 		// }
-		w.Write([]byte(response))
-		//c.respond.JSON(ctx, w, http.StatusOK, response)
+		//w.Write([]byte(response))
+		//data := GetObservationsResponse{}
+
+		//resp := make(map[string]string)
+		//io.WriteString(w, response)
+		//w.Header().Set("Content-Type", "application/json")
+		//w.Write(jData)
+		//json.NewEncoder(w).Encode(response)
+
+		//c.respond.JSON(ctx, w, http.StatusOK, jData)
 
 		//fmt.Println(data)
 		return nil
 	}
 
 	//qRes, err := c.ctblr.StaticDatasetQuery(ctx, cReq)
-	qRes, err := c.ctblr.StaticDatasetQueryStreamJson(cancelContext, cReq, consume)
+	qRes, rows, err := c.ctblr.StaticDatasetQueryStreamJson(cancelContext, cReq, consume)
+	fmt.Println(rows)
 	if err != nil {
 		c.respond.Error(
 			ctx,
@@ -235,7 +269,7 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("THE COUNT IS ")
 	fmt.Println(len(qRes.Observations))
-
-	//c.respond.JSON(ctx, w, http.StatusOK, b)
+	qRes.TotalObservations = countcheck
+	c.respond.JSON(ctx, w, http.StatusOK, qRes)
 
 }

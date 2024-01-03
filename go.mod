@@ -1,6 +1,6 @@
 module github.com/ONSdigital/dp-population-types-api
 
-go 1.19
+go 1.21
 
 // to avoid the following vulnerabilities:
 //     - CVE-2022-29153 # pkg:golang/github.com/hashicorp/consul/api@v1.1.0
@@ -10,15 +10,17 @@ replace github.com/spf13/cobra => github.com/spf13/cobra v1.4.0
 // to fix: [CVE-2023-32731] CWE-Other
 replace google.golang.org/grpc => google.golang.org/grpc v1.55.0
 
+replace github.com/ONSdigital/dp-api-clients-go/v2 => /Users/francesmoore/src/github.com/ONSdigital/dp-api-clients-go
+
 require (
 	github.com/ONSdigital/dp-api-clients-go/v2 v2.252.0
 	github.com/ONSdigital/dp-authorisation v0.2.0
 	github.com/ONSdigital/dp-cantabular-filter-flex-api v1.19.0
 	github.com/ONSdigital/dp-component-test v0.9.0
-	github.com/ONSdigital/dp-healthcheck v1.6.0
+	github.com/ONSdigital/dp-healthcheck v1.6.1
 	github.com/ONSdigital/dp-mongodb/v3 v3.5.0
 	github.com/ONSdigital/dp-net v1.5.0
-	github.com/ONSdigital/dp-net/v2 v2.10.0
+	github.com/ONSdigital/dp-net/v2 v2.11.0
 	github.com/ONSdigital/log.go/v2 v2.4.1
 	github.com/cucumber/godog v0.12.6
 	github.com/go-chi/chi/v5 v5.0.8
@@ -27,7 +29,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/maxcnunes/httpfake v1.2.4
 	github.com/pkg/errors v0.9.1
-	github.com/smartystreets/goconvey v1.8.0
+	github.com/smartystreets/goconvey v1.8.1
 	go.mongodb.org/mongo-driver v1.11.4
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 )
@@ -63,11 +65,11 @@ require (
 	github.com/klauspost/compress v1.16.5 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.18 // indirect
+	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/montanaflynn/stats v0.7.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/shurcooL/graphql v0.0.0-20220606043923-3cf50f8a0a29 // indirect
-	github.com/smartystreets/assertions v1.13.1 // indirect
+	github.com/shurcooL/graphql v0.0.0-20230722043721-ed46e5a46466 // indirect
+	github.com/smarty/assertions v1.15.1 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/square/mongo-lock v0.0.0-20220601164918-701ecf357cd7 // indirect
@@ -76,10 +78,10 @@ require (
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
-	golang.org/x/crypto v0.8.0 // indirect
-	golang.org/x/net v0.9.0 // indirect
+	golang.org/x/crypto v0.12.0 // indirect
+	golang.org/x/net v0.14.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.7.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/sys v0.11.0 // indirect
+	golang.org/x/text v0.12.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

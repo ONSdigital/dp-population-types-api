@@ -7,6 +7,7 @@ import (
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular/gql"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
+	"github.com/ONSdigital/dp-api-clients-go/v2/stream"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/datastore"
@@ -62,6 +63,9 @@ type CantabularClient interface {
 	StatusCode(error) int
 	StaticDatasetQuery(context.Context, cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error)
 	StaticDatasetType(ctx context.Context, datasetName string) (*gql.Dataset, error)
+	StaticDatasetQueryStreamCSV(context.Context, cantabular.StaticDatasetQueryRequest, stream.Consumer) (int32, error)
+	StaticDatasetQueryStreamJson(context.Context, cantabular.StaticDatasetQueryRequest, stream.Consumer) (cantabular.GetObservationsResponse, int32, error)
+	CheckQueryCount(context.Context, cantabular.StaticDatasetQueryRequest) (int, error)
 }
 
 // Responder handles responding to http requests

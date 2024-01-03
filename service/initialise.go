@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/datastore"
@@ -30,6 +31,8 @@ func NewInit() *Init {
 func (i *Init) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
 	s := dphttp.NewServer(bindAddr, router)
 	s.HandleOSSignals = false
+	s.ReadTimeout = 300 * time.Second
+	s.WriteTimeout = 300 * time.Second
 	return s
 }
 
