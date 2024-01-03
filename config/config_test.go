@@ -33,6 +33,9 @@ func TestConfig(t *testing.T) {
 					ZebedeeURL:                 "http://localhost:8082",
 					EnablePermissionsAuth:      true,
 					DatasetAPIURL:              "http://localhost:22000",
+					OTExporterOTLPEndpoint:     "localhost:4317",
+					OTServiceName:              "dp-population-types-api",
+					OTBatchTimeout:				5 * time.Second,
 					CantabularConfig: config.CantabularConfig{
 						CantabularURL:                "http://localhost:8491",
 						CantabularExtURL:             "http://localhost:8492",

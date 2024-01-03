@@ -13,6 +13,7 @@ import (
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
 	dphttp "github.com/ONSdigital/dp-net/http"
 	"github.com/ONSdigital/dp-net/v2/responder"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 
 	"github.com/pkg/errors"
 )
@@ -29,7 +30,8 @@ func NewInit() *Init {
 
 // GetHTTPServer creates an http server
 func (i *Init) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
-	s := dphttp.NewServer(bindAddr, router)
+	otelHandler := otelhttp.NewHandler(router, "/")
+	s := dphttp.NewServer(bindAddr, otelHandler)
 	s.HandleOSSignals = false
 	s.ReadTimeout = 300 * time.Second
 	s.WriteTimeout = 300 * time.Second

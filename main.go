@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	goerrors "errors"
 	"fmt"
 	"os"
 	"os/signal"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	dpotelgo "github.com/ONSdigital/dp-otel-go"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"github.com/ONSdigital/log.go/v2/log"
@@ -57,6 +59,23 @@ func run(ctx context.Context) error {
 
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
+
+	// Set up OpenTelemetry
+	otelConfig := dpotelgo.Config{
+		OtelServiceName:          cfg.OTServiceName,
+		OtelExporterOtlpEndpoint: cfg.OTExporterOTLPEndpoint,
+		OtelBatchTimeout:         cfg.OTBatchTimeout,
+	}
+
+	otelShutdown, err := dpotelgo.SetupOTelSDK(ctx, otelConfig)
+
+	if err != nil {
+		log.Error(ctx, "error setting up OpenTelemetry - hint: ensure OTEL_EXPORTER_OTLP_ENDPOINT is set", err)
+	}
+	// Handle shutdown properly so nothing leaks.
+	defer func() {
+		err = goerrors.Join(err, otelShutdown(context.Background()))
+	}()
 
 	// Start service
 	svc := service.New()
