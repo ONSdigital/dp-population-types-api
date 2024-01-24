@@ -444,17 +444,17 @@ Scenario: Getting More Than 5 errors
     Given the following census observations response is available from Cantabular:
     """
     {
-  "data": {
-    "dataset": {
-      "table": {
-        "dimensions": null,
-        "error": "Maximum variables at MSOA and above is 5",
-        "rules": null,
-        "values": null
-      }
+        "data": {
+          "dataset": {
+            "table": {
+                "dimensions": null,
+                "error": "Maximum variables at MSOA and above is 5",
+                "rules": null,
+                "values": null
+            }
+           }
+        }
     }
-  }
-}
     """
 
     And the following dataset type is available from Cantabular:
