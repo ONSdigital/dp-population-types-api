@@ -253,8 +253,6 @@ func (c *PopulationTypesComponent) theFollowingCantabularCategorisationsResponse
 }
 
 func (c *PopulationTypesComponent) theFollowingCensusObservationsResponseIsAvailableFromCantabular(body *godog.DocString) error {
-	fmt.Println("IN THE STEP")
-
 	var resp cantabular.StaticDatasetQuery
 	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
 		return fmt.Errorf("failed to unmarshal body: %w", err)
@@ -266,8 +264,6 @@ func (c *PopulationTypesComponent) theFollowingCensusObservationsResponseIsAvail
 }
 
 func (c *PopulationTypesComponent) theFollowingJSONResponseIsAvailableToStream(body *godog.DocString) error {
-	fmt.Println("IN THE STEP")
-
 	var resp cantabular.GetObservationsResponse
 	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
 		return fmt.Errorf("failed to unmarshal body: %w", err)

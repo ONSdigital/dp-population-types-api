@@ -3,10 +3,8 @@ package main
 import (
 	"context"
 	goerrors "errors"
-	"fmt"
 	"os"
 	"os/signal"
-	"runtime/debug"
 	"syscall"
 
 	"github.com/pkg/errors"
@@ -16,7 +14,6 @@ import (
 	"github.com/ONSdigital/dp-population-types-api/service"
 	"github.com/ONSdigital/log.go/v2/log"
 
-	"net/http"
 	_ "net/http/pprof"
 )
 
@@ -83,14 +80,6 @@ func run(ctx context.Context) error {
 	if err := svc.Init(ctx, init, cfg, BuildTime, GitCommit, Version); err != nil {
 		return errors.Wrap(err, "failed to initialise service")
 	}
-
-	// Server for pprof
-	go func() {
-		fmt.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
-
-	// The following value could be read from some a config setting ...
-	debug.SetGCPercent(25)
 
 	svc.Start(ctx, svcErrors)
 

@@ -3,7 +3,6 @@ package mock
 import (
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -55,11 +54,6 @@ func (c *CantabularClient) CheckQueryCount(context.Context, cantabular.StaticDat
 		return 500000, nil
 	}
 	return c.GetObservationsResponse.TotalObservations, nil
-}
-
-// StaticDatasetQueryStreamCSV implements service.CantabularClient.
-func (c *CantabularClient) StaticDatasetQueryStreamCSV(context.Context, cantabular.StaticDatasetQueryRequest, func(ctx context.Context, r io.Reader) error) (int32, error) {
-	return 0, nil
 }
 
 func (c *CantabularClient) Checker(_ context.Context, _ *healthcheck.CheckState) error {
@@ -326,10 +320,6 @@ func (c *CantabularClient) StaticDatasetQuery(context.Context, cantabular.Static
 
 // StaticDatasetQueryStreamJson implements service.CantabularClient.
 func (c *CantabularClient) StaticDatasetQueryStreamJson(context.Context, cantabular.StaticDatasetQueryRequest, func(ctx context.Context, r io.Reader) error) (cantabular.GetObservationsResponse, error) {
-
-	fmt.Println("IN THE MOCKED STATIC DATASET QUERY STREAM JSON")
-	fmt.Println("C IS")
-	fmt.Println(c)
 	if c.BadRequest {
 		return *c.GetObservationsResponse, dperrors.New(
 			errors.New("bad request"),
@@ -337,8 +327,7 @@ func (c *CantabularClient) StaticDatasetQueryStreamJson(context.Context, cantabu
 			log.Data{"errors": map[string]string{"message": "400 Bad Request: codes not found for variable on filter for ltla"}},
 		)
 	}
-	fmt.Println("THE FABRICATED RESULT IS")
-	fmt.Println(c.GetObservationsResponse)
+
 	return *c.GetObservationsResponse, nil
 
 }
