@@ -34,7 +34,7 @@ type cantabularClient interface {
 	StaticDatasetQuery(context.Context, cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error)
 	StaticDatasetType(ctx context.Context, datasetName string) (*gql.Dataset, error)
 	StaticDatasetQueryStreamCSV(context.Context, cantabular.StaticDatasetQueryRequest, stream.Consumer) (int32, error)
-	StaticDatasetQueryStreamJson(context.Context, cantabular.StaticDatasetQueryRequest, stream.Consumer) (cantabular.GetObservationsResponse, int32, error)
+	StaticDatasetQueryStreamJson(context.Context, cantabular.StaticDatasetQueryRequest, stream.Consumer) (cantabular.GetObservationsResponse, error)
 	CheckQueryCount(context.Context, cantabular.StaticDatasetQueryRequest) (int, error)
 }
 

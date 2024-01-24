@@ -3,6 +3,7 @@ package mock
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -23,6 +24,7 @@ type CantabularClient struct {
 	BadRequest                       bool
 	NotFound                         bool
 	BadGateway                       bool
+	ResponseTooLarge                 bool
 	GetGeographyDimensionsResponse   *cantabular.GetGeographyDimensionsResponse
 	GetDimensionsResponse            *cantabular.GetDimensionsResponse
 	GetDimensionsDescriptionResponse *cantabular.GetDimensionsResponse
@@ -42,18 +44,22 @@ type CantabularClient struct {
 
 // CheckQueryCount implements service.CantabularClient.
 func (c *CantabularClient) CheckQueryCount(context.Context, cantabular.StaticDatasetQueryRequest) (int, error) {
-	return 0, nil
+	if c.BadRequest {
+		return 0, dperrors.New(
+			errors.New("Maximum variables at MSOA and above is 5"),
+			http.StatusBadRequest,
+			log.Data{"errors": map[string]string{"message": "Maximum variables at MSOA and above is 5"}},
+		)
+	}
+	if c.ResponseTooLarge {
+		return 500000, nil
+	}
+	return c.GetObservationsResponse.TotalObservations, nil
 }
 
 // StaticDatasetQueryStreamCSV implements service.CantabularClient.
 func (c *CantabularClient) StaticDatasetQueryStreamCSV(context.Context, cantabular.StaticDatasetQueryRequest, func(ctx context.Context, r io.Reader) error) (int32, error) {
 	return 0, nil
-}
-
-// StaticDatasetQueryStreamJson implements service.CantabularClient.
-func (c *CantabularClient) StaticDatasetQueryStreamJson(context.Context, cantabular.StaticDatasetQueryRequest, func(ctx context.Context, r io.Reader) error) (cantabular.GetObservationsResponse, int32, error) {
-	return *c.GetObservationsResponse, 0, nil
-
 }
 
 func (c *CantabularClient) Checker(_ context.Context, _ *healthcheck.CheckState) error {
@@ -316,6 +322,25 @@ func (c *CantabularClient) StaticDatasetQuery(context.Context, cantabular.Static
 	}
 
 	return c.GetStaticDatasetQuery, nil
+}
+
+// StaticDatasetQueryStreamJson implements service.CantabularClient.
+func (c *CantabularClient) StaticDatasetQueryStreamJson(context.Context, cantabular.StaticDatasetQueryRequest, func(ctx context.Context, r io.Reader) error) (cantabular.GetObservationsResponse, error) {
+
+	fmt.Println("IN THE MOCKED STATIC DATASET QUERY STREAM JSON")
+	fmt.Println("C IS")
+	fmt.Println(c)
+	if c.BadRequest {
+		return *c.GetObservationsResponse, dperrors.New(
+			errors.New("bad request"),
+			http.StatusBadRequest,
+			log.Data{"errors": map[string]string{"message": "400 Bad Request: codes not found for variable on filter for ltla"}},
+		)
+	}
+	fmt.Println("THE FABRICATED RESULT IS")
+	fmt.Println(c.GetObservationsResponse)
+	return *c.GetObservationsResponse, nil
+
 }
 
 func (c *CantabularClient) StaticDatasetType(ctx context.Context, datasetName string) (*gql.Dataset, error) {

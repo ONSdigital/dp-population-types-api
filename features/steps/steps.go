@@ -37,6 +37,9 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the following dimension categories response is available from Cantabular:$`, c.theFollowingDimensionCategoryResponseIsAvailableFromCantabular)
 	ctx.Step(`^the following census observations response is available from Cantabular:$`, c.theFollowingCensusObservationsResponseIsAvailableFromCantabular)
 	ctx.Step(`^the following dataset type is available from Cantabular:$`, c.theFollowingDatasetTypeIsAvailableFromCantabular)
+	ctx.Step(`^the following JSON response is available to stream:$`, c.theFollowingJSONResponseIsAvailableToStream)
+	ctx.Step(`^the count check is bad request`, c.jsonResponseIsEmpty)
+	ctx.Step(`^the count check is too large`, c.countIsTooLarge)
 }
 
 func (c *PopulationTypesComponent) theFollowingDimensionCategoryResponseIsAvailableFromCantabular(body *godog.DocString) error {
@@ -250,12 +253,27 @@ func (c *PopulationTypesComponent) theFollowingCantabularCategorisationsResponse
 }
 
 func (c *PopulationTypesComponent) theFollowingCensusObservationsResponseIsAvailableFromCantabular(body *godog.DocString) error {
+	fmt.Println("IN THE STEP")
+
 	var resp cantabular.StaticDatasetQuery
 	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
 		return fmt.Errorf("failed to unmarshal body: %w", err)
 	}
 
 	c.fakeCantabular.GetStaticDatasetQuery = &resp
+	return nil
+
+}
+
+func (c *PopulationTypesComponent) theFollowingJSONResponseIsAvailableToStream(body *godog.DocString) error {
+	fmt.Println("IN THE STEP")
+
+	var resp cantabular.GetObservationsResponse
+	if err := json.Unmarshal([]byte(body.Content), &resp); err != nil {
+		return fmt.Errorf("failed to unmarshal body: %w", err)
+	}
+
+	c.fakeCantabular.GetObservationsResponse = &resp
 	return nil
 
 }
@@ -272,5 +290,15 @@ func (c *PopulationTypesComponent) theFollowingDatasetTypeIsAvailableFromCantabu
 		return fmt.Errorf("failed to unmarshal body: %w", err)
 	}
 	c.fakeCantabular.GetStaticDataset = &resp.Data.Dataset
+	return nil
+}
+
+func (c *PopulationTypesComponent) jsonResponseIsEmpty() error {
+	c.fakeCantabular.BadRequest = true
+	return nil
+}
+
+func (c *PopulationTypesComponent) countIsTooLarge() error {
+	c.fakeCantabular.ResponseTooLarge = true
 	return nil
 }

@@ -83,26 +83,29 @@ func getDimensionRow(query *cantabular.StaticDatasetQuery, dimIndices []int, dim
 	return observationDimensions
 }
 
-func (c *CensusObservations) toGetDatasetObservationsResponse(r io.Reader, ctx context.Context, w http.ResponseWriter) (string, error) {
-	log.Info(ctx, "Starting to process response")
-
-	//rc := http.NewResponseController(w)
-	//rc.SetWriteDeadline(time.Time{})
+func (c *CensusObservations) processObservationsResponse(r io.Reader, ctx context.Context, w http.ResponseWriter) (string, error) {
 
 	buf := new(strings.Builder)
 
 	writ, err := io.Copy(buf, r)
 	if err != nil {
-		fmt.Println(writ)
-		fmt.Println("an error occurred")
-		fmt.Println(err)
-	}
 
-	//io.WriteString(w, buf.String())
-	//w.(http.Flusher).Flush()
-	//var datasetResponse interface{}
-	//json.NewEncoder(w).Encode(buf.String())
-	//c.respond.JSON(ctx, w, http.StatusOK, buf.String())
+		logData := log.Data{
+			"method":  http.MethodGet,
+			"message": err,
+		}
+
+		c.respond.Error(
+			ctx,
+			w,
+			http.StatusUnprocessableEntity,
+			Error{
+				err:     errors.New(fmt.Sprintf("An error occurred while processing the response, bytes written %d", writ)),
+				logData: logData,
+			},
+		)
+		return "", err
+	}
 
 	return buf.String(), nil
 }
@@ -188,72 +191,6 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 	log.Info(ctx, "handling census-observations - all parameters now set.  Sending query to cantabular", logData)
 
 	countcheck, err := c.ctblr.CheckQueryCount(ctx, cReq)
-
-	fmt.Println("THE CHECK COUNT IS")
-	fmt.Println(countcheck)
-	if countcheck > c.cfg.MaxRowsReturned {
-		c.respond.Error(
-			ctx,
-			w,
-			400,
-			Error{
-				message: "Too many rows returned, please refine your query by requesting specific areas and/or reducing the number of categories returned.  For further information please visit https://developer.ons.gov.uk/createyourowndataset/",
-			},
-		)
-		return
-	}
-
-	// // stream consumer/uploader for encrypted private files
-	// consume = func(ctx context.Context, file io.Reader) error {
-	// 	// if file == nil {
-	// 	// 	return errors.New("no file content has been provided")
-	// 	// }
-	// 	// log.Info(ctx, "uploading encrypted private file to S3", logData)
-
-	// THIS IS WHERE I COMMENTED FROM
-	var consume cantabular.Consumer
-	consume = func(ctx context.Context, file io.Reader) error {
-		if file == nil {
-			return errors.New("no file content has been provided")
-		}
-
-		response, err := c.toGetDatasetObservationsResponse(file, cancelContext, w)
-		if err != nil {
-			panic("That didn't go well")
-		}
-		fmt.Println("THE RESPONSE IS")
-		if len(response) == 0 {
-			fmt.Println("there was an error")
-		}
-		//fmt.Println(response)
-		//c.respond.JSON(ctx, w, http.StatusOK, response)
-
-		// var trimmed string
-		// trimmed := strings.TrimLeft(response, "{")
-		// newtrimmed := strings.TrimLeft(trimmed, ":")
-		// // //fmt.Println(newtrimmed)
-
-		// if err != nil {
-		// 	fmt.Println(err.Error())
-		// }
-		//w.Write([]byte(response))
-		//data := GetObservationsResponse{}
-
-		//resp := make(map[string]string)
-		//io.WriteString(w, response)
-		//w.Header().Set("Content-Type", "application/json")
-		//w.Write(jData)
-		//json.NewEncoder(w).Encode(response)
-
-		//c.respond.JSON(ctx, w, http.StatusOK, jData)
-
-		//fmt.Println(data)
-		return nil
-	}
-
-	//qRes, err := c.ctblr.StaticDatasetQuery(ctx, cReq)
-	qRes, rows, err := c.ctblr.StaticDatasetQueryStreamJson(cancelContext, cReq, consume)
-	fmt.Println(rows)
 	if err != nil {
 		c.respond.Error(
 			ctx,
@@ -267,9 +204,65 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("THE COUNT IS ")
-	fmt.Println(len(qRes.Observations))
+	if countcheck > c.cfg.MaxRowsReturned {
+		c.respond.Error(
+			ctx,
+			w,
+			403,
+			Error{
+				message: "Too many rows returned, please refine your query by requesting specific areas or reducing the number of categories returned.  For further information please visit https://developer.ons.gov.uk/createyourowndataset/",
+			},
+		)
+		return
+	}
+
+	var consume cantabular.Consumer
+	consume = func(ctx context.Context, file io.Reader) error {
+		if file == nil {
+			return errors.New("no file content has been provided")
+		}
+
+		response, err := c.processObservationsResponse(file, cancelContext, w)
+		if err != nil {
+			c.respond.Error(
+				ctx,
+				w,
+				http.StatusUnprocessableEntity,
+				Error{
+					message: err.Error(),
+				},
+			)
+		}
+		if len(response) == 0 {
+			c.respond.Error(
+				ctx,
+				w,
+				http.StatusNotFound,
+				Error{
+					message: "No results found",
+				},
+			)
+		}
+		return nil
+	}
+
+	qRes, err := c.ctblr.StaticDatasetQueryStreamJson(cancelContext, cReq, consume)
+	if err != nil {
+		c.respond.Error(
+			ctx,
+			w,
+			statusCode(err),
+			Error{
+				err:     err,
+				logData: logData,
+			},
+		)
+		return
+	}
+
 	qRes.TotalObservations = countcheck
+
+	qRes.Links.Self.HREF = r.URL.String()
 	c.respond.JSON(ctx, w, http.StatusOK, qRes)
 
 }
