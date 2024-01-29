@@ -38,8 +38,8 @@ func (c *PopulationTypesComponent) RegisterSteps(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the following census observations response is available from Cantabular:$`, c.theFollowingCensusObservationsResponseIsAvailableFromCantabular)
 	ctx.Step(`^the following dataset type is available from Cantabular:$`, c.theFollowingDatasetTypeIsAvailableFromCantabular)
 	ctx.Step(`^the following JSON response is available to stream:$`, c.theFollowingJSONResponseIsAvailableToStream)
-	ctx.Step(`^the count check is bad request`, c.jsonResponseIsEmpty)
-	ctx.Step(`^the count check is too large`, c.countIsTooLarge)
+	ctx.Step(`^the count check returns a bad request`, c.jsonResponseIsEmpty)
+	ctx.Step(`^the count check returns that the count is too large`, c.countIsTooLarge)
 }
 
 func (c *PopulationTypesComponent) theFollowingDimensionCategoryResponseIsAvailableFromCantabular(body *godog.DocString) error {
@@ -271,7 +271,6 @@ func (c *PopulationTypesComponent) theFollowingJSONResponseIsAvailableToStream(b
 
 	c.fakeCantabular.GetObservationsResponse = &resp
 	return nil
-
 }
 
 func (c *PopulationTypesComponent) theFollowingDatasetTypeIsAvailableFromCantabular(body *godog.DocString) error {

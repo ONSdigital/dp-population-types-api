@@ -329,7 +329,6 @@ func (c *CantabularClient) StaticDatasetQueryStreamJson(context.Context, cantabu
 	}
 
 	return *c.GetObservationsResponse, nil
-
 }
 
 func (c *CantabularClient) StaticDatasetType(ctx context.Context, datasetName string) (*gql.Dataset, error) {

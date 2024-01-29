@@ -468,7 +468,7 @@ Scenario: Getting More Than 5 errors
     }
     """
 
-    And the count check is bad request
+    And the count check returns a bad request
     
     And census observations endpoint is enabled
 
@@ -579,7 +579,7 @@ Scenario: Too many observations returned
     }
     """
 
-    And the count check is too large
+    And the count check returns that the count is too large
     
     And census observations endpoint is enabled
 
