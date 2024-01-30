@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/ONSdigital/dp-population-types-api/config"
@@ -32,7 +33,9 @@ func NewInit() *Init {
 func (i *Init) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
 	cfg, err := config.Get()
 	if err != nil {
-		log.Error(context.Background(), "failed to get config", err)
+		log.Error(context.Background(), fmt.Sprintf("failed to get config %v", cfg), err, log.Data{
+			"config": cfg,
+		})
 		return nil
 	}
 
