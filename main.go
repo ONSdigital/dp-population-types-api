@@ -57,7 +57,7 @@ func run(ctx context.Context) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	if cfg.OtelEnabled == true {
+	if cfg.OtelEnabled {
 		// Set up OpenTelemetry
 		otelConfig := dpotelgo.Config{
 			OtelServiceName:          cfg.OTServiceName,

@@ -6,6 +6,7 @@ import (
 
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/datastore"
+	"github.com/ONSdigital/log.go/v2/log"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
@@ -31,11 +32,12 @@ func NewInit() *Init {
 func (i *Init) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
 	cfg, err := config.Get()
 	if err != nil {
+		log.Error(context.Background(), "failed to get config", err)
 		return nil
 	}
 
 	var s *dphttp.Server
-	if cfg.OtelEnabled == true {
+	if cfg.OtelEnabled {
 		otelHandler := otelhttp.NewHandler(router, "/")
 		s = dphttp.NewServer(bindAddr, otelHandler)
 	} else {
