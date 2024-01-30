@@ -21,6 +21,7 @@ Exposes representation of the population types resources which support selection
 | OTEL_EXPORTER_OTLP_ENDPOINT  | localhost:4317          | Endpoint for OpenTelemetry service
 | OTEL_SERVICE_NAME            | dp-population-types-api | Label of service for OpenTelemetry service
 | OTEL_BATCH_TIMEOUT           | 5s                      | Timeout for OpenTelemetry
+| OTEL_ENABLED                 | false                   | Feature flag to enable OpenTelemetry
 | MAX_ROWS_RETURNED            | 100000                  | The maximum number of rows that should be returned from the /census-observations endpoint
 
 ## Contributing
