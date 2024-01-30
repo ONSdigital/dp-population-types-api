@@ -29,8 +29,18 @@ func NewInit() *Init {
 
 // GetHTTPServer creates an http server
 func (i *Init) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
-	otelHandler := otelhttp.NewHandler(router, "/")
-	s := dphttp.NewServer(bindAddr, otelHandler)
+	cfg, err := config.Get()
+	if err != nil {
+		return nil
+	}
+
+	var s *dphttp.Server
+	if cfg.OtelEnabled == true {
+		otelHandler := otelhttp.NewHandler(router, "/")
+		s = dphttp.NewServer(bindAddr, otelHandler)
+	} else {
+		s = dphttp.NewServer(bindAddr, router)
+	}
 	s.HandleOSSignals = false
 	return s
 }
