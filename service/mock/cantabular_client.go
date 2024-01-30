@@ -74,9 +74,6 @@ var _ service.CantabularClient = &CantabularClientMock{}
 //			StaticDatasetQueryFunc: func(contextMoqParam context.Context, staticDatasetQueryRequest cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error) {
 //				panic("mock out the StaticDatasetQuery method")
 //			},
-//			StaticDatasetQueryStreamCSVFunc: func(contextMoqParam context.Context, staticDatasetQueryRequest cantabular.StaticDatasetQueryRequest, fn func(ctx context.Context, r io.Reader) error) (int32, error) {
-//				panic("mock out the StaticDatasetQueryStreamCSV method")
-//			},
 //			StaticDatasetQueryStreamJsonFunc: func(contextMoqParam context.Context, staticDatasetQueryRequest cantabular.StaticDatasetQueryRequest, fn func(ctx context.Context, r io.Reader) error) (cantabular.GetObservationsResponse, error) {
 //				panic("mock out the StaticDatasetQueryStreamJson method")
 //			},
@@ -143,9 +140,6 @@ type CantabularClientMock struct {
 
 	// StaticDatasetQueryFunc mocks the StaticDatasetQuery method.
 	StaticDatasetQueryFunc func(contextMoqParam context.Context, staticDatasetQueryRequest cantabular.StaticDatasetQueryRequest) (*cantabular.StaticDatasetQuery, error)
-
-	// StaticDatasetQueryStreamCSVFunc mocks the StaticDatasetQueryStreamCSV method.
-	StaticDatasetQueryStreamCSVFunc func(contextMoqParam context.Context, staticDatasetQueryRequest cantabular.StaticDatasetQueryRequest, fn func(ctx context.Context, r io.Reader) error) (int32, error)
 
 	// StaticDatasetQueryStreamJsonFunc mocks the StaticDatasetQueryStreamJson method.
 	StaticDatasetQueryStreamJsonFunc func(contextMoqParam context.Context, staticDatasetQueryRequest cantabular.StaticDatasetQueryRequest, fn func(ctx context.Context, r io.Reader) error) (cantabular.GetObservationsResponse, error)
@@ -275,15 +269,6 @@ type CantabularClientMock struct {
 			// StaticDatasetQueryRequest is the staticDatasetQueryRequest argument value.
 			StaticDatasetQueryRequest cantabular.StaticDatasetQueryRequest
 		}
-		// StaticDatasetQueryStreamCSV holds details about calls to the StaticDatasetQueryStreamCSV method.
-		StaticDatasetQueryStreamCSV []struct {
-			// ContextMoqParam is the contextMoqParam argument value.
-			ContextMoqParam context.Context
-			// StaticDatasetQueryRequest is the staticDatasetQueryRequest argument value.
-			StaticDatasetQueryRequest cantabular.StaticDatasetQueryRequest
-			// Fn is the fn argument value.
-			Fn func(ctx context.Context, r io.Reader) error
-		}
 		// StaticDatasetQueryStreamJson holds details about calls to the StaticDatasetQueryStreamJson method.
 		StaticDatasetQueryStreamJson []struct {
 			// ContextMoqParam is the contextMoqParam argument value.
@@ -323,7 +308,6 @@ type CantabularClientMock struct {
 	lockGetParents                   sync.RWMutex
 	lockListDatasets                 sync.RWMutex
 	lockStaticDatasetQuery           sync.RWMutex
-	lockStaticDatasetQueryStreamCSV  sync.RWMutex
 	lockStaticDatasetQueryStreamJson sync.RWMutex
 	lockStaticDatasetType            sync.RWMutex
 	lockStatusCode                   sync.RWMutex
@@ -934,46 +918,6 @@ func (mock *CantabularClientMock) StaticDatasetQueryCalls() []struct {
 	mock.lockStaticDatasetQuery.RLock()
 	calls = mock.calls.StaticDatasetQuery
 	mock.lockStaticDatasetQuery.RUnlock()
-	return calls
-}
-
-// StaticDatasetQueryStreamCSV calls StaticDatasetQueryStreamCSVFunc.
-func (mock *CantabularClientMock) StaticDatasetQueryStreamCSV(contextMoqParam context.Context, staticDatasetQueryRequest cantabular.StaticDatasetQueryRequest, fn func(ctx context.Context, r io.Reader) error) (int32, error) {
-	if mock.StaticDatasetQueryStreamCSVFunc == nil {
-		panic("CantabularClientMock.StaticDatasetQueryStreamCSVFunc: method is nil but CantabularClient.StaticDatasetQueryStreamCSV was just called")
-	}
-	callInfo := struct {
-		ContextMoqParam           context.Context
-		StaticDatasetQueryRequest cantabular.StaticDatasetQueryRequest
-		Fn                        func(ctx context.Context, r io.Reader) error
-	}{
-		ContextMoqParam:           contextMoqParam,
-		StaticDatasetQueryRequest: staticDatasetQueryRequest,
-		Fn:                        fn,
-	}
-	mock.lockStaticDatasetQueryStreamCSV.Lock()
-	mock.calls.StaticDatasetQueryStreamCSV = append(mock.calls.StaticDatasetQueryStreamCSV, callInfo)
-	mock.lockStaticDatasetQueryStreamCSV.Unlock()
-	return mock.StaticDatasetQueryStreamCSVFunc(contextMoqParam, staticDatasetQueryRequest, fn)
-}
-
-// StaticDatasetQueryStreamCSVCalls gets all the calls that were made to StaticDatasetQueryStreamCSV.
-// Check the length with:
-//
-//	len(mockedCantabularClient.StaticDatasetQueryStreamCSVCalls())
-func (mock *CantabularClientMock) StaticDatasetQueryStreamCSVCalls() []struct {
-	ContextMoqParam           context.Context
-	StaticDatasetQueryRequest cantabular.StaticDatasetQueryRequest
-	Fn                        func(ctx context.Context, r io.Reader) error
-} {
-	var calls []struct {
-		ContextMoqParam           context.Context
-		StaticDatasetQueryRequest cantabular.StaticDatasetQueryRequest
-		Fn                        func(ctx context.Context, r io.Reader) error
-	}
-	mock.lockStaticDatasetQueryStreamCSV.RLock()
-	calls = mock.calls.StaticDatasetQueryStreamCSV
-	mock.lockStaticDatasetQueryStreamCSV.RUnlock()
 	return calls
 }
 

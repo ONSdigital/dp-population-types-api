@@ -30,6 +30,9 @@ var _ service.Initialiser = &InitialiserMock{}
 //			GetHTTPServerFunc: func(bindAddr string, router http.Handler) service.HTTPServer {
 //				panic("mock out the GetHTTPServer method")
 //			},
+//			GetHTTPServerWithOtelFunc: func(bindAddr string, router http.Handler) service.HTTPServer {
+//				panic("mock out the GetHTTPServerWithOtel method")
+//			},
 //			GetHealthCheckFunc: func(cfg *config.Config, time string, commit string, version string) (service.HealthChecker, error) {
 //				panic("mock out the GetHealthCheck method")
 //			},
@@ -54,6 +57,9 @@ type InitialiserMock struct {
 
 	// GetHTTPServerFunc mocks the GetHTTPServer method.
 	GetHTTPServerFunc func(bindAddr string, router http.Handler) service.HTTPServer
+
+	// GetHTTPServerWithOtelFunc mocks the GetHTTPServerWithOtel method.
+	GetHTTPServerWithOtelFunc func(bindAddr string, router http.Handler) service.HTTPServer
 
 	// GetHealthCheckFunc mocks the GetHealthCheck method.
 	GetHealthCheckFunc func(cfg *config.Config, time string, commit string, version string) (service.HealthChecker, error)
@@ -83,6 +89,13 @@ type InitialiserMock struct {
 			// Router is the router argument value.
 			Router http.Handler
 		}
+		// GetHTTPServerWithOtel holds details about calls to the GetHTTPServerWithOtel method.
+		GetHTTPServerWithOtel []struct {
+			// BindAddr is the bindAddr argument value.
+			BindAddr string
+			// Router is the router argument value.
+			Router http.Handler
+		}
 		// GetHealthCheck holds details about calls to the GetHealthCheck method.
 		GetHealthCheck []struct {
 			// Cfg is the cfg argument value.
@@ -105,12 +118,13 @@ type InitialiserMock struct {
 		GetResponder []struct {
 		}
 	}
-	lockGetCantabularClient sync.RWMutex
-	lockGetDatasetAPIClient sync.RWMutex
-	lockGetHTTPServer       sync.RWMutex
-	lockGetHealthCheck      sync.RWMutex
-	lockGetMongoClient      sync.RWMutex
-	lockGetResponder        sync.RWMutex
+	lockGetCantabularClient   sync.RWMutex
+	lockGetDatasetAPIClient   sync.RWMutex
+	lockGetHTTPServer         sync.RWMutex
+	lockGetHTTPServerWithOtel sync.RWMutex
+	lockGetHealthCheck        sync.RWMutex
+	lockGetMongoClient        sync.RWMutex
+	lockGetResponder          sync.RWMutex
 }
 
 // GetCantabularClient calls GetCantabularClientFunc.
@@ -210,6 +224,42 @@ func (mock *InitialiserMock) GetHTTPServerCalls() []struct {
 	mock.lockGetHTTPServer.RLock()
 	calls = mock.calls.GetHTTPServer
 	mock.lockGetHTTPServer.RUnlock()
+	return calls
+}
+
+// GetHTTPServerWithOtel calls GetHTTPServerWithOtelFunc.
+func (mock *InitialiserMock) GetHTTPServerWithOtel(bindAddr string, router http.Handler) service.HTTPServer {
+	if mock.GetHTTPServerWithOtelFunc == nil {
+		panic("InitialiserMock.GetHTTPServerWithOtelFunc: method is nil but Initialiser.GetHTTPServerWithOtel was just called")
+	}
+	callInfo := struct {
+		BindAddr string
+		Router   http.Handler
+	}{
+		BindAddr: bindAddr,
+		Router:   router,
+	}
+	mock.lockGetHTTPServerWithOtel.Lock()
+	mock.calls.GetHTTPServerWithOtel = append(mock.calls.GetHTTPServerWithOtel, callInfo)
+	mock.lockGetHTTPServerWithOtel.Unlock()
+	return mock.GetHTTPServerWithOtelFunc(bindAddr, router)
+}
+
+// GetHTTPServerWithOtelCalls gets all the calls that were made to GetHTTPServerWithOtel.
+// Check the length with:
+//
+//	len(mockedInitialiser.GetHTTPServerWithOtelCalls())
+func (mock *InitialiserMock) GetHTTPServerWithOtelCalls() []struct {
+	BindAddr string
+	Router   http.Handler
+} {
+	var calls []struct {
+		BindAddr string
+		Router   http.Handler
+	}
+	mock.lockGetHTTPServerWithOtel.RLock()
+	calls = mock.calls.GetHTTPServerWithOtel
+	mock.lockGetHTTPServerWithOtel.RUnlock()
 	return calls
 }
 

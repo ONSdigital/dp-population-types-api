@@ -28,6 +28,7 @@ type Initialiser interface {
 	GetDatasetAPIClient(cfg *config.Config) DatasetAPIClient
 	GetMongoClient(ctx context.Context, cfg *config.Config) (MongoClient, error)
 	GetResponder() Responder
+	GetHTTPServerWithOtel(bindAddr string, router http.Handler) HTTPServer
 }
 
 // HTTPServer defines the required methods from the HTTP server

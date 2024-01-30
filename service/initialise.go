@@ -2,12 +2,10 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/datastore"
-	"github.com/ONSdigital/log.go/v2/log"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
@@ -31,21 +29,7 @@ func NewInit() *Init {
 
 // GetHTTPServer creates an http server
 func (i *Init) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
-	cfg, err := config.Get()
-	if err != nil {
-		log.Error(context.Background(), fmt.Sprintf("failed to get config %v", cfg), err, log.Data{
-			"config": cfg,
-		})
-		return nil
-	}
-
-	var s *dphttp.Server
-
-	if cfg.OtelEnabled {
-		s = i.GetHTTPServerWithOtel(cfg.BindAddr, router)
-	} else {
-		s = i.GetHTTPServerWithoutOtel(cfg.BindAddr, router)
-	}
+	s := dphttp.NewServer(bindAddr, router)
 	s.HandleOSSignals = false
 	return s
 }
@@ -90,11 +74,7 @@ func (i *Init) GetResponder() Responder {
 	return responder.New()
 }
 
-func (i *Init) GetHTTPServerWithOtel(bindAddr string, router http.Handler) *dphttp.Server {
+func (i *Init) GetHTTPServerWithOtel(bindAddr string, router http.Handler) HTTPServer {
 	otelHandler := otelhttp.NewHandler(router, "/")
 	return dphttp.NewServer(bindAddr, otelHandler)
-}
-
-func (i *Init) GetHTTPServerWithoutOtel(bindAddr string, router http.Handler) *dphttp.Server {
-	return dphttp.NewServer(bindAddr, router)
 }

@@ -55,7 +55,11 @@ func (svc *Service) Init(ctx context.Context, init Initialiser, cfg *config.Conf
 
 	svc.buildRoutes(ctx)
 
-	svc.Server = init.GetHTTPServer(cfg.BindAddr, svc.Router)
+	if cfg.OtelEnabled {
+		svc.Server = init.GetHTTPServerWithOtel(cfg.BindAddr, svc.Router)
+	} else {
+		svc.Server = init.GetHTTPServer(cfg.BindAddr, svc.Router)
+	}
 
 	if err = svc.registerCheckers(ctx); err != nil {
 		return errors.Wrap(err, "unable to register checkers")
