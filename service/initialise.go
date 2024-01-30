@@ -40,11 +40,11 @@ func (i *Init) GetHTTPServer(bindAddr string, router http.Handler) HTTPServer {
 	}
 
 	var s *dphttp.Server
+
 	if cfg.OtelEnabled {
-		otelHandler := otelhttp.NewHandler(router, "/")
-		s = dphttp.NewServer(bindAddr, otelHandler)
+		s = i.GetHTTPServerWithOtel(cfg.BindAddr, router)
 	} else {
-		s = dphttp.NewServer(bindAddr, router)
+		s = i.GetHTTPServerWithoutOtel(cfg.BindAddr, router)
 	}
 	s.HandleOSSignals = false
 	return s
@@ -88,4 +88,13 @@ func cantabularNewClient(cfg cantabular.Config, ua dphttp.Clienter) *cantabular.
 
 func (i *Init) GetResponder() Responder {
 	return responder.New()
+}
+
+func (i *Init) GetHTTPServerWithOtel(bindAddr string, router http.Handler) *dphttp.Server {
+	otelHandler := otelhttp.NewHandler(router, "/")
+	return dphttp.NewServer(bindAddr, otelHandler)
+}
+
+func (i *Init) GetHTTPServerWithoutOtel(bindAddr string, router http.Handler) *dphttp.Server {
+	return dphttp.NewServer(bindAddr, router)
 }
