@@ -31,7 +31,7 @@ require (
 	github.com/riandyrn/otelchi v0.9.0
 	github.com/smartystreets/goconvey v1.8.1
 	go.mongodb.org/mongo-driver v1.16.1
-	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.54.0
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.53.0
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 )
 
