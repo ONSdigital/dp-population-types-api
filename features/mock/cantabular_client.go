@@ -319,7 +319,7 @@ func (c *CantabularClient) StaticDatasetQuery(context.Context, cantabular.Static
 }
 
 // StaticDatasetQueryStreamJson implements service.CantabularClient.
-func (c *CantabularClient) StaticDatasetQueryStreamJson(context.Context, cantabular.StaticDatasetQueryRequest, func(ctx context.Context, r io.Reader) error) (cantabular.GetObservationsResponse, error) {
+func (c *CantabularClient) StaticDatasetQueryStreamJSON(context.Context, cantabular.StaticDatasetQueryRequest, func(ctx context.Context, r io.Reader) error) (cantabular.GetObservationsResponse, error) {
 	if c.BadRequest {
 		return *c.GetObservationsResponse, dperrors.New(
 			errors.New("bad request"),

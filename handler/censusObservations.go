@@ -246,7 +246,7 @@ func (c *CensusObservations) Get(w http.ResponseWriter, r *http.Request) {
 		return nil
 	}
 
-	qRes, err := c.ctblr.StaticDatasetQueryStreamJson(cancelContext, cReq, consume)
+	qRes, err := c.ctblr.StaticDatasetQueryStreamJSON(cancelContext, cReq, consume)
 	if err != nil {
 		c.respond.Error(
 			ctx,
