@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
-	dperrors "github.com/ONSdigital/dp-net/v2/errors"
+	dperrors "github.com/ONSdigital/dp-net/v3/errors"
 	"github.com/ONSdigital/log.go/v2/log"
 
 	"github.com/ONSdigital/dp-population-types-api/config"

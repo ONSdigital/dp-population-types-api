@@ -10,8 +10,8 @@ import (
 	"github.com/ONSdigital/dp-api-clients-go/v2/cantabular"
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
-	dphttp "github.com/ONSdigital/dp-net/http"
-	"github.com/ONSdigital/dp-net/v2/responder"
+	dphttp "github.com/ONSdigital/dp-net/v3/http"
+	"github.com/ONSdigital/dp-net/v3/responder"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 
 	"github.com/pkg/errors"

@@ -7,7 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/ONSdigital/dp-authorisation/auth"
-	dphandlers "github.com/ONSdigital/dp-net/v2/handlers"
+	dphandlers "github.com/ONSdigital/dp-net/v3/handlers"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/handler"
 	"github.com/ONSdigital/dp-population-types-api/middleware"

@@ -11,7 +11,7 @@ import (
 	"github.com/ONSdigital/dp-api-clients-go/v2/dataset"
 	componenttest "github.com/ONSdigital/dp-component-test"
 	"github.com/ONSdigital/dp-healthcheck/healthcheck"
-	"github.com/ONSdigital/dp-net/v2/responder"
+	"github.com/ONSdigital/dp-net/v3/responder"
 	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/datastore"
 	"github.com/ONSdigital/dp-population-types-api/features/mock"
