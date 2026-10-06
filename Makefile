@@ -9,12 +9,27 @@ LDFLAGS = -ldflags "-X main.BuildTime=$(BUILD_TIME) -X main.GitCommit=$(GIT_COMM
 .PHONY: all
 all: audit test build
 
-.PHONY: audit
-audit:
+.PHONY: audit-go
+audit-go:
 	dis-vulncheck
 
+.PHONY: audit-python
+audit-python:
+	$(MAKE) -C sdk/python audit
+
+.PHONY: audit
+audit: audit-go audit-python
+
+.PHONY: lint-python
+lint-python:
+	$(MAKE) -C sdk/python lint
+
 .PHONY: lint
-lint:
+lint: lint-python
+
+.PHONY: format-python
+format-python:
+	$(MAKE) -C sdk/python format
 
 .PHONY: build
 build:
@@ -29,9 +44,16 @@ debug:
 debug-run:
 	HUMAN_LOG=1 DEBUG=1 go run -race -tags 'debug' $(LDFLAGS) main.go
 
-.PHONY: test
-test:
+.PHONY: test-go
+test-go:
 	go test -race -cover ./...
+
+.PHONY: test-python
+test-python:
+	$(MAKE) -C sdk/python test
+
+.PHONY: test
+test: test-go test-python
 
 .PHONY: convey
 convey:

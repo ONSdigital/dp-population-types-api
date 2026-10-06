@@ -12,3 +12,10 @@
 *.iml
 *.iws
 /.go/
+
+# Python
+__pycache__/
+.pytest_cache/
+.coverage
+.mypy_cache/
+.ruff_cache/

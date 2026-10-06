@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
 
 	componenttest "github.com/ONSdigital/dp-component-test"
 	"github.com/ONSdigital/dp-population-types-api/config"
@@ -15,10 +16,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const (
-	mongoVersion = "4.4.8"
-)
-
 type MongoFeature struct {
 	componenttest.ErrorFeature
 	*componenttest.MongoFeature
@@ -26,18 +23,24 @@ type MongoFeature struct {
 	cfg *config.Config
 }
 
-func NewMongoFeature(ef componenttest.ErrorFeature, cfg *config.Config) *MongoFeature {
-	mf := &MongoFeature{
-		ErrorFeature: ef,
-		MongoFeature: componenttest.NewMongoFeature(componenttest.MongoOptions{
-			MongoVersion: mongoVersion,
-		}),
-		cfg: cfg,
+func NewMongoFeature(ef componenttest.ErrorFeature, cfg *config.Config, mongoFeature *componenttest.MongoFeature) (*MongoFeature, error) {
+	mongoURI, err := mongoFeature.GetConnectionString()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get mongo connection string: %w", err)
 	}
 
-	mf.cfg.Mongo.ClusterEndpoint = mf.MongoFeature.Server.URI()
+	parsedMongoURI, err := url.Parse(mongoURI)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse mongo connection string: %w", err)
+	}
 
-	return mf
+	cfg.Mongo.ClusterEndpoint = parsedMongoURI.Host
+
+	return &MongoFeature{
+		ErrorFeature: ef,
+		MongoFeature: mongoFeature,
+		cfg:          cfg,
+	}, nil
 }
 
 func (mf *MongoFeature) RegisterSteps(ctx *godog.ScenarioContext) {
@@ -52,7 +55,6 @@ func (mf *MongoFeature) RegisterSteps(ctx *godog.ScenarioContext) {
 		`^a document in collection "([^"]*)" with key "([^"]*)" value "([^"]*)" should match:$`,
 		mf.aDocumentInCollectionWithKeyValueShouldMatch,
 	)
-
 }
 
 func (mf *MongoFeature) iHaveThisMetadata(docs *godog.DocString) error {

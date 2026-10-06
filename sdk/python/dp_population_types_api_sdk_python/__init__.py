@@ -1,0 +1,58 @@
+from .client import PopulationTypesAPIClient, create_client
+from .exceptions import (
+    APIError,
+    AuthenticationError,
+    NotFoundError,
+    ValidationError,
+)
+from .models import (
+    Area,
+    Category,
+    Dimension,
+    DimensionCategory,
+    GetAreaResponse,
+    GetAreasResponse,
+    GetBlockedAreaCountResult,
+    GetCategorisationsResponse,
+    GetDimensionCategoriesResponse,
+    GetDimensionsResponse,
+    GetPopulationTypeMetadataResponse,
+    GetPopulationTypeResponse,
+    GetPopulationTypesResponse,
+    HTTPHeaders,
+    PopulationType,
+)
+from .protocols import (
+    Headers,
+    PopulationTypesAPIClientProtocol,
+    PopulationTypesClientProtocol,
+    RequestingClient,
+)
+
+__all__ = [
+    "APIError",
+    "Area",
+    "AuthenticationError",
+    "Category",
+    "Dimension",
+    "DimensionCategory",
+    "GetAreaResponse",
+    "GetAreasResponse",
+    "GetBlockedAreaCountResult",
+    "GetCategorisationsResponse",
+    "GetDimensionCategoriesResponse",
+    "GetDimensionsResponse",
+    "GetPopulationTypeMetadataResponse",
+    "GetPopulationTypeResponse",
+    "GetPopulationTypesResponse",
+    "HTTPHeaders",
+    "Headers",
+    "NotFoundError",
+    "PopulationType",
+    "PopulationTypesAPIClient",
+    "PopulationTypesAPIClientProtocol",
+    "PopulationTypesClientProtocol",
+    "RequestingClient",
+    "ValidationError",
+    "create_client",
+]

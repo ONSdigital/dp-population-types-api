@@ -14,21 +14,25 @@ import (
 	"github.com/cucumber/godog/colors"
 
 	componenttest "github.com/ONSdigital/dp-component-test"
+	"github.com/ONSdigital/dp-population-types-api/config"
 	"github.com/ONSdigital/dp-population-types-api/features/steps"
 )
+
+const mongoVersion = "4.4.8"
 
 var componentFlag = flag.Bool("component", false, "perform component tests")
 var loggingFlag = flag.Bool("logging", false, "print logging")
 
 type ComponentTest struct {
-	t testing.TB
+	t            testing.TB
+	MongoFeature *componenttest.MongoFeature
 }
 
 func (f *ComponentTest) InitializeScenario(ctx *godog.ScenarioContext) {
 	authFeature := componenttest.NewAuthorizationFeature()
 	zebedeeURL := authFeature.FakeAuthService.ResolveURL("")
 
-	component, err := steps.NewComponent(f.t, zebedeeURL)
+	component, err := steps.NewComponent(f.t, zebedeeURL, f.MongoFeature)
 	if err != nil {
 		panic(fmt.Sprintf("failed to create component: %s", err))
 	}
@@ -36,6 +40,9 @@ func (f *ComponentTest) InitializeScenario(ctx *godog.ScenarioContext) {
 	apiFeature := componenttest.NewAPIFeature(component.InitialiseService)
 
 	ctx.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
+		if err := f.MongoFeature.Reset(); err != nil {
+			return nil, err
+		}
 		apiFeature.Reset()
 		if err := component.Reset(); err != nil {
 			return nil, err
@@ -56,7 +63,25 @@ func (f *ComponentTest) InitializeScenario(ctx *godog.ScenarioContext) {
 	component.MongoFeature.RegisterSteps(ctx)
 }
 
-func (f *ComponentTest) InitializeTestSuite(ctx *godog.TestSuiteContext) {}
+func (f *ComponentTest) InitializeTestSuite(ctx *godog.TestSuiteContext) {
+	ctx.BeforeSuite(func() {
+		cfg, err := config.Get()
+		if err != nil {
+			panic(fmt.Sprintf("failed to get config: %s", err))
+		}
+
+		f.MongoFeature = componenttest.NewMongoFeature(componenttest.MongoOptions{
+			MongoVersion: mongoVersion,
+			DatabaseName: cfg.Mongo.Database,
+		})
+	})
+
+	ctx.AfterSuite(func() {
+		if err := f.MongoFeature.Close(); err != nil {
+			log.Error(context.Background(), "failed to close mongo feature", err)
+		}
+	})
+}
 
 func TestComponent(t *testing.T) {
 	if *componentFlag {

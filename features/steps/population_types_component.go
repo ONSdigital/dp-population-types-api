@@ -32,13 +32,14 @@ type PopulationTypesComponent struct {
 	service                      *service.Service
 	InitialiserMock              service.Initialiser
 	MongoFeature                 *MongoFeature
+	mongoClient                  *datastore.MongoClient
 	datasetAPI                   *httpfake.HTTPFake
 	CantabularApiExt             *httpfake.HTTPFake
 	CantabularSrv                *httpfake.HTTPFake
 	fakeCantabular               *mock.CantabularClient
 }
 
-func NewComponent(t testing.TB, zebedeeURL string) (*PopulationTypesComponent, error) {
+func NewComponent(t testing.TB, zebedeeURL string, mongoFeature *componenttest.MongoFeature) (*PopulationTypesComponent, error) {
 	config, err := config.Get()
 	if err != nil {
 		return nil, err
@@ -65,7 +66,11 @@ func NewComponent(t testing.TB, zebedeeURL string) (*PopulationTypesComponent, e
 		NotFound:   false,
 	}
 
-	c.MongoFeature = NewMongoFeature(c.ErrorFeature, config)
+	mf, err := NewMongoFeature(c.ErrorFeature, config, mongoFeature)
+	if err != nil {
+		return nil, err
+	}
+	c.MongoFeature = mf
 
 	return c, nil
 }
@@ -80,15 +85,26 @@ func (c *PopulationTypesComponent) Reset() error {
 }
 
 func (c *PopulationTypesComponent) Close() error {
-	if c.svc != nil && c.ServiceRunning {
-		c.svc.Close(context.Background())
+	c.closeService(context.Background())
+	return nil
+}
+
+func (c *PopulationTypesComponent) closeService(ctx context.Context) {
+	if c.service != nil && c.ServiceRunning {
+		c.service.Close(ctx)
 		c.ServiceRunning = false
 	}
-	return nil
+
+	if c.mongoClient != nil {
+		_ = c.mongoClient.Close(ctx)
+		c.mongoClient = nil
+	}
 }
 
 func (c *PopulationTypesComponent) InitialiseService() (http.Handler, error) {
 	ctx := context.Background()
+
+	c.closeService(ctx)
 
 	c.InitialiserMock = &svcmock.InitialiserMock{
 		GetHealthCheckFunc:      c.GetHealthcheck,
@@ -135,11 +151,19 @@ func (c *PopulationTypesComponent) GetCantabularClient(_ config.CantabularConfig
 }
 
 func (c *PopulationTypesComponent) GetMongoClient(_ context.Context, _ *config.Config) (service.MongoClient, error) {
-	return datastore.NewClient(context.Background(), datastore.Config{
+	client, err := datastore.NewClient(context.Background(), datastore.Config{
 		MongoDriverConfig:  c.Config.Mongo,
 		MetadataCollection: "defaultDatasetMetadata",
 	})
+	if err != nil {
+		return nil, err
+	}
+
+	c.mongoClient = client
+
+	return client, nil
 }
+
 func (c *PopulationTypesComponent) GetDatasetAPIClient(_ *config.Config) service.DatasetAPIClient {
 	return dataset.NewAPIClient(c.Config.DatasetAPIURL)
 }
