@@ -2,6 +2,27 @@
 
 Python SDK for interacting with `dp-population-types-api`.
 
+## Overview
+
+This SDK provides a Python client for interacting with `dp-population-types-api`. It is intended to be consumed by services that require endpoints from the dp-population-types-api, such as `frontend-dataset-controller`. Responses are returned as validated Pydantic models.
+
+## Available client methods
+
+| Name | Description |
+| ------ | ------------- |
+| [`health`](#health) | Returns the health status of the API |
+| [`get_population_types`](#get_population_types) | Returns a paginated list of population types |
+| [`get_population_type`](#get_population_type) | Returns a single population type |
+| [`get_population_type_metadata`](#get_population_type_metadata) | Returns the default dataset metadata for a population type |
+| [`get_area`](#get_area) | Returns a single area for a given population type and area type |
+| [`get_areas`](#get_areas) | Returns a paginated list of areas for a given population type and area type, optionally filtered by search text |
+| [`get_blocked_area_count`](#get_blocked_area_count) | Returns the passed, blocked and total area counts for a combination of variables |
+| [`get_dimension_categories`](#get_dimension_categories) | Returns the categories for the given dimensions |
+| [`get_dimensions_description`](#get_dimensions_description) | Returns the descriptions for the given dimensions |
+| [`get_categorisations`](#get_categorisations) | Returns a paginated list of categorisations for a dimension |
+
+All methods except `health` are on the `population_types` resource, e.g. `client.population_types.get_areas(...)`.
+
 ## Requirements
 
 - Python `>=3.14`
@@ -30,7 +51,7 @@ pip install "git+https://github.com/ONSdigital/dp-population-types-api.git@<rele
 ```python
 from dp_population_types_api_sdk_python import create_client
 
-client = create_client(base_url="https://api.example.com")
+client = create_client(base_url="https://localhost:27300")
 health = client.health()
 
 print(health)
@@ -43,7 +64,7 @@ All operations are on the `population_types` resource and return validated Pydan
 ```python
 from dp_population_types_api_sdk_python import create_client
 
-client = create_client(base_url="https://api.example.com")
+client = create_client(base_url="https://localhost:27300")
 pt = client.population_types
 
 pt.get_population_types(require_default_dataset=True, limit=20, offset=0)
@@ -68,12 +89,12 @@ Optional parameters that are `None` are not sent, so the API defaults apply.
 
 ## Headers and authentication
 
-You can pass per-request headers using `HTTPHeaders`. Pass the raw token; the `Bearer ` prefix is added for you.
+You can pass per-request headers using `HTTPHeaders`. Pass the raw token the `Bearer ` prefix is added for you.
 
 ```python
 from dp_population_types_api_sdk_python import HTTPHeaders, create_client
 
-client = create_client(base_url="https://api.example.com")
+client = create_client(base_url="https://localhost:27300")
 
 population_type = client.population_types.get_population_type(
     "UR",
@@ -99,7 +120,7 @@ session = requests.Session()
 session.headers.update({"Authorization": "Bearer YOUR_TOKEN"})
 
 client = create_client(
-    base_url="https://api.example.com",
+    base_url="https://localhost:27300",
     session=session,
 )
 ```
@@ -117,7 +138,7 @@ from dp_population_types_api_sdk_python import (
     create_client,
 )
 
-client = create_client(base_url="https://api.example.com")
+client = create_client(base_url="https://localhost:27300")
 
 try:
     population_type = client.population_types.get_population_type("UR")

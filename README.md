@@ -6,9 +6,14 @@ Exposes representation of the population types resources which support selection
 
 * Run `make debug`
 
+## SDK
+
+A Python SDK for this API is available in [`sdk/python`](sdk/python). See the [SDK README](sdk/python/README.md) for installation and usage
+
 ## Dependencies
 
 * No further dependencies other than those defined in `go.mod`
+* Docker is required to run the component tests (`make test-component`), as they use testcontainers to run MongoDB
 
 ## Configuration
 
