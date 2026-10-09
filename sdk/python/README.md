@@ -46,70 +46,17 @@ Replace `<release-tag>` with a tag from the [dp-population-types-api releases](h
 pip install "git+https://github.com/ONSdigital/dp-population-types-api.git@<release-tag>#subdirectory=sdk/python"
 ```
 
-## Quick Start
+## Instantiation
+
+Example using `create_client`:
 
 ```python
 from dp_population_types_api_sdk_python import create_client
 
-client = create_client(base_url="https://localhost:27300")
-health = client.health()
-
-print(health)
+client = create_client(base_url="http://localhost:27300")
 ```
 
-## Population types
-
-All operations are on the `population_types` resource and return validated Pydantic models.
-
-```python
-from dp_population_types_api_sdk_python import create_client
-
-client = create_client(base_url="https://localhost:27300")
-pt = client.population_types
-
-pt.get_population_types(require_default_dataset=True, limit=20, offset=0)
-pt.get_population_type("UR")
-pt.get_population_type_metadata("UR")
-
-pt.get_area("UR", "ltla", "E06000001")
-pt.get_areas("UR", "ltla", text="Hart", limit=20, offset=0)
-pt.get_blocked_area_count(
-    "UR",
-    variables=["ltla", "sex"],
-    filter_variable="ltla",
-    filter_codes=["E06000001", "E06000002"],
-)
-
-pt.get_dimension_categories("UR", dimensions=["sex", "resident_age_7b"])
-pt.get_dimensions_description("UR", dimension_ids=["sex", "resident_age_7b"])
-pt.get_categorisations("UR", "resident_age_7b", limit=20, offset=0)
-```
-
-Optional parameters that are `None` are not sent, so the API defaults apply.
-
-## Headers and authentication
-
-You can pass per-request headers using `HTTPHeaders`. Pass the raw token the `Bearer ` prefix is added for you.
-
-```python
-from dp_population_types_api_sdk_python import HTTPHeaders, create_client
-
-client = create_client(base_url="https://localhost:27300")
-
-population_type = client.population_types.get_population_type(
-    "UR",
-    headers=HTTPHeaders(access_token="YOUR_TOKEN"),
-)
-```
-
-| Field | Header sent |
-|---|---|
-| `access_token` | `Authorization: Bearer <access_token>` |
-| `florence_token` | `X-Florence-Token: <florence_token>` |
-
-`None` values are omitted before sending the request.
-
-This SDK is designed to be used with a shared `requests.Session`. Pass one into `create_client()` so your requests reuse connections and can share default headers.
+Example using a shared `requests.Session`, so requests reuse connections and can share default headers:
 
 ```python
 import requests
@@ -117,17 +64,161 @@ import requests
 from dp_population_types_api_sdk_python import create_client
 
 session = requests.Session()
-session.headers.update({"Authorization": "Bearer YOUR_TOKEN"})
 
 client = create_client(
-    base_url="https://localhost:27300",
+    base_url="http://localhost:27300",
+    timeout=5.0,
     session=session,
 )
 ```
 
-## Error handling
+## Example usage of client
 
-The client raises typed exceptions for common HTTP failures. The exception message contains the response body where one is returned.
+This example demonstrates how `get_population_type()` could be used:
+
+```python
+from dp_population_types_api_sdk_python import (
+    HTTPHeaders,
+    NotFoundError,
+    create_client,
+)
+
+client = create_client(base_url="http://localhost:27300")
+
+headers = HTTPHeaders(access_token="example-auth-token")
+
+try:
+    response = client.population_types.get_population_type("UR", headers=headers)
+except NotFoundError as exc:
+
+    print(exc.status_code, exc)
+
+```
+
+## Available functionality
+
+Every method on `population_types` accepts an optional `headers` argument. Optional parameters that are `None` are not sent, so the API defaults apply.
+
+### health
+
+```python
+health = client.health()
+```
+
+Returns: `dict`
+
+### get_population_types
+
+```python
+response = client.population_types.get_population_types(
+    require_default_dataset=True,
+    limit=20,
+    offset=0,
+)
+```
+
+Returns: `GetPopulationTypesResponse`
+
+### get_population_type
+
+```python
+response = client.population_types.get_population_type("UR")
+```
+
+Returns: `GetPopulationTypeResponse`
+
+### get_population_type_metadata
+
+```python
+response = client.population_types.get_population_type_metadata("UR")
+```
+
+Returns: `GetPopulationTypeMetadataResponse`
+
+### get_area
+
+```python
+response = client.population_types.get_area("UR", "ltla", "E06000001")
+```
+
+Returns: `GetAreaResponse`
+
+### get_areas
+
+```python
+response = client.population_types.get_areas(
+    "UR",
+    "ltla",
+    text="Hart",
+    limit=20,
+    offset=0,
+)
+```
+
+Returns: `GetAreasResponse`
+
+### get_blocked_area_count
+
+```python
+response = client.population_types.get_blocked_area_count(
+    "UR",
+    variables=["ltla", "sex"],
+    filter_variable="ltla",
+    filter_codes=["E06000001", "E06000002"],
+)
+```
+
+Returns: `GetBlockedAreaCountResult`
+
+### get_dimension_categories
+
+```python
+response = client.population_types.get_dimension_categories(
+    "UR",
+    dimensions=["sex", "resident_age_7b"],
+    limit=20,
+    offset=0,
+)
+```
+
+Returns: `GetDimensionCategoriesResponse`
+
+### get_dimensions_description
+
+```python
+response = client.population_types.get_dimensions_description(
+    "UR",
+    dimension_ids=["sex", "resident_age_7b"],
+)
+```
+
+Returns: `GetDimensionsResponse`
+
+### get_categorisations
+
+```python
+response = client.population_types.get_categorisations(
+    "UR",
+    "resident_age_7b",
+    limit=20,
+    offset=0,
+)
+```
+
+Returns: `GetCategorisationsResponse`
+
+## Additional Information
+
+### Errors
+
+The client raises typed exceptions for unsuccessful responses. Each exception has a `status_code` attribute, and its message contains the response body returned by the API where there is one (e.g. `{"errors": ["population type not found"]}`).
+
+| Exception | Raised when |
+| --------- | ----------- |
+| `AuthenticationError` | The API returns `401` or `403` |
+| `NotFoundError` | The API returns `404` |
+| `ValidationError` | The API returns `400` or `422` |
+| `APIError` | Any other error response, or the request fails to send (e.g. connection error). Base class of all the above |
 
 ```python
 from dp_population_types_api_sdk_python import (
@@ -138,10 +229,10 @@ from dp_population_types_api_sdk_python import (
     create_client,
 )
 
-client = create_client(base_url="https://localhost:27300")
+client = create_client(base_url="http://localhost:27300")
 
 try:
-    population_type = client.population_types.get_population_type("UR")
+    response = client.population_types.get_population_type("UR")
 except NotFoundError:
     print("Population type does not exist")
 except AuthenticationError:
