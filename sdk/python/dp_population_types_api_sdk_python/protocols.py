@@ -112,7 +112,7 @@ class PopulationTypesClientProtocol(Protocol):
 
 @runtime_checkable
 class PopulationTypesAPIClientProtocol(Protocol):
-    """Protocol for the PopulationTypesAPIClient."""
+    """Protocol for the PopulationTypesAPIClient"""
 
     def health(self) -> dict[str, Any]: ...
 
