@@ -90,9 +90,7 @@ headers = HTTPHeaders(access_token="example-auth-token")
 try:
     response = client.population_types.get_population_type("UR", headers=headers)
 except NotFoundError as exc:
-
     print(exc.status_code, exc)
-
 ```
 
 ## Available functionality
